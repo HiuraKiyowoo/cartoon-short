@@ -74,6 +74,11 @@ const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
   ), [fx, on]);
   const cam = camera as THREE.PerspectiveCamera;
   target.copy(world.update(id, f, cam, scene));
+  if ((getInputProps() as { diag?: boolean }).diag) {
+    console.log("DIAG2 id=" + id + " f=" + f + " root=" + world.root.children.length + " scene=" + scene.children.length +
+      " cam=" + cam.position.toArray().map((n) => n.toFixed(1)).join(",") + " look=" + target.toArray().map((n) => n.toFixed(1)).join(",") +
+      " fov=" + cam.fov);
+  }
   noInkFallback(world.root);
   // thin-lens focus: distance along the view axis to the shot's focus point (default: the camera's look target)
   const d = dofAt(f);
