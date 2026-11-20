@@ -31,7 +31,7 @@ for (const f of frames.split(",").map(Number)) {
   await renderStill({
     composition, serveUrl, frame: f, output: `${prefix}${f}.jpg`, imageFormat: "jpeg", jpegQuality: 88,
     scale: Number(scale), browserExecutable, chromiumOptions: { gl }, timeoutInMilliseconds: 240000,
-    onBrowserLog: (l) => { if (l.type === "error") console.log("[browser error]", String(l.text).slice(0, 300)); },
+    onBrowserLog: (l) => { console.log("[" + l.type + "]", String(l.text).slice(0, 400)); },
   });
   console.log("still", f, ((Date.now() - t) / 1000).toFixed(1) + "s");
 }

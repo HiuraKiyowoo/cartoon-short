@@ -12,6 +12,9 @@ on:
       gl:
         description: "chromium gl backend"
         default: "swangle"
+      composition:
+        description: "composition id"
+        default: "BeerFlood"
   push:
     branches: [main]
     paths-ignore: ["**.md"]
@@ -44,6 +47,7 @@ jobs:
         env:
           REMOTION_TMP: ${{ runner.temp }}/remotion-tmp
           GL: ${{ github.event.inputs.gl || 'swangle' }}
+          COMPOSITION: ${{ github.event.inputs.composition || 'BeerFlood' }}
         run: |
           mkdir -p out/test
           node scripts/stills.mjs out/test/x_ "${{ github.event.inputs.frames || '60,300,700,1100,1500,1900' }}" "${{ github.event.inputs.scale || '0.5' }}" 2>&1 | tee out/test/render.log
