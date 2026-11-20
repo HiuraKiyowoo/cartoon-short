@@ -14,7 +14,7 @@ if (tmp) {
 }
 
 const [prefix, frames, scale = "0.5"] = process.argv.slice(2);
-const entry = process.env.ENTRY || "src/index.ts";
+const entry = process.env.ENTRY || "src/index.tsx";
 const compositionId = process.env.COMPOSITION || "BeerFlood";
 const gl = process.env.GL || "swangle";
 const browserExecutable = process.env.CHROME_PATH || undefined;
