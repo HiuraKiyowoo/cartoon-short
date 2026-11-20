@@ -31,8 +31,7 @@ echo "== 3. dependensi proyek"
 cd "$(dirname "$0")/.."
 npm install --no-audit --no-fund
 
-echo "== 4. Chromium untuk Remotion"
-npx remotion browser ensure
+echo "== 4. Chromium untuk Remotion (diunduh otomatis oleh scripts/stills.mjs lewat ensureBrowser)"
 
 echo "== 5. cek GL dari Mesa"
 glxinfo -B 2>/dev/null | sed -n '1,12p' || echo "  (glxinfo tidak tersedia / tanpa X — tidak fatal untuk headless)"

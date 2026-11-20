@@ -18,9 +18,8 @@ mkdir -p "$OUT"
 
 echo "== render $COMP · scale $SCALE · gl $GL"
 t0=$(date +%s)
-npx remotion render src/index.tsx "$COMP" "$OUT/video_silent.mp4" \
-  --codec h264 --crf 16 --scale "$SCALE" --gl "$GL" --concurrency 4 2>&1 | tail -30
-rc=${PIPESTATUS[0]}
+CONCURRENCY=${CONCURRENCY:-4} SCALE="$SCALE" GL="$GL" COMPOSITION="$COMP" node scripts/render_media.mjs "$OUT/video_silent.mp4" "$SCALE" "$GL"
+rc=$?
 t1=$(date +%s)
 echo "== render selesai rc=$rc dalam $((t1 - t0)) detik"
 [ "$rc" -ne 0 ] && { echo "render gagal"; exit "$rc"; }

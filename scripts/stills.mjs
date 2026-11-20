@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { bundle } from "@remotion/bundler";
-import { renderStill, selectComposition } from "@remotion/renderer";
+import { ensureBrowser, renderStill, selectComposition } from "@remotion/renderer";
 
 // every Remotion bundle copies public/ into the temp dir; point it at a big disk when the default is small
 const tmp = process.env.REMOTION_TMP;
@@ -21,6 +21,7 @@ const browserExecutable = process.env.CHROME_PATH || undefined;
 const inputProps = process.env.INPUT_PROPS ? JSON.parse(process.env.INPUT_PROPS) : {};
 
 const t0 = Date.now();
+await ensureBrowser();
 const serveUrl = await bundle({ entryPoint: path.resolve(entry), publicDir: path.resolve("public") });
 console.log("bundle", ((Date.now() - t0) / 1000).toFixed(1) + "s");
 
