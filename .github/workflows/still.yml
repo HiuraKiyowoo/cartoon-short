@@ -1,0 +1,59 @@
+name: Render Stills
+
+on:
+  workflow_dispatch:
+    inputs:
+      frames:
+        description: "frame list"
+        default: "60,300,700,1100,1500,1900"
+      scale:
+        description: "still scale"
+        default: "0.5"
+      gl:
+        description: "chromium gl backend"
+        default: "swangle"
+  push:
+    branches: [main]
+    paths-ignore: ["**.md"]
+
+jobs:
+  stills:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install deps
+        run: npm install --no-audit --no-fund
+
+      - name: Chromium system libs
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libnss3 libdbus-1-3 libatk1.0-0t64 libatk-bridge2.0-0t64 libcups2t64 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2t64 \
+            || sudo apt-get install -y --no-install-recommends libnss3 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libpango-1.0-0 libcairo2 libasound2 \
+            || true
+
+      - name: Ensure headless browser
+        run: npx remotion browser ensure
+
+      - name: Render stills
+        env:
+          REMOTION_TMP: ${{ runner.temp }}/remotion-tmp
+          GL: ${{ github.event.inputs.gl || 'swangle' }}
+        run: |
+          node scripts/stills.mjs out/test/x_ "${{ github.event.inputs.frames || '60,300,700,1100,1500,1900' }}" "${{ github.event.inputs.scale || '0.5' }}" | tee out/test/render.log
+          ls -la out/test/
+
+      - name: Upload stills
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stills
+          path: |
+            out/test/*.jpg
+            out/test/render.log
+          if-no-files-found: warn
