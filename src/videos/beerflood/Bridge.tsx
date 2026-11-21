@@ -45,14 +45,15 @@ const ManualPost: React.FC<{ fx: any; on: PostToggles }> = ({ fx, on }) => {
     c.addPass(new RenderPass(scene as never, camera as never));
     if (!on.empty) {
       if (on.ink) c.addPass(fx.ink);
-      const effs: unknown[] = [];
-      if (on.lens && on.pre) effs.push(fx.lens.pre);
-      if (on.lens) effs.push(fx.lens.main);
-      if (on.bloom) effs.push(fx.bloom);
-      effs.push(fx.tone);
-      if (on.grade) effs.push(fx.grade);
-      if (on.grain) effs.push(fx.grain);
-      if (effs.length) c.addPass(new EffectPass(camera as never, ...(effs as never[])));
+      // Tiap effect dapat EffectPass sendiri: lens blur itu tipe CONVOLUTION dan
+      // postprocessing menolak menggabungkannya ("Convolution effects cannot be merged").
+      const solo = (e: unknown) => { if (e) c.addPass(new EffectPass(camera as never, e as never)); };
+      if (on.lens && on.pre) solo(fx.lens.pre);
+      if (on.lens) solo(fx.lens.main);
+      if (on.bloom) solo(fx.bloom);
+      solo(fx.tone);
+      if (on.grade) solo(fx.grade);
+      if (on.grain) solo(fx.grain);
     }
     ref.current = c;
     if (on.dbg) console.log("MANUAL composer passes=" + c.passes.length + " size=" + String((c as unknown as { inputBuffer: { width: number } }).inputBuffer?.width));
