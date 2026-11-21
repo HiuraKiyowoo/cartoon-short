@@ -1,0 +1,520 @@
+{
+ "fps": 30,
+ "words": [
+  {
+   "word": "Di",
+   "start": 0.0,
+   "end": 0.2
+  },
+  {
+   "word": "London,",
+   "start": 0.2,
+   "end": 0.48
+  },
+  {
+   "word": "delapan",
+   "start": 0.98,
+   "end": 1.32
+  },
+  {
+   "word": "orang",
+   "start": 1.32,
+   "end": 1.64
+  },
+  {
+   "word": "tewas",
+   "start": 1.64,
+   "end": 2.14
+  },
+  {
+   "word": "tenggelam",
+   "start": 2.14,
+   "end": 2.72
+  },
+  {
+   "word": "di",
+   "start": 2.72,
+   "end": 2.9
+  },
+  {
+   "word": "dalam",
+   "start": 2.9,
+   "end": 3.08
+  },
+  {
+   "word": "bir.",
+   "start": 3.08,
+   "end": 3.4
+  },
+  {
+   "word": "Tahun",
+   "start": 4.16,
+   "end": 4.54
+  },
+  {
+   "word": "1814,",
+   "start": 4.54,
+   "end": 5.98
+  },
+  {
+   "word": "satu",
+   "start": 6.7,
+   "end": 7.06
+  },
+  {
+   "word": "tong",
+   "start": 7.06,
+   "end": 7.3
+  },
+  {
+   "word": "kayu",
+   "start": 7.3,
+   "end": 7.72
+  },
+  {
+   "word": "setinggi",
+   "start": 7.72,
+   "end": 8.14
+  },
+  {
+   "word": "rumah",
+   "start": 8.14,
+   "end": 8.5
+  },
+  {
+   "word": "berdiri",
+   "start": 8.5,
+   "end": 9.18
+  },
+  {
+   "word": "di",
+   "start": 9.18,
+   "end": 9.4
+  },
+  {
+   "word": "pabrik",
+   "start": 9.4,
+   "end": 9.7
+  },
+  {
+   "word": "Horshaw.",
+   "start": 9.7,
+   "end": 10.38
+  },
+  {
+   "word": "Sore",
+   "start": 10.96,
+   "end": 11.3
+  },
+  {
+   "word": "itu,",
+   "start": 11.3,
+   "end": 11.62
+  },
+  {
+   "word": "jurugudang",
+   "start": 12.14,
+   "end": 12.68
+  },
+  {
+   "word": "George",
+   "start": 12.68,
+   "end": 13.0
+  },
+  {
+   "word": "Crick",
+   "start": 13.0,
+   "end": 13.5
+  },
+  {
+   "word": "melihat",
+   "start": 13.5,
+   "end": 14.0
+  },
+  {
+   "word": "satu",
+   "start": 14.0,
+   "end": 14.32
+  },
+  {
+   "word": "gelang",
+   "start": 14.32,
+   "end": 14.62
+  },
+  {
+   "word": "besi",
+   "start": 14.62,
+   "end": 15.0
+  },
+  {
+   "word": "lepas",
+   "start": 15.0,
+   "end": 15.46
+  },
+  {
+   "word": "dari",
+   "start": 15.46,
+   "end": 15.74
+  },
+  {
+   "word": "tong",
+   "start": 15.74,
+   "end": 15.92
+  },
+  {
+   "word": "itu.",
+   "start": 15.92,
+   "end": 16.16
+  },
+  {
+   "word": "Dia",
+   "start": 16.8,
+   "end": 17.06
+  },
+  {
+   "word": "sudah",
+   "start": 17.06,
+   "end": 17.28
+  },
+  {
+   "word": "17",
+   "start": 17.28,
+   "end": 17.54
+  },
+  {
+   "word": "tahun",
+   "start": 17.54,
+   "end": 18.18
+  },
+  {
+   "word": "bekerja",
+   "start": 18.18,
+   "end": 18.62
+  },
+  {
+   "word": "di",
+   "start": 18.62,
+   "end": 18.72
+  },
+  {
+   "word": "situ.",
+   "start": 18.72,
+   "end": 19.0
+  },
+  {
+   "word": "Gelang",
+   "start": 19.62,
+   "end": 20.02
+  },
+  {
+   "word": "memang",
+   "start": 20.02,
+   "end": 20.22
+  },
+  {
+   "word": "lepas",
+   "start": 20.22,
+   "end": 20.66
+  },
+  {
+   "word": "2",
+   "start": 20.66,
+   "end": 20.86
+  },
+  {
+   "word": "-3",
+   "start": 20.86,
+   "end": 21.14
+  },
+  {
+   "word": "kali",
+   "start": 21.14,
+   "end": 21.46
+  },
+  {
+   "word": "setahun.",
+   "start": 21.46,
+   "end": 21.98
+  },
+  {
+   "word": "Atasannya",
+   "start": 22.48,
+   "end": 22.96
+  },
+  {
+   "word": "bilang,",
+   "start": 22.96,
+   "end": 23.24
+  },
+  {
+   "word": "tidak",
+   "start": 23.76,
+   "end": 23.94
+  },
+  {
+   "word": "akan",
+   "start": 23.94,
+   "end": 24.22
+  },
+  {
+   "word": "ada",
+   "start": 24.22,
+   "end": 24.38
+  },
+  {
+   "word": "bahaya,",
+   "start": 24.38,
+   "end": 24.82
+  },
+  {
+   "word": "tulis",
+   "start": 25.36,
+   "end": 25.62
+  },
+  {
+   "word": "memos",
+   "start": 25.62,
+   "end": 25.92
+  },
+  {
+   "word": "aja.",
+   "start": 25.92,
+   "end": 26.18
+  },
+  {
+   "word": "Satu",
+   "start": 26.82,
+   "end": 27.24
+  },
+  {
+   "word": "jam",
+   "start": 27.24,
+   "end": 27.42
+  },
+  {
+   "word": "kemudian,",
+   "start": 27.42,
+   "end": 27.98
+  },
+  {
+   "word": "memo",
+   "start": 28.36,
+   "end": 28.68
+  },
+  {
+   "word": "itu",
+   "start": 28.68,
+   "end": 28.96
+  },
+  {
+   "word": "masih",
+   "start": 28.96,
+   "end": 29.38
+  },
+  {
+   "word": "ditangannya.",
+   "start": 29.38,
+   "end": 30.06
+  },
+  {
+   "word": "Dan",
+   "start": 30.58,
+   "end": 30.68
+  },
+  {
+   "word": "tongnya",
+   "start": 30.68,
+   "end": 31.24
+  },
+  {
+   "word": "pecah.",
+   "start": 31.24,
+   "end": 32.04
+  },
+  {
+   "word": "Glombang",
+   "start": 32.48,
+   "end": 32.96
+  },
+  {
+   "word": "bir",
+   "start": 32.96,
+   "end": 33.18
+  },
+  {
+   "word": "setinggi",
+   "start": 33.18,
+   "end": 33.7
+  },
+  {
+   "word": "15",
+   "start": 33.7,
+   "end": 34.1
+  },
+  {
+   "word": "kaki",
+   "start": 34.1,
+   "end": 34.68
+  },
+  {
+   "word": "menerjang",
+   "start": 34.68,
+   "end": 35.3
+  },
+  {
+   "word": "jalan.",
+   "start": 35.3,
+   "end": 35.7
+  },
+  {
+   "word": "Delapan",
+   "start": 36.26,
+   "end": 36.62
+  },
+  {
+   "word": "orang",
+   "start": 36.62,
+   "end": 36.9
+  },
+  {
+   "word": "tewas.",
+   "start": 36.9,
+   "end": 37.36
+  },
+  {
+   "word": "5",
+   "start": 37.92,
+   "end": 38.22
+  },
+  {
+   "word": "di",
+   "start": 38.22,
+   "end": 38.4
+  },
+  {
+   "word": "antaranya",
+   "start": 38.4,
+   "end": 38.94
+  },
+  {
+   "word": "sedang",
+   "start": 38.94,
+   "end": 39.36
+  },
+  {
+   "word": "melayat",
+   "start": 39.36,
+   "end": 39.76
+  },
+  {
+   "word": "anak",
+   "start": 39.76,
+   "end": 40.08
+  },
+  {
+   "word": "berumur",
+   "start": 40.08,
+   "end": 40.58
+  },
+  {
+   "word": "2",
+   "start": 40.58,
+   "end": 40.76
+  },
+  {
+   "word": "tahun.",
+   "start": 40.76,
+   "end": 41.12
+  },
+  {
+   "word": "Juri",
+   "start": 41.78,
+   "end": 42.18
+  },
+  {
+   "word": "menyebutnya",
+   "start": 42.18,
+   "end": 42.84
+  },
+  {
+   "word": "Kehendak",
+   "start": 42.84,
+   "end": 43.44
+  },
+  {
+   "word": "Tuhan.",
+   "start": 43.44,
+   "end": 43.84
+  },
+  {
+   "word": "Dan",
+   "start": 44.42,
+   "end": 44.7
+  },
+  {
+   "word": "pabriknya",
+   "start": 44.7,
+   "end": 45.24
+  },
+  {
+   "word": "selamat.",
+   "start": 45.24,
+   "end": 45.64
+  },
+  {
+   "word": "Karena",
+   "start": 46.06,
+   "end": 46.32
+  },
+  {
+   "word": "negara",
+   "start": 46.32,
+   "end": 46.8
+  },
+  {
+   "word": "mengembalikan",
+   "start": 46.8,
+   "end": 47.42
+  },
+  {
+   "word": "pajak",
+   "start": 47.42,
+   "end": 47.94
+  },
+  {
+   "word": "atas",
+   "start": 47.94,
+   "end": 48.32
+  },
+  {
+   "word": "bir",
+   "start": 48.32,
+   "end": 48.58
+  },
+  {
+   "word": "yang",
+   "start": 48.58,
+   "end": 48.8
+  },
+  {
+   "word": "menewaskan",
+   "start": 48.8,
+   "end": 49.4
+  },
+  {
+   "word": "8",
+   "start": 49.4,
+   "end": 49.78
+  },
+  {
+   "word": "orang.",
+   "start": 49.78,
+   "end": 50.14
+  }
+ ],
+ "totalSeconds": 50.14,
+ "totalFrames": 1504,
+ "source": "assets/voice.mp3",
+ "method": "faster-whisper small (id)",
+ "language": "id"
+}

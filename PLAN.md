@@ -1,7 +1,27 @@
-# PLAN — London Beer Flood (1814), 41 detik, 1080x1920 @30fps
+# PLAN — London Beer Flood (1814), 50 detik, 1080x1920 @30fps
 
-Skrip: `assets/script_id.txt` · timing: `assets/words.json` (estimasi, ganti dengan word-time hasil ASR setelah voiceover ada)
-Total: **1.228 frame** (40,93 s)
+Skrip: `assets/script_id.txt` · timing: `assets/words-voice.json` (**word timestamps asli** dari voiceover)
+Total: **1.504 frame** (50,14 s). Voiceover: ElevenLabs "Jonathan – News Anchor", mono 44,1 kHz, 824 KB.
+Transkripsi: faster-whisper `small` (id), 102 kata. Suara asli **tidak boleh diubah** — gambar mengikuti suara.
+
+## Timing aktual (dari kata ke frame, @30fps)
+
+| # | shot | frame | kalimat (kata kunci → frame) |
+|---|---|---|---|
+| 1 | hook: gang sempit, air gelap | 0–113 | "Di London, delapan orang **tewas** f49 … **bir** f92" |
+| 2 | setting: tong 22 kaki | 113–321 | "**Tahun** f125 **1814** f136 … **Horshaw** f291" |
+| 3 | Crick melihat gelang lepas | 321–494 | "**Sore** f329 **jurugudang** f364 **Crick** f390 … **lepas** f450" |
+| 4 | 17 tahun / gelang rutin | 494–667 | "**Dia** f504 **17 tahun** f518-526 … **setahun** f644" |
+| 5 | atasan: tulis memo | 667–795 | "**Atasannya** f674 **bahaya** f731 … **aja** f778" |
+| 6 | memo di tangan → tong pecah | 795–968 | "**Satu** f805 … **ditangannya** f881 … **pecah** f937" |
+| 7 | gelombang 15 kaki | 968–1049 | "**Glombang** f974 **bir** f989 … **jalan** f1059" |
+| 8 | 8 tewas · vonis juri · pajak (twist) | 1049–1504 | "**Delapan** f1088 **tewas** f1107 · **5** f1138 **melayat** f1181 **anak** f1193 **2 tahun** f1217-1223 · **Juri** f1253 **Tuhan** f1303 · **pabriknya selamat** f1341-1357 · **pajak** f1423 · **menewaskan** f1464 **8 orang** f1482-1493" |
+
+**Jangkar wajib** (reaksi visual mendarat 0–3 frame sebelum katanya):
+gelang jatuh ≈ f447 · memo ditulis ≈ f758 · **tong pecah f934** · **gelombang menerjang f971** ·
+angka 8 muncul f1085 · vonis juri f1250 · potongan akhir (pajak) f1330.
+Musik march **berhenti** di f934; sting rendah di f1250; hening di f1490.
+
 
 Fakta terverifikasi (Wikipedia London Beer Flood; History.com; Smithsonian):
 17 Oktober 1814 ±16.30, Meux & Co Horse Shoe Brewery, sudut Tottenham Court Road / Great Russell Street.

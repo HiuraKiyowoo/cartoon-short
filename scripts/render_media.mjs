@@ -7,6 +7,7 @@ import { bundle } from "@remotion/bundler";
 import { ensureBrowser, renderMedia, selectComposition } from "@remotion/renderer";
 
 const [out = "out/final/video_silent.mp4", scaleArg = process.env.SCALE || "1", gl = process.env.GL || "angle"] = process.argv.slice(2);
+const frameRange = process.env.FRAMES ? process.env.FRAMES.split("-").map(Number) as [number, number] : undefined;
 const compId = process.env.COMPOSITION || "BeerFlood";
 const tmp = process.env.REMOTION_TMP;
 if (tmp) {
@@ -20,7 +21,8 @@ await ensureBrowser();
 const serveUrl = await bundle({ entryPoint: path.resolve(process.env.ENTRY || "src/index.tsx"), publicDir: path.resolve("public") });
 console.log("bundle", ((Date.now() - t0) / 1000).toFixed(1) + "s");
 
-const composition = await selectComposition({ serveUrl, id: compId, chromiumOptions: { gl } });
+const inputProps = process.env.INPUT_PROPS ? JSON.parse(process.env.INPUT_PROPS) : {};
+const composition = await selectComposition({ serveUrl, id: compId, chromiumOptions: { gl }, inputProps });
 console.log("komposisi", composition.width + "x" + composition.height, composition.durationInFrames + " frame", composition.fps + " fps", "scale", scaleArg);
 
 const t1 = Date.now();
@@ -28,6 +30,8 @@ let last = 0;
 await renderMedia({
   composition, serveUrl, codec: "h264", crf: 16, outputLocation: out,
   scale: Number(scaleArg), chromiumOptions: { gl },
+  frameRange,
+  inputProps,
   concurrency: Number(process.env.CONCURRENCY || 4),
   onProgress: ({ renderedFrames, encodedFrames, progress }) => {
     const done = Math.max(renderedFrames, encodedFrames);
