@@ -12,10 +12,10 @@ import { Kit } from "./videos/beerflood/build";
 
 /** pos.x, pos.y, pos.z, look.x, look.y, look.z, fov */
 const VIEWS: number[][] = [
-  [-13, 2.4, 15, 0, 3.6, 0, 42],   // dari gang, rendah, ke tong
-  [12, 8.5, 12, 0, 3.2, 0, 38],    // dari ketinggian: halaman + dinding belakang
-  [0, 1.6, 12, 0, 5.8, 0, 45],     // menengok ke atas tong
-  [3.5, 6.4, -9.5, 0, 2.4, 2, 40], // dari sisi dinding, seperti dari platform Crick
+  [-17, 7.5, 23, 0, 3.2, 0, 38],   // luas dari gang: halaman, tong, dinding
+  [14, 12, 17, 0, 3.0, 0, 36],     // dari ketinggian: tata letak + dinding belakang
+  [11, 2.1, 15, 0.5, 3.4, 0, 42],  // dari jalan, rendah: alas tong + gelang besi
+  [-10.5, 8.5, 7, 0, 2.4, 0, 40],  // dari sisi platform (tempat Crick), turun ke tong
 ];
 
 const Aim: React.FC<{ pos: [number, number, number]; look: [number, number, number] }> = ({ pos, look }) => {
@@ -32,10 +32,12 @@ export const FloodSetProbe: React.FC = () => {
   const built = React.useMemo(() => buildFloodSet({} as Kit), []);
   return (
     <AbsoluteFill style={{ background: "#cfe3f2" }}>
-      <ThreeCanvas width={1080} height={1920} camera={{ position: [v[0], v[1], v[2]], fov: v[6] }}>
+      <ThreeCanvas width={1080} height={1920} shadows camera={{ position: [v[0], v[1], v[2]], fov: v[6] }}>
         <Aim pos={[v[0], v[1], v[2]]} look={[v[3], v[4], v[5]]} />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[9, 15, 7]} intensity={1.5} />
+        <hemisphereLight args={["#bcd8f5", "#8d7f6b", 0.75]} />
+        <directionalLight position={[14, 20, 11]} intensity={1.5} castShadow
+          shadow-mapSize-width={2048} shadow-mapSize-height={2048}
+          shadow-camera-left={-26} shadow-camera-right={26} shadow-camera-top={26} shadow-camera-bottom={-26} />
         <primitive object={built.root} dispose={null} />
       </ThreeCanvas>
     </AbsoluteFill>

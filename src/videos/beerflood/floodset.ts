@@ -55,6 +55,18 @@ export const buildFloodSet = (kit: Kit): FloodSet => {
       new THREE.Matrix4().makeTranslation(0, y, 0));
   }
 
+  // ---------- penyangga tong (cradle): tanpa ini tong terlihat menggantung ----------
+  for (let i = 0; i < 6; i++) {
+    const a = (i / 6) * Math.PI * 2 + 0.3;
+    const x = Math.cos(a) * (VAT_R + 0.45), z = Math.sin(a) * (VAT_R + 0.45);
+    const brace = boxGeo(V(-0.16, 0.1, -0.16), V(0.16, 1.9, 0.16), 1);
+    const m = new THREE.Matrix4().makeRotationZ(Math.cos(a) * 0.28).multiply(new THREE.Matrix4().makeRotationX(-Math.sin(a) * 0.28));
+    m.setPosition(x, 0.95, z);
+    b.add(brace, mat.wood(), m);
+  }
+  // cincin batu dasar tempat tong berdiri
+  b.add(new THREE.CylinderGeometry(VAT_R * 1.22, VAT_R * 1.3, 0.42, 24), mat.stone(), new THREE.Matrix4().makeTranslation(0, 0.21, 0));
+
   // ---------- perancah/platform di sisi tong (tempat Crick dan memonya) ----------
   b.add(boxGeo(V(-VAT_R - 2.6, VAT_H - 2.3, -1.5), V(-VAT_R - 0.6, VAT_H - 2.1, 2.6), 1), mat.plank());
   for (const z of [-1.4, 0.5, 2.4]) {
@@ -99,6 +111,11 @@ export const buildFloodSet = (kit: Kit): FloodSet => {
   b.add(boxGeo(V(-1.4, 4.2, 9.1), V(-0.6, 4.9, 9.9), 1), mat.dark());
 
   b.build(root, true);
+  // bayangan kontak: mesh tanah dan bangunan harus menerima bayangan, kalau tidak semua terlihat "ditempel"
+  root.traverse((o) => {
+    const m = o as THREE.Mesh;
+    if (m.isMesh) { m.receiveShadow = true; }
+  });
 
   // ---------- gelombang porter (mesh terpisah, dianimasikan) ----------
   const waveGeo = new THREE.PlaneGeometry(90, 26, 1, 1);
