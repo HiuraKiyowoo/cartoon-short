@@ -27,15 +27,15 @@ mean_rgb() { ffmpeg -v error -i "$1" -vf scale=1:1 -f rawvideo -pix_fmt rgb24 - 
 run_case() { # tag komposisi props frame
   local tag=$1 comp=$2 props=$3 frame=$4
   rm -f "out/smoke/d_${tag}_${frame}.jpg"
-  eval $WRAP env GL="$GL" COMPOSITION="$comp" INPUT_PROPS="'$props'" \
+  eval $WRAP env GL="$GL" COMPOSITION="$comp" INPUT_PROPS="'$props'" DIAG="${DIAG:-0}" \
     node scripts/stills.mjs "out/smoke/d_${tag}_" "$frame" 0.5 > "out/smoke/d_${tag}.log" 2>&1
   local rc=$?
   local f="out/smoke/d_${tag}_${frame}.jpg"
   local v="gagal"
   [ -f "$f" ] && v=$(mean_rgb "$f")
   local glr
-  glr=$(sed 's/\x1b\[[0-9;]*m//g' "out/smoke/d_${tag}.log" | grep -o 'GL_RENDERER = [^,]*' | head -1)
-  printf 'DIFF %-12s rgb=%-13s rc=%s %s\n' "$tag" "$v" "$rc" "$glr"
+  glr=$(sed 's/\x1b\[[0-9;]*m//g' "out/smoke/d_${tag}.log" | grep -oE 'UNMASKED=[^ ]*' | head -1)
+  printf 'DIFF %-10s rgb=%-13s rc=%s %s\n' "$tag" "$v" "$rc" "$glr"
 }
 
 echo "=== $LABEL"

@@ -9,10 +9,13 @@ const Diag: React.FC = () => {
   React.useEffect(() => {
     try {
       const ctx = gl.getContext();
+      const dbg = ctx ? ctx.getExtension("WEBGL_debug_renderer_info") : null;
+      const unmasked = dbg && ctx ? ctx.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : "n/a";
       console.log(
         "DIAG webgl=" + !!ctx +
         " version=" + (ctx ? ctx.getParameter(ctx.VERSION) : "none") +
         " renderer=" + (ctx ? ctx.getParameter(ctx.RENDERER) : "none") +
+        " UNMASKED=" + unmasked +
         " size=" + size.width + "x" + size.height
       );
     } catch (e) {
