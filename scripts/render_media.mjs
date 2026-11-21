@@ -32,6 +32,7 @@ await renderMedia({
   scale: Number(scaleArg), chromiumOptions: { gl },
   frameRange,
   inputProps,
+  timeoutInMilliseconds: Number(process.env.TMO || 600000),
   concurrency: Number(process.env.CONCURRENCY || 4),
   onProgress: ({ renderedFrames, encodedFrames, progress }) => {
     const done = Math.max(renderedFrames, encodedFrames);
