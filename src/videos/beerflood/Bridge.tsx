@@ -6,13 +6,13 @@
 // source; the grade is display-referred, so it comes after tone mapping. Every pixel-sized parameter is specified at
 // 1080x1920 and scaled with the output size, so stills at --scale 0.5 and the 1440x2560 final match.
 // Place changes crossfade by stacking a second canvas for the fade frames; the hook ends on a 4-frame white flash.
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, getInputProps, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer } from "@react-three/postprocessing";
-import { BlendFunction, BloomEffect, ToneMappingEffect, ToneMappingMode } from "postprocessing";
+import { BlendFunction, BloomEffect, EffectComposer as PostComposer, EffectPass, RenderPass, ToneMappingEffect, ToneMappingMode } from "postprocessing";
 import { World, loadKit } from "./world";
 import { InkPass, noInkFallback } from "./ink";
 import { LensBlur, GrainEffect } from "./lensblur";
@@ -23,8 +23,48 @@ import { TOTAL, FLASH_AT, SHOTS, layersAt, dofAt } from "./story";
 export const FLOOD_FRAMES = TOTAL;
 
 /** A/B switches for test stills only (Remotion inputProps `{ post: { ink: false, ... } }`); everything is on by default. */
-type PostToggles = { ink: boolean; lens: boolean; pre: boolean; bloom: boolean; grade: boolean; grain: boolean; composer: boolean; msaa: number; ldr: boolean; empty: boolean };
-const toggles = (): PostToggles => ({ ink: true, lens: true, pre: true, bloom: true, grade: true, grain: false, composer: true, msaa: 4, ldr: false, empty: false, ...((getInputProps() as { post?: Partial<PostToggles> }).post ?? {}) });
+type PostToggles = { ink: boolean; lens: boolean; pre: boolean; bloom: boolean; grade: boolean; grain: boolean; composer: boolean; msaa: number; ldr: boolean; empty: boolean; manual: boolean };
+const toggles = (): PostToggles => ({ ink: true, lens: true, pre: true, bloom: true, grade: true, grain: false, composer: true, msaa: 4, ldr: false, empty: false, manual: false, ...((getInputProps() as { post?: Partial<PostToggles> }).post ?? {}) });
+
+/**
+ * Composer manual: melewati pembungkus @react-three/postprocessing.
+ * Pembungkus itu mengandalkan useFrame R3F, sedangkan ThreeCanvas milik Remotion
+ * memakai frameloop "never" + advance() manual — akibatnya kanvas dibiarkan kosong.
+ * Di sini composer dari paket `postprocessing` dibangun langsung dan dirender
+ * urut setelah scene disiapkan. Aktifkan lewat inputProps `{ post: { manual: true } }`.
+ */
+const ManualPost: React.FC<{ fx: any; on: PostToggles }> = ({ fx, on }) => {
+  const { gl, scene, camera } = useThree();
+  const ref = useRef<PostComposer | null>(null);
+  useEffect(() => {
+    const c = new PostComposer(gl as never, {
+      frameBufferType: on.ldr ? THREE.UnsignedByteType : THREE.HalfFloatType,
+      multisampling: on.msaa,
+      alpha: false,
+    });
+    c.addPass(new RenderPass(scene as never, camera as never));
+    if (!on.empty) {
+      if (on.ink) c.addPass(fx.ink);
+      const effs: unknown[] = [];
+      if (on.lens && on.pre) effs.push(fx.lens.pre);
+      if (on.lens) effs.push(fx.lens.main);
+      if (on.bloom) effs.push(fx.bloom);
+      effs.push(fx.tone);
+      if (on.grade) effs.push(fx.grade);
+      if (on.grain) effs.push(fx.grain);
+      if (effs.length) c.addPass(new EffectPass(camera as never, ...(effs as never[])));
+    }
+    ref.current = c;
+    return () => { c.dispose(); ref.current = null; };
+  }, [gl, scene, camera, on, fx]);
+  useFrame(() => {
+    const c = ref.current;
+    if (!c) return;
+    gl.autoClear = false;
+    c.render();
+  }, 1);
+  return null;
+};
 
 /** Bloom for emissive sources only (depth.md 6.4). Its MIP chain always starts at 540x960 (half of 1080x1920),
  *  whatever the output size, so the glow keeps the same size relative to the frame (e-fold ~30 px at 1080p,
@@ -95,7 +135,7 @@ const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
   return (
     <>
       <primitive object={world.root} dispose={null} />
-      {post}
+      {on.manual ? <ManualPost fx={fx} on={on} /> : post}
     </>
   );
 };
