@@ -58,14 +58,20 @@ const ManualPost: React.FC<{ fx: any; on: PostToggles }> = ({ fx, on }) => {
     if (on.dbg) console.log("MANUAL composer passes=" + c.passes.length + " size=" + String((c as unknown as { inputBuffer: { width: number } }).inputBuffer?.width));
     return () => { c.dispose(); ref.current = null; };
   }, [gl, scene, camera, on, fx]);
-  useFrame(() => {
+  // Jangan pakai useFrame: dengan frameloop "never" milik ThreeCanvas, callback berprioritas
+  // tidak pernah dieksekusi (terbukti: composer dibuat tapi tidak ada satu pun frame render).
+  // R3F menggambar scene normal; effect ini jalan setelah commit dan mengganti isi kanvas
+  // dengan keluaran composer.
+  const frame = useCurrentFrame();
+  useEffect(() => {
     const c = ref.current;
     if (!c) return;
+    const el = gl.domElement;
+    c.setSize(el.width, el.height, false);
     gl.autoClear = false;
-    gl.setRenderTarget(null);
     c.render();
-    if (on.dbg) console.log("MANUAL frame calls=" + gl.info.render.calls + " tris=" + gl.info.render.triangles + " rt=" + String(gl.getRenderTarget()));
-  }, 1);
+    if (on.dbg) console.log("MANUAL frame=" + frame + " calls=" + gl.info.render.calls + " tris=" + gl.info.render.triangles);
+  }, [frame, gl, on.dbg]);
   return null;
 };
 
