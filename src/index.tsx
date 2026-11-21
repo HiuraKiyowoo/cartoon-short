@@ -6,7 +6,7 @@ import { Probe } from "./probe";
 const Root: React.FC = () => (
   <>
     <Composition id="BeerFlood" component={BeerFlood} durationInFrames={FLOOD_FRAMES} fps={30} width={1080} height={1920} />
-    <Composition id="Probe" component={Probe} durationInFrames={60} fps={30} width={1080} height={1920} />
+    <Composition id="Probe" component={Probe} durationInFrames={120} fps={30} width={1080} height={1920} />
   </>
 );
 

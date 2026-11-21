@@ -18,11 +18,11 @@ echo "--------|-----------|----------------|--------"
 
 for gl in angle egl vulkan swangle; do
   rm -f out/smoke/*.jpg
-  GL=$gl COMPOSITION=Probe timeout 600 node scripts/stills.mjs out/smoke/probe_ "60" 0.5 > out/smoke/probe_$gl.log 2>&1
+  GL=$gl COMPOSITION=Probe timeout 600 node scripts/stills.mjs out/smoke/probe_ "30" 0.5 > out/smoke/probe_$gl.log 2>&1
   rc_p=$?
   GL=$gl COMPOSITION=BeerFlood timeout 600 node scripts/stills.mjs out/smoke/flood_ "60" 0.5 > out/smoke/flood_$gl.log 2>&1
   rc_f=$?
-  p=$( [ -f out/smoke/probe_60.jpg ] && mean_rgb out/smoke/probe_60.jpg || echo "gagal")
+  p=$( [ -f out/smoke/probe_30.jpg ] && mean_rgb out/smoke/probe_30.jpg || echo "gagal")
   f=$( [ -f out/smoke/flood_60.jpg ] && mean_rgb out/smoke/flood_60.jpg || echo "gagal")
   verdict="tidak terpakai"
   if [ "$p" != "gagal" ] && [ "$p" != "17,16,19" ]; then
