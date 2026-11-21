@@ -7,7 +7,7 @@ import { bundle } from "@remotion/bundler";
 import { ensureBrowser, renderMedia, selectComposition } from "@remotion/renderer";
 
 const [out = "out/final/video_silent.mp4", scaleArg = process.env.SCALE || "1", gl = process.env.GL || "angle"] = process.argv.slice(2);
-const frameRange = process.env.FRAMES ? process.env.FRAMES.split("-").map(Number) as [number, number] : undefined;
+const frameRange = process.env.FRAMES ? process.env.FRAMES.split("-").map(Number) : undefined;
 const compId = process.env.COMPOSITION || "BeerFlood";
 const tmp = process.env.REMOTION_TMP;
 if (tmp) {
