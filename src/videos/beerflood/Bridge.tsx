@@ -6,7 +6,7 @@
 // source; the grade is display-referred, so it comes after tone mapping. Every pixel-sized parameter is specified at
 // 1080x1920 and scaled with the output size, so stills at --scale 0.5 and the 1440x2560 final match.
 // Place changes crossfade by stacking a second canvas for the fade frames; the hook ends on a 4-frame white flash.
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, continueRender, delayRender, getInputProps, useCurrentFrame } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
@@ -23,8 +23,8 @@ import { TOTAL, FLASH_AT, SHOTS, layersAt, dofAt } from "./story";
 export const FLOOD_FRAMES = TOTAL;
 
 /** A/B switches for test stills only (Remotion inputProps `{ post: { ink: false, ... } }`); everything is on by default. */
-type PostToggles = { ink: boolean; lens: boolean; pre: boolean; bloom: boolean; grade: boolean; grain: boolean; composer: boolean; msaa: number; ldr: boolean; empty: boolean; manual: boolean };
-const toggles = (): PostToggles => ({ ink: true, lens: true, pre: true, bloom: true, grade: true, grain: false, composer: true, msaa: 4, ldr: false, empty: false, manual: false, ...((getInputProps() as { post?: Partial<PostToggles> }).post ?? {}) });
+type PostToggles = { ink: boolean; lens: boolean; pre: boolean; bloom: boolean; grade: boolean; grain: boolean; composer: boolean; msaa: number; ldr: boolean; empty: boolean; manual: boolean; dbg: boolean };
+const toggles = (): PostToggles => ({ ink: true, lens: true, pre: true, bloom: true, grade: true, grain: false, composer: true, msaa: 4, ldr: false, empty: false, manual: false, dbg: false, ...((getInputProps() as { post?: Partial<PostToggles> }).post ?? {}) });
 
 /**
  * Composer manual: melewati pembungkus @react-three/postprocessing.
@@ -55,13 +55,16 @@ const ManualPost: React.FC<{ fx: any; on: PostToggles }> = ({ fx, on }) => {
       if (effs.length) c.addPass(new EffectPass(camera as never, ...(effs as never[])));
     }
     ref.current = c;
+    if (on.dbg) console.log("MANUAL composer passes=" + c.passes.length + " size=" + String((c as unknown as { inputBuffer: { width: number } }).inputBuffer?.width));
     return () => { c.dispose(); ref.current = null; };
   }, [gl, scene, camera, on, fx]);
   useFrame(() => {
     const c = ref.current;
     if (!c) return;
     gl.autoClear = false;
+    gl.setRenderTarget(null);
     c.render();
+    if (on.dbg) console.log("MANUAL frame calls=" + gl.info.render.calls + " tris=" + gl.info.render.triangles + " rt=" + String(gl.getRenderTarget()));
   }, 1);
   return null;
 };
