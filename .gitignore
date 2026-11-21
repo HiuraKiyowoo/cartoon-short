@@ -5,3 +5,4 @@ out/
 
 assets/voice*.mp3
 assets/*.wav
+public/voice*.mp3
