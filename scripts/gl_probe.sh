@@ -10,16 +10,17 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p out/smoke
 
-GL=${GL:-angle}
+GL=${GL:-swangle}
 if [ "${FULL:-0}" = "1" ]; then
   CHROME_PATH=${CHROME_PATH:-/usr/bin/google-chrome}
   export CHROME_PATH
 fi
 WRAP=""
-if [ "${XVFB:-1}" = "1" ] && command -v xvfb-run >/dev/null; then
+if [ "${XVFB:-0}" = "1" ] && command -v xvfb-run >/dev/null; then
   WRAP="xvfb-run -a -s '-screen 0 1280x1024x24'"
 fi
 export LIBGL_ALWAYS_SOFTWARE=${LIBGL_ALWAYS_SOFTWARE:-1}
+LABEL=${LABEL:-"gl=$GL xvfb=${XVFB:-0} full=${FULL:-0}"}
 
 mean_rgb() { ffmpeg -v error -i "$1" -vf scale=1:1 -f rawvideo -pix_fmt rgb24 - 2>/dev/null | od -An -tu1 | awk '{print $1","$2","$3}'; }
 
@@ -37,12 +38,14 @@ run_case() { # tag komposisi props frame
   printf 'DIFF %-12s rgb=%-13s rc=%s %s\n' "$tag" "$v" "$rc" "$glr"
 }
 
-# probe: kubus polos, TANPA composer. Kalau ini gambar → GL sehat.
-run_case probe Probe '{}' 30
-# beerflood penuh: composer ter-mount.
-run_case flood BeerFlood '{"diag":true}' 60
-# beerflood tanpa composer: kalau ini gambar → composer penyebabnya.
+echo "=== $LABEL"
+echo "# kontrol: kubus tanpa composer (harus oranye), scene tanpa composer (terlihat), composer HDR (duga: kosong)"
+run_case probe      Probe     '{}' 30
 run_case nocomposer BeerFlood '{"post":{"composer":false}}' 60
-
-echo "--- catatan: latar BeerFlood 207,226,245 = kosong; kubus probe ~ oranye (R>G>B)"
+run_case hdr        BeerFlood '{}' 60
+echo "# composer LDR (UnsignedByte): tiga varian"
+run_case ldr        BeerFlood '{"post":{"ldr":true}}' 60
+run_case ldrmsaa0   BeerFlood '{"post":{"ldr":true,"msaa":0}}' 60
+run_case ldronly    BeerFlood '{"post":{"ldr":true,"msaa":0,"lens":false,"bloom":false}}' 60
+echo "--- acuan: 207,226,245 = kosong · ~110,115,131 = scene polos · oranye = kubus probe"
 echo "--- log: out/smoke/d_*.log"
