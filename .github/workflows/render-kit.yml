@@ -117,8 +117,8 @@ jobs:
             kit/stills
           if-no-files-found: warn
 
-      - name: Unggah frame mentah (hanya kalau encode gagal)
-        if: failure()
+      - name: Unggah frame mentah (kalau encode dilewati atau gagal)
+        if: ${{ failure() || contains(inputs.frames, ',') }}
         uses: actions/upload-artifact@v4
         with:
           name: frames-mentah
