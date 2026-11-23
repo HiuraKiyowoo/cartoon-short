@@ -144,8 +144,8 @@ const frame = (f) => {
     case "hadapan": {
       const p = sm(ramp(f, 317, 430));
       C = { pos: A(lv([0, 2.0, 10.4], [0, 1.8, 8.8], p)), look: A(lv([0, 1.75, 3.0], [0, 1.7, 2.9], p)), fov: lerp(40, 35, p), roll: lerp(-2, 2, u) };
-      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 0.85, 0, 2.9, 1.05, false, idle(f, 7), true);
-      person(pelaut({ expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.85, 0, 2.7, 1.02, true, idle(f, 8), true);
+      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 0.6, 0, 2.9, 0.98, false, idle(f, 7), true);
+      person(pelaut({ expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.6, 0, 2.7, 0.98, true, idle(f, 8), true);
       if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -0.85, 2.1, 2.7, 0.7, 0.1);
       break; }
     case "serang": {
@@ -157,8 +157,8 @@ const frame = (f) => {
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
       C = { pos: A(lv([0, 2.1, 8.4], [0, 1.95, 7.0], p)), look: A(lv([0, 2.0, 1.0], [0, 1.95, 0.8], p)), fov: lerp(44, 40, p), roll: lerp(-1.5, 1.5, u) };
-      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.95, 0, 1.0, 0.98, false, idle(f, 11), true);
-      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.98, 0, 0.8, 0.94, true, idle(f, 12), true);
+      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.72, 0, 1.0, 0.92, false, idle(f, 11), true);
+      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.75, 0, 0.8, 0.9, true, idle(f, 12), true);
       fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 0.4, 0.7, 0, true);
       break; }
     case "amsterdam": {
@@ -176,8 +176,8 @@ const frame = (f) => {
     case "tulip": {
       const p = sm(ramp(f, 826, 895));
       C = { pos: A(lv([0, 2.2, 12], [0, 2.0, 10.4], p)), look: A(lv([0, 1.6, 4.4], [0, 1.5, 4.0], p)), fov: lerp(44, 40, p), roll: lerp(1.5, -1.5, u) };
-      person(pelaut({ expr: "grin", look: Math.sin(f / 13) }), -0.95, 0, 4.6, 0.98, false, idle(f, 16), true);
-      person(serdadu({ expr: "neutral" }), 0.95, 0, 4.9, 0.98, true, idle(f, 17), true);
+      person(pelaut({ expr: "grin", look: Math.sin(f / 13) }), -0.72, 0, 4.6, 0.92, false, idle(f, 16), true);
+      person(serdadu({ expr: "neutral" }), 0.75, 0, 4.9, 0.92, true, idle(f, 17), true);
       fx("spark", ((f - 826) % 28) / 28, 0.0, 1.5, 4.2, 0.65, 0, true);
       break; }
     case "kota": {
@@ -187,8 +187,8 @@ const frame = (f) => {
     case "gelap": {
       const p = sm(ramp(f, 1004, 1070));
       C = { pos: A(lv([0, 1.8, 5.4], [0, 1.6, 4.4], p)), look: A(lv([0, 1.15, -0.9], [0, 1.1, -1.1], p)), fov: lerp(42, 38, p), roll: lerp(-1, 1, u) };
-      person(raja({ expr: "stern", look: Math.sin(f / 20) }), -0.8, 0, -1.4, 0.95, false, idle(f, 18), true);
-      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 0.8, 0, -1.4, 0.95, true, idle(f, 19), true);
+      person(raja({ expr: "stern", look: Math.sin(f / 20) }), -0.58, 0, -1.4, 0.9, false, idle(f, 18), true);
+      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 0.58, 0, -1.4, 0.9, true, idle(f, 19), true);
       fx("glow", ((f - 1004) % 40) / 40, 0.5, 1.3, 0.3, 1.0, 0, true);
       break; }
     case "adidaya": {

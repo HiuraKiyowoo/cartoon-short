@@ -96,6 +96,9 @@ jobs:
 
       - name: Encode video (tanpa audio)
         id: enc
+        # hanya untuk frame berurutan; rangkaian uji (70,190,...) punya lubang sehingga
+        # pola f%04d gagal dengan "No such file or directory"
+        if: ${{ !contains(inputs.frames, ',') }}
         working-directory: kit
         run: |
           set -o pipefail
