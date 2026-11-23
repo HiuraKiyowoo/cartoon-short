@@ -174,8 +174,8 @@ const frame = (f) => {
     case "kelas": {
       const p = sm(ramp(f, 710, 800));
       C = { pos: A(lv([0, 1.9, 5.2], [0, 1.75, 4.0], p)), look: A(lv([0, 2.4, -4], [0, 2.5, -5], p)), fov: lerp(48, 44, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -1.5, 0, -2.6, 0.88, false, idle(f, 14), true);
-      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 1.5, 0, -2.6, 0.88, true, idle(f, 15), true);
+      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -0.9, 0, -2.9, 0.88, false, idle(f, 14), true);
+      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 0.95, 0, -2.9, 0.88, true, idle(f, 15), true);
       break; }
     case "tulip": {
       const p = sm(ramp(f, 826, 895));
@@ -191,8 +191,8 @@ const frame = (f) => {
     case "gelap": {
       const p = sm(ramp(f, 1004, 1070));
       C = { pos: A(lv([0, 1.8, 5.6], [0, 1.6, 4.6], p)), look: A(lv([0, 1.15, -0.8], [0, 1.1, -1.0], p)), fov: lerp(44, 40, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 1, expr: "stern", look: Math.sin(f / 20) }), -1.15, 0, -1.2, 0.95, false, idle(f, 18), true);
-      person(guard({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 1.15, 0, -1.2, 0.95, true, idle(f, 19), true);
+      person(folk({ v: 1, expr: "stern", look: Math.sin(f / 20) }), -0.8, 0, -1.4, 0.92, false, idle(f, 18), true);
+      person(guard({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 0.85, 0, -1.4, 0.92, true, idle(f, 19), true);
       fx("glow", ((f - 1004) % 40) / 40, 1.15, 1.35, 0.55, 1.1, 0, true);
       break; }
     case "adidaya": {
