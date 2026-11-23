@@ -157,14 +157,14 @@ const frame = (f) => {
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
       C = { pos: A(lv([0, 3.4, 9.6], [0, 3.2, 8.2], p)), look: A(lv([0, 3.0, 2.2], [0, 2.95, 2.0], p)), fov: lerp(46, 42, p), roll: lerp(-1.5, 1.5, u) };
-      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.8, 1.68, 2.2, 0.92, false, idle(f, 11), false);
-      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.85, 1.68, 2.0, 0.9, true, idle(f, 12), false);
+      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.8, 1.68, 2.85, 0.92, false, idle(f, 11), true);
+      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.85, 1.68, 2.65, 0.9, true, idle(f, 12), true);
       fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 0.4, 0.7, 0, true);
       break; }
     case "amsterdam": {
       const p = sm(ramp(f, 617, 690));
       C = { pos: A(lv([0, 3.2, 10.6], [0, 3.8, 8.6], p)), look: A(lv([0, 3.1, 1.6], [0, 3.5, 0.6], p)), fov: lerp(48, 44, p), roll: lerp(-2, 2, u) };
-      person(raja({ expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.75, 1.68, 2.2, 1.0, false, idle(f, 13), false);
+      person(raja({ expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.75, 1.68, 2.9, 1.0, false, idle(f, 13), true);
       if (f > 660) fx("spark", ((f - 660) % 22) / 22, -0.6, 2.5, 1.2, 0.8, 0, true);
       break; }
     case "kelas": {
