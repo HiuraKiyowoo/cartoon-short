@@ -104,7 +104,8 @@ jobs:
         id: enc
         # hanya untuk frame berurutan; rangkaian uji (70,190,...) punya lubang sehingga
         # pola f%04d gagal dengan "No such file or directory"
-        if: ${{ !contains(inputs.frames, ',') }}
+        # hanya kalau mulai dari frame 0 dan berurutan
+        if: ${{ startsWith(inputs.frames, '0-') }}
         working-directory: kit
         run: |
           set -o pipefail
