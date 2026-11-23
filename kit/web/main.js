@@ -4,6 +4,7 @@ import { drawFx4 as drawFx2 } from "./fx4.js";
 import { Pen, INK } from "./toon.ts";
 import { addM, mkMat, buildDesk, buildHall } from "./world.js";
 import { buildHarbor, buildTown, buildQuayProps } from "./world2.js";
+import { buildKelas, buildRuangPeta } from "./world_belanda.js";
 
 const Q = new URLSearchParams(location.search), W = +(Q.get("w") || 1080), H = Math.round((W * 16) / 9);
 const FPS = 30, TOTAL = 1180, SU = 0.00216;
@@ -24,16 +25,18 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x555555, 1), sun = new THREE.D
 // ---------------------------------------------------------------- panggung
 // Cerita: "Belanda menjadi jajahan Indonesia" (alternatif sejarah).
 // Tahap 1 = pelabuhan + armada (modul buildHarbor). Tahap kota/kelas menyusul.
-const ORG = { H: [0, 0, 0], T: [400, 0, 0] };
+const ORG = { H: [0, 0, 0], T: [400, 0, 0], K: [800, 0, 0], S: [1200, 0, 0] };
 const grp = (k) => { const g = new THREE.Group(); g.position.set(...ORG[k]); scene.add(g); return g; };
-const gH = grp("H"), gT = grp("T");
+const gH = grp("H"), gT = grp("T"), gK = grp("K"), gS = grp("S");
 const WH = buildHarbor(gH), WT = buildTown(gT); const WP = buildQuayProps(gH);
-const stages = { H: gH, T: gT };
+const WK = buildKelas(gK), WS2 = buildRuangPeta(gS);
+const stages = { H: gH, T: gT, K: gK, S: gS };
 
 const LOOK = {
   pagi: { bg: ["#7cc4f0", "#ffeec9"], fog: 0xf2e2c0, fn: [60, 260], hemi: [0xffffff, 0x9fb4c0, 1.15], dir: [0xfff2cf, 1.5, [-6, 11, 8]], card: 0xfff6e6 },
   senja: { bg: ["#8a5f8f", "#ffb072"], fog: 0xe0a888, fn: [40, 190], hemi: [0xffe2c8, 0x6f6070, 1.1], dir: [0xffc487, 1.45, [-6, 8, 8]], card: 0xffe8d6 },
   malam: { bg: ["#1a2440", "#4a5a86"], fog: 0x27324e, fn: [30, 150], hemi: [0xa8c0ff, 0x2a3348, 0.85], dir: [0xbcd0ff, 0.75, [-6, 9, 7]], card: 0xdfe6ff },
+  kelas: { bg: ["#f3e2c4", "#e2c79c"], fog: 0xdcc9a8, fn: [14, 46], hemi: [0xfff4e0, 0xa98c62, 1.25], dir: [0xffeccb, 1.15, [-2, 7, 6]], card: 0xfff6e8 },
 };
 const bgTex = {}; for (const k in LOOK) { const c = document.createElement("canvas"); c.width = 4; c.height = 256; const g = c.getContext("2d"); const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, LOOK[k].bg[0]); gr.addColorStop(1, LOOK[k].bg[1]); g.fillStyle = gr; g.fillRect(0, 0, 4, 256); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; bgTex[k] = t; }
 let curLook = null, cardTint = new THREE.Color(1, 1, 1);
@@ -86,7 +89,16 @@ const SHOTS = [
   { id: "dermaga", a: 150, b: 229, st: "H", look: "pagi" },
   { id: "datang", a: 233, b: 316, st: "H", look: "senja" },
   { id: "hadapan", a: 317, b: 488, st: "H", look: "senja" },
-  { id: "sisa", a: 488, b: 1451, st: "H", look: "pagi" },
+  { id: "serang", a: 488, b: 569, st: "H", look: "senja" },
+  { id: "pasar", a: 570, b: 616, st: "T", look: "pagi" },
+  { id: "amsterdam", a: 617, b: 709, st: "T", look: "senja" },
+  { id: "kelas", a: 710, b: 825, st: "K", look: "kelas" },
+  { id: "tulip", a: 826, b: 908, st: "H", look: "pagi" },
+  { id: "kota", a: 909, b: 1003, st: "T", look: "senja" },
+  { id: "gelap", a: 1004, b: 1088, st: "S", look: "malam" },
+  { id: "adidaya", a: 1089, b: 1200, st: "T", look: "pagi" },
+  { id: "ulang", a: 1201, b: 1299, st: "H", look: "malam" },
+  { id: "akhir", a: 1300, b: 1451, st: "H", look: "senja" },
 ];
 const TOTALF = 1451;
 const shotAt = (f) => SHOTS.find((s) => f >= s.a && f < s.b) || SHOTS[SHOTS.length - 1];
@@ -137,6 +149,65 @@ const frame = (f) => {
       person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 1.25, 0, 2.6, 1.12, false, idle(f, 7), true);
       person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -1.05, 0, 2.3, 1.1, true, idle(f, 8), true);
       if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -1.05, 2.15, 2.3, 0.7, 0.1);
+      break; }
+    case "serang": {
+      const p = sm(ramp(f, 488, 560));
+      C = { pos: A(lv([0, 4.2, 20], [-2.0, 3.4, 15], p)), look: A(lv([0, 3.6, -6], [0, 3.2, -8], p)), fov: lerp(50, 46, p), roll: lerp(2, -2, u) };
+      const hit = 500 + ((f - 500) % 34);
+      const st = ramp(f, hit, hit + 8);
+      if (f > 500) fx("boom", ((f - 500) % 34) / 34, (f % 2 ? 1 : -1) * 5.5, 4.0, -5.4, 1.6 * (1 - st * 0.4), 0, true);
+      if (f > 500) fx("smoke", ((f - 500) % 34) / 34, (f % 2 ? 1 : -1) * 5.0, 4.6, -5.6, 2.6, 0, true);
+      break; }
+    case "pasar": {
+      const p = sm(ramp(f, 570, 606));
+      C = { pos: A(lv([1.6, 2.0, 9], [0.4, 1.85, 6.6], p)), look: A(lv([0, 2.3, -2], [0.2, 2.1, -3.4], p)), fov: lerp(46, 41, p), roll: lerp(-1.5, 1.5, u) };
+      person(folk({ v: 2, expr: "grin", look: Math.sin(f / 12) }), -1.3, 0, 3.4, 1.0, false, idle(f, 11), true);
+      person(folk({ v: 5, expr: "neutral", look: Math.sin(f / 14 + 1) }), 1.5, 0, 3.0, 1.0, true, idle(f, 12), true);
+      fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 2.6, 0.7, 0, true);
+      break; }
+    case "amsterdam": {
+      const p = sm(ramp(f, 617, 690));
+      C = { pos: A(lv([3.0, 2.8, 15], [1.0, 3.4, 10], p)), look: A(lv([0, 3.0, -8], [0, 3.6, -12], p)), fov: lerp(50, 46, p), roll: lerp(-2, 2, u) };
+      person(folk({ v: 4, expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.6, 0, 2.4, 1.06, false, idle(f, 13), true);
+      if (f > 660) fx("spark", ((f - 660) % 22) / 22, -0.6, 2.5, 2.4, 0.8, 0, true);
+      break; }
+    case "kelas": {
+      const p = sm(ramp(f, 710, 800));
+      C = { pos: A(lv([0, 1.9, 5.2], [0, 1.75, 4.0], p)), look: A(lv([0, 2.4, -4], [0, 2.5, -5], p)), fov: lerp(48, 44, p), roll: lerp(-1, 1, u) };
+      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -2.3, 0, 0.9, 0.95, false, idle(f, 14), true);
+      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 2.3, 0, 0.9, 0.95, true, idle(f, 15), true);
+      break; }
+    case "tulip": {
+      const p = sm(ramp(f, 826, 895));
+      C = { pos: A(lv([1.2, 2.2, 11], [0.2, 1.9, 8.6], p)), look: A(lv([0, 1.5, 3.6], [0, 1.4, 3.0], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
+      person(folk({ v: 5, expr: "grin", look: Math.sin(f / 13) }), -1.6, 0, 4.8, 1.05, false, idle(f, 16), true);
+      person(guard({ expr: "neutral" }), 1.7, 0, 5.2, 1.05, true, idle(f, 17), true);
+      fx("spark", ((f - 826) % 28) / 28, 0.0, 1.5, 3.8, 0.65, 0, true);
+      break; }
+    case "kota": {
+      const p = sm(ramp(f, 909, 990));
+      C = { pos: A(lv([0, 10.5, 30], [0, 15.0, 40], p)), look: A(lv([0, 2.0, -14], [0, 1.4, -20], p)), fov: lerp(52, 48, p), roll: lerp(-2, 2, u) };
+      break; }
+    case "gelap": {
+      const p = sm(ramp(f, 1004, 1070));
+      C = { pos: A(lv([0, 1.6, 3.6], [0, 1.45, 2.6], p)), look: A(lv([0, 1.15, -0.4], [0, 1.1, -0.6], p)), fov: lerp(42, 38, p), roll: lerp(-1, 1, u) };
+      person(folk({ v: 1, expr: "stern", look: Math.sin(f / 20) }), -1.5, 0, -1.2, 1.0, false, idle(f, 18), true);
+      person(guard({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 1.5, 0, -1.2, 1.0, true, idle(f, 19), true);
+      fx("glow", ((f - 1004) % 40) / 40, 1.15, 1.35, 0.55, 1.1, 0, true);
+      break; }
+    case "adidaya": {
+      const p = sm(ramp(f, 1089, 1180));
+      C = { pos: A(lv([-7.5, 3.4, 12], [7.0, 3.4, 12], p)), look: A(lv([0, 2.6, -8], [0, 2.6, -8], p)), fov: 50, roll: lerp(-1, 1, u) };
+      break; }
+    case "ulang": {
+      const p = sm(ramp(f, 1201, 1280));
+      C = { pos: A(lv([0, 3.4, 22], [0, 3.0, 18], p)), look: A(lv([0, 4.2, -6], [0, 3.8, -6], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
+      if (f > 1230) fx("smoke", ((f - 1230) % 46) / 46, -3.0, 2.4, -4.0, 2.2, 0, true);
+      break; }
+    case "akhir": {
+      const p = sm(ramp(f, 1300, 1430));
+      C = { pos: A(lv([3.0, 3.4, -62], [8.0, 5.2, -84], p)), look: A(lv([0, 4.4, -20], [-2, 5.2, -14], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
+      if (f > 1340) fx("bird", ((f - 1340) % 44) / 44, -8.0 + ((f - 1340) % 44) / 44 * 14, 7.6, -30, 0.9, 0, false);
       break; }
     default: {
       C = { pos: A([0, 6.5, 50]), look: A([0, 3.0, -28]), fov: 48, roll: Math.sin(f / 90) * 1.2 };
