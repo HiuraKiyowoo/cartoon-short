@@ -10,9 +10,9 @@ export const OUT = {
 
 // ---- pakaian khusus cerita "Belanda jadi jajahan Indonesia" ----
 // pelaut Nusantara: kemeja bergaris, kain ikat kepala, sabuk kain, telanjang kaki
-// PENTING: townsfolk(v) bisa membawa `dress` (dan itu menggambar gaun panjang TANPA lengan).
-// Untuk pelaut, `dress` wajib dikosongkan supaya engine memakai potongan jaket + celana.
-export const PELAUT = { ...townsfolk(3), dress: undefined, jacket: "#3f6fb5", pants: "#e6d9bd", boots: "#c9a06a", hat: "hair", hair: "#2a201a", sash: "#b0453c", belt: null, buttons: "#f2e6c8" };
+// Pelaut Nusantara — ditulis bersih dari nol (tanpa mewarisi townsfolk) supaya tidak ada
+// sisa `dress`/`sash` yang membuat siluetnya bertabrakan seperti gaun.
+export const PELAUT = { dress: undefined, sash: undefined, belt: undefined, jacket: "#3f6fb5", pants: "#e6d9bd", boots: "#c9a06a", hat: "hair", hair: "#2a201a", buttons: "#f2e6c8" };
 // raja/penguasa Nusantara: jubah gelap, kain emas, penutup kepala tinggi
 export const RAJA = { ...OFFICER, jacket: "#5a2f6e", pants: "#3a2440", boots: "#241726", hat: "shako_tall", cap: "#e8c45a", sash: "#e8c45a", sword: true, rifle: false, belt: null, moustache: null, skin: "#e8c39a", build: "stout" };
 // murid sekolah: seragam sederhana + topi
