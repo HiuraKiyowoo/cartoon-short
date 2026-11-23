@@ -3,7 +3,7 @@ import { drawAny, headGeo, CW, CH } from "./cast.js";
 import { drawFx4 as drawFx2 } from "./fx4.js";
 import { Pen, INK } from "./toon.ts";
 import { addM, mkMat, buildDesk, buildHall } from "./world.js";
-import { buildHarbor, buildTown } from "./world2.js";
+import { buildHarbor, buildTown, buildQuayProps } from "./world2.js";
 
 const Q = new URLSearchParams(location.search), W = +(Q.get("w") || 1080), H = Math.round((W * 16) / 9);
 const FPS = 30, TOTAL = 1180, SU = 0.00216;
@@ -27,7 +27,7 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x555555, 1), sun = new THREE.D
 const ORG = { H: [0, 0, 0], T: [400, 0, 0] };
 const grp = (k) => { const g = new THREE.Group(); g.position.set(...ORG[k]); scene.add(g); return g; };
 const gH = grp("H"), gT = grp("T");
-const WH = buildHarbor(gH), WT = buildTown(gT);
+const WH = buildHarbor(gH), WT = buildTown(gT); const WP = buildQuayProps(gH);
 const stages = { H: gH, T: gT };
 
 const LOOK = {
