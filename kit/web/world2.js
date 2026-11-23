@@ -44,7 +44,10 @@ export const buildTown = (par) => {
   o.g = g; return o;
 };
 // ---------------------------------------------------------------- HARBOUR / FORTRESS / FLEET
-const ship = (par, x, z, s = 1, ry = 0) => {
+const sailTex = cvTex("sail", 256, 256, (g, w, h) => { g.fillStyle = "#f7f0dd"; g.fillRect(0, 0, w, h); g.fillStyle = "rgba(214,201,172,.55)"; for (let i = 1; i < 7; i++) g.fillRect(0, (i * h) / 7 - 3, w, 6); g.strokeStyle = "#c9bda0"; g.lineWidth = 8; g.strokeRect(4, 4, w - 8, h - 8); });
+const sailMat = new THREE.MeshBasicMaterial({ map: sailTex, side: THREE.DoubleSide });
+
+const ship = (par, x, z, s = 1, ry = 0, layar = false) => {
   const sg = new THREE.Group(); sg.position.set(x, 0, z); sg.rotation.y = ry; sg.scale.setScalar(s); par.add(sg);
   const sh = new THREE.Shape(); sh.moveTo(-6, 2.0); sh.lineTo(-5.2, 0); sh.lineTo(4.6, 0); sh.lineTo(6.6, 2.2); sh.lineTo(5.6, 2.2); sh.lineTo(-6, 2.0);
   const hg = new THREE.ExtrudeGeometry(sh, { depth: 3.2, bevelEnabled: false }); hg.translate(0, 0, -1.6);
@@ -53,6 +56,13 @@ const ship = (par, x, z, s = 1, ry = 0) => {
   for (let i = 0; i < 5; i++) for (const sz of [-1, 1]) addM(sg, box(0.55, 0.45, 0.1), mkMat(0x1c1420), [-3.4 + i * 1.7, 0.85, sz * 1.62], { ink: 0.01 });
   for (const mx of [-3.4, 0.2, 3.6]) { addM(sg, cyl(0.12, 0.16, 9, 7), mkMat(0x5a3a26), [mx, 6.3, 0], { ink: 0.02 }); addM(sg, box(0.12, 0.12, 3.8), mkMat(0x5a3a26), [mx, 8.3, 0], { ink: 0.02 }); addM(sg, box(0.12, 0.12, 3.2), mkMat(0x5a3a26), [mx, 5.2, 0], { ink: 0.02 });
     addM(sg, box(0.1, 2.5, 3.5), mkMat(0xfaf3dc), [mx + 0.05, 6.75, 0], { ink: 0.03 }); addM(sg, box(0.1, 2.0, 3.0), mkMat(0xfaf3dc), [mx + 0.05, 3.9, 0], { ink: 0.03 }); }
+  // layar terkembang: dua tingkat per tiang, bidang di sepanjang z (sama arah dengan layar tergulung)
+  if (layar) for (const [mx, y1, y2, wz, hy] of [[-3.4, 6.6, 3.9, 3.5, 2.5], [0.2, 8.0, 5.2, 3.7, 2.6], [3.6, 6.4, 3.8, 3.3, 2.4]]) {
+    for (const [y, wz2, hy2] of [[y1, wz, hy], [y2, wz * 0.85, hy * 0.8]]) {
+      const sl = new THREE.Mesh(new THREE.PlaneGeometry(wz2, hy2), sailMat);
+      sl.position.set(mx, y, 0); sl.rotation.y = Math.PI / 2; sg.add(sl);
+    }
+  }
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 1.2), flagMat(flagTex(["#2a4f9e", "#ffffff", "#d5343b"]))); fl.position.set(3.6, 11.0, 0.9); fl.rotation.y = Math.PI / 2; sg.add(fl);
   const guns = []; for (let i = 0; i < 5; i++) guns.push([x + Math.cos(ry) * (-3.4 + i * 1.7) * s, 0.85 * s, z - Math.sin(ry) * (-3.4 + i * 1.7) * s + 1.7 * s]);
   return { g: sg, guns };
@@ -73,7 +83,7 @@ export const buildHarbor = (par) => {
   for (let i = 0; i < 9; i++) addM(g, new THREE.SphereGeometry(0.28, 8, 6), mkMat(0x34363f), [-2 + (i % 3) * 0.55, 0.28, -1.0 + Math.floor(i / 3) * 0.55], { ink: 0.02 });
   for (let i = 0; i < 9; i++) palm(g, (r() - 0.5) * 60, 6 + r() * 26, 0.9 + r() * 0.6, r() * 6);
   // fleet
-  o.ships = [ship(g, -16, -28, 1.2), ship(g, 2, -38, 1.35), ship(g, 20, -30, 1.2), ship(g, -34, -46, 1.2), ship(g, 38, -50, 1.2)];
+  o.ships = [ship(g, -15, -24, 1.2, 0, true), ship(g, 1, -34, 1.35, 0, true), ship(g, 19, -26, 1.2, 0, true), ship(g, -32, -42, 1.25, 0, true), ship(g, 36, -46, 1.2, 0, true)];
   for (let i = 0; i < 4; i++) addM(g, new THREE.SphereGeometry(30 + r() * 14, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), mkMat(0x6aa07a), [-90 + i * 60, -1, -170], { ink: 0.1 });
   o.g = g; return o;
 };

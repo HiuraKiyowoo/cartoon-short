@@ -110,7 +110,7 @@ const frame = (f) => {
     case "armada": {
       // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
       const p = sm(ramp(f, 0, 120));
-      C = { pos: A(lv([0, 6.0, 26], [0, 7.2, 30], p)), look: A(lv([0, 3.0, -20], [0, 2.6, -28], p)), fov: lerp(56, 52, p), roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0, 2.8, 14], [0, 4.2, 10], p)), look: A(lv([0, 4.2, -30], [-1, 5.0, -36], p)), fov: lerp(56, 52, p), roll: lerp(-1.5, 1.5, u) };
       person(folk({ v: 1, expr: "grin", look: Math.sin(f / 18) }), -2.1, 0, 2.0, 0.85, false, idle(f, 1), true);
       person(folk({ v: 4, expr: "grin", look: Math.sin(f / 16 + 2) }), 2.1, 0, 3.2, 0.85, true, idle(f, 2), true);
       if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 5.0, 1.4, -0.5, 9.0, 0, true);
@@ -123,7 +123,7 @@ const frame = (f) => {
       break; }
     case "datang": {
       const p = sm(ramp(f, 233, 300));
-      C = { pos: A(lv([2.0, 2.6, -8], [1.0, 3.0, -14], p)), look: A(lv([2, 3.6, -40], [-2, 3.2, -46], p)), fov: 47, roll: lerp(1.5, -1.5, u) };
+      C = { pos: A(lv([9.0, 2.4, 6], [5.0, 2.8, -2], p)), look: A(lv([-8, 4.2, -34], [-12, 4.4, -40], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
       
       fx("splash", ((f - 233) % 24) / 24, -2.0, 0.05, -14.0, 1.1);
       break; }
