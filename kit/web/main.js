@@ -110,29 +110,29 @@ const frame = (f) => {
     case "armada": {
       // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
       const p = sm(ramp(f, 0, 120));
-      C = { pos: A(lv([0, 7.5, 40], [0, 9.0, 46], p)), look: A(lv([0, 4.5, -26], [0, 3.6, -34], p)), fov: lerp(54, 50, p), roll: lerp(-1.5, 1.5, u) };
-      person(folk({ v: 1, expr: "grin", look: Math.sin(f / 18) }), -1.9, 0, 30.0, 0.8, false, idle(f, 1), true);
-      person(folk({ v: 4, expr: "grin", look: Math.sin(f / 16 + 2) }), 1.9, 0, 31.0, 0.8, true, idle(f, 2), true);
-      if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 3.5, 0.6, -6.0, 9.0, 0, true);
+      C = { pos: A(lv([0, 6.0, 26], [0, 7.2, 30], p)), look: A(lv([0, 3.0, -20], [0, 2.6, -28], p)), fov: lerp(56, 52, p), roll: lerp(-1.5, 1.5, u) };
+      person(folk({ v: 1, expr: "grin", look: Math.sin(f / 18) }), -2.1, 0, 2.0, 0.85, false, idle(f, 1), true);
+      person(folk({ v: 4, expr: "grin", look: Math.sin(f / 16 + 2) }), 2.1, 0, 3.2, 0.85, true, idle(f, 2), true);
+      if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 5.0, 1.4, -0.5, 9.0, 0, true);
       break; }
     case "dermaga": {
       const p = sm(ramp(f, 150, 215));
-      C = { pos: A(lv([-16, 3.6, 8], [-11, 3.0, -2], p)), look: A(lv([6, 3.2, -30], [10, 3.4, -36], p)), fov: lerp(52, 47, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 12) }), -0.9, 0, 30.0, 1.05, false, idle(f, 3), true);
-      fx("steam", ((f - 150) % 30) / 30, -0.9, 1.35, 9.0, 0.5);
+      C = { pos: A(lv([-9, 2.8, 13], [-6.5, 2.4, 9], p)), look: A(lv([0.4, 1.8, 2.2], [0.2, 1.7, 1.8], p)), fov: lerp(46, 40, p), roll: lerp(-1, 1, u) };
+      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 12) }), 0.0, 0, 2.0, 1.05, false, idle(f, 3), true);
+      fx("steam", ((f - 150) % 30) / 30, 0.0, 1.35, 2.0, 0.5);
       break; }
     case "datang": {
       const p = sm(ramp(f, 233, 300));
       C = { pos: A(lv([2.0, 2.6, -8], [1.0, 3.0, -14], p)), look: A(lv([2, 3.6, -40], [-2, 3.2, -46], p)), fov: 47, roll: lerp(1.5, -1.5, u) };
-      person(folk({ v: 5, expr: "nervous", look: 1 }), -0.5, 0, 30.5, 0.95, false, idle(f, 5), true);
-      fx("splash", ((f - 233) % 24) / 24, -2.2, 0.05, 6.0, 0.9);
+      
+      fx("splash", ((f - 233) % 24) / 24, -3.0, 0.05, -14.0, 0.9);
       break; }
     case "hadapan": {
       const p = sm(ramp(f, 317, 430));
-      C = { pos: A(lv([-1.6, 1.8, 35.0], [-0.4, 1.68, 33.2], p)), look: A(lv([1.2, 1.7, 30.0], [0.6, 1.62, 29.6], p)), fov: lerp(40, 35, p), roll: lerp(-2, 2, u) };
-      person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 1.35, 0, 30.2, 1.12, false, idle(f, 7), true);
-      person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.55, 0, 29.8, 1.1, true, idle(f, 8), true);
-      if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -0.55, 2.1, 29.8, 0.7, 0.1);
+      C = { pos: A(lv([-2.8, 2.0, 9.5], [-2.2, 1.75, 7.6], p)), look: A(lv([0.5, 1.65, 2.4], [0.3, 1.6, 2.2], p)), fov: lerp(42, 36, p), roll: lerp(-2, 2, u) };
+      person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 1.25, 0, 2.6, 1.12, false, idle(f, 7), true);
+      person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -1.05, 0, 2.3, 1.1, true, idle(f, 8), true);
+      if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -1.05, 2.15, 2.3, 0.7, 0.1);
       break; }
     default: {
       C = { pos: A([0, 6.5, 50]), look: A([0, 3.0, -28]), fov: 48, roll: Math.sin(f / 90) * 1.2 };
