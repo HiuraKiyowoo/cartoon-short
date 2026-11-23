@@ -87,3 +87,26 @@ export const buildHarbor = (par) => {
   for (let i = 0; i < 4; i++) addM(g, new THREE.SphereGeometry(30 + r() * 14, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), mkMat(0x6aa07a), [-90 + i * 60, -1, -170], { ink: 0.1 });
   o.g = g; return o;
 };
+
+// ---------------------------------------------------------------- PROP DERMAGA (tong, peti, tiang tambat, tali)
+export const buildQuayProps = (par) => {
+  const g = new THREE.Group(); par.add(g); const r = R(73), o = { tong: [], peti: [], tiang: [] };
+  const kayu = mkMat(T("plain", "#8a5f39", null, 2, 2)), besi = mkMat(0x4a4a52), tali = mkMat(0xc9b184);
+  const tong = (x, z, s = 1) => { const gr = new THREE.Group(); gr.position.set(x, 0, z); gr.rotation.y = r() * 6.28; g.add(gr);
+    addM(gr, cyl(0.42 * s, 0.38 * s, 0.95 * s, 12), kayu, [0, 0.475 * s, 0], { ink: 0.03 });
+    for (const y of [0.2, 0.5, 0.8]) addM(gr, cyl(0.44 * s, 0.44 * s, 0.07 * s, 12), besi, [0, y * s, 0], { ink: 0.02 });
+    o.tong.push(gr); return gr; };
+  const peti = (x, z, s = 1) => { const gr = new THREE.Group(); gr.position.set(x, 0, z); gr.rotation.y = r() * 1.2 - 0.6; g.add(gr);
+    addM(gr, box(0.9 * s, 0.62 * s, 0.66 * s), kayu, [0, 0.31 * s, 0], { ink: 0.035 });
+    addM(gr, box(0.94 * s, 0.08 * s, 0.7 * s), mkMat(0x6e4a30), [0, 0.6 * s, 0], { ink: 0.02 });
+    o.peti.push(gr); return gr; };
+  const tiangTambat = (x, z) => { addM(g, cyl(0.19, 0.22, 1.15, 10), mkMat(0x6e4a30), [x, 0.57, z], { ink: 0.03 });
+    addM(g, cyl(0.21, 0.21, 0.12, 10), besi, [x, 1.12, z], { ink: 0.02 }); o.tiang.push([x, z]); };
+  // tepi quay (z ~ 9..13), dua sisi supaya terasa kedalaman
+  tong(-5.4, 4.2, 1.0); tong(-6.1, 5.0, 0.95); tong(5.0, 3.9, 1.0); tong(-6.2, 12.4, 1.0);
+  peti(-4.0, 4.0, 1.15); peti(-3.2, 4.9, 0.9); peti(3.9, 4.4, 1.05); peti(5.6, 5.2, 1.0);
+  tiangTambat(-7.4, 4.6); tiangTambat(0.4, 4.2); tiangTambat(6.8, 4.8); tiangTambat(9.6, 6.0);
+  // gulungan tali di geladak
+  for (let i = 0; i < 6; i++) addM(g, new THREE.TorusGeometry(0.34, 0.07, 6, 14), tali, [-4.6 + i * 0.16, 0.09 + i * 0.055, 5.6], { rot: [-Math.PI / 2, 0, 0], ink: 0.02 });
+  o.g = g; return o;
+};
