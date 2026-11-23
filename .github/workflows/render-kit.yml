@@ -21,6 +21,9 @@ on:
       audio:
         description: "1 = jalankan work/audio.py + work/mix.py (butuh work/voice.mp3)"
         default: "0"
+      audit:
+        description: "frame yang diaudit penempatannya (kosong = lewati). Mis. 0,150,300"
+        default: "0,150,300,450,599"
 
 jobs:
   render:
@@ -58,6 +61,11 @@ jobs:
       - name: UJI WEBGL — baca hasilnya sebelum render panjang
         working-directory: kit
         run: node probe_gl.mjs
+
+      - name: AUDIT PENEMPATAN — kartu terpotong / mengapung, diukur
+        if: ${{ inputs.audit != '' }}
+        working-directory: kit
+        run: node probe_frame.mjs "${{ inputs.audit }}" ${{ inputs.width }} || true
 
       - name: Render frame
         working-directory: kit

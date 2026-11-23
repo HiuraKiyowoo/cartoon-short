@@ -274,5 +274,26 @@ const hall = (f, mode) => {
   }
 };
 window.renderFrame = (f) => { frame(f); return renderer.domElement.toDataURL("image/jpeg", 0.93); };
+
+// ---- audit penempatan (dipakai probe_frame.mjs) ----
+// Mengembalikan posisi layar (NDC) tiap kartu yang tampak + tinggi dunia terendahnya,
+// supaya cacat seperti "terpotong tepi frame" atau "mengapung" bisa DIUKUR, bukan ditaksir.
+window.__audit = (f) => {
+  frame(f);
+  const out = [], v = new THREE.Vector3();
+  for (const k of ["p", "f", "b"]) for (const m of pools[k]) {
+    if (!m.visible) continue;
+    const bb = new THREE.Box3().setFromObject(m);
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (const cx of [bb.min.x, bb.max.x]) for (const cy of [bb.min.y, bb.max.y]) for (const cz of [bb.min.z, bb.max.z]) {
+      v.set(cx, cy, cz).project(cam);
+      x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
+    }
+    const r = (n) => Math.round(n * 1000) / 1000;
+    out.push({ pool: k, x0: r(x0), x1: r(x1), y0: r(y0), y1: r(y1), minY: r(bb.min.y), cut: x0 < -1 || x1 > 1 || y0 < -1 || y1 > 1 });
+  }
+  return out;
+};
+
 window.drawOnly = (f) => { frame(f); return true; };
 window.ready = true;
