@@ -67,6 +67,10 @@ jobs:
         working-directory: kit
         run: node probe_frame.mjs "${{ inputs.audit }}" ${{ inputs.width }} || true
 
+      - name: Lembar uji tokoh (selalu, murah)
+        working-directory: kit
+        run: node probe_tokoh.mjs
+
       - name: Render frame
         working-directory: kit
         run: |

@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  body{margin:0;background:#20242c;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px;font:600 16px 'DejaVu Sans',sans-serif;color:#fff}
+  figure{margin:0;background:#2b3040;border-radius:8px;padding:6px}
+  canvas{display:block;width:100%;height:auto;background:#e9e2d2;border-radius:6px}
+  figcaption{text-align:center;padding-top:4px;font-size:14px}
+</style></head><body>
+<script type="module">
+import { drawAny, CW, CH } from "./cast.js";
+const daftar = [
+  ["pelaut", { kind: "pelaut" }],
+  ["raja", { kind: "raja" }],
+  ["murid", { kind: "murid" }],
+  ["serdadu", { kind: "serdadu" }],
+  ["folk", { kind: "folk", v: 2 }],
+];
+for (const [nama, o] of daftar) {
+  const fig = document.createElement("figure");
+  const cv = document.createElement("canvas");
+  cv.width = CW; cv.height = CH;
+  const cap = document.createElement("figcaption");
+  cap.textContent = nama;
+  fig.appendChild(cv); fig.appendChild(cap);
+  document.body.appendChild(fig);
+  try { drawAny(cv, { expr: "neutral", blink: 0, seed: 20, ...o }); }
+  catch (e) { cap.textContent = nama + " ❌ " + e.message; }
+}
+window.ready = true;
+</script></body></html>
