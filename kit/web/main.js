@@ -117,7 +117,7 @@ const frame = (f) => {
       break; }
     case "dermaga": {
       const p = sm(ramp(f, 150, 215));
-      C = { pos: A(lv([-9, 2.8, 13], [-6.5, 2.4, 9], p)), look: A(lv([0.4, 1.8, 2.2], [0.2, 1.7, 1.8], p)), fov: lerp(46, 40, p), roll: lerp(-1, 1, u) };
+      C = { pos: A(lv([-9.5, 3.0, 14], [-8.0, 2.6, 12], p)), look: A(lv([-0.2, 1.7, 2.0], [-0.1, 1.68, 2.0], p)), fov: lerp(48, 42, p), roll: lerp(-1, 1, u) };
       person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 12) }), 0.0, 0, 2.0, 1.05, false, idle(f, 3), true);
       fx("steam", ((f - 150) % 30) / 30, 0.0, 1.35, 2.0, 0.5);
       break; }
@@ -125,11 +125,11 @@ const frame = (f) => {
       const p = sm(ramp(f, 233, 300));
       C = { pos: A(lv([2.0, 2.6, -8], [1.0, 3.0, -14], p)), look: A(lv([2, 3.6, -40], [-2, 3.2, -46], p)), fov: 47, roll: lerp(1.5, -1.5, u) };
       
-      fx("splash", ((f - 233) % 24) / 24, -3.0, 0.05, -14.0, 0.9);
+      fx("splash", ((f - 233) % 24) / 24, -2.0, 0.05, -14.0, 1.1);
       break; }
     case "hadapan": {
       const p = sm(ramp(f, 317, 430));
-      C = { pos: A(lv([-2.8, 2.0, 9.5], [-2.2, 1.75, 7.6], p)), look: A(lv([0.5, 1.65, 2.4], [0.3, 1.6, 2.2], p)), fov: lerp(42, 36, p), roll: lerp(-2, 2, u) };
+      C = { pos: A(lv([-2.6, 2.2, 16.0], [-2.0, 1.9, 13.5], p)), look: A(lv([0.2, 1.7, 2.4], [0.1, 1.66, 2.3], p)), fov: lerp(46, 42, p), roll: lerp(-2, 2, u) };
       person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 1.25, 0, 2.6, 1.12, false, idle(f, 7), true);
       person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -1.05, 0, 2.3, 1.1, true, idle(f, 8), true);
       if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -1.05, 2.15, 2.3, 0.7, 0.1);
