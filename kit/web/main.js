@@ -161,8 +161,8 @@ const frame = (f) => {
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
       C = { pos: A(lv([1.6, 2.0, 9], [0.4, 1.85, 6.6], p)), look: A(lv([0, 2.3, -2], [0.2, 2.1, -3.4], p)), fov: lerp(46, 41, p), roll: lerp(-1.5, 1.5, u) };
-      person(folk({ v: 2, expr: "grin", look: Math.sin(f / 12) }), -1.3, 0, 3.4, 1.0, false, idle(f, 11), true);
-      person(folk({ v: 5, expr: "neutral", look: Math.sin(f / 14 + 1) }), 1.5, 0, 3.0, 1.0, true, idle(f, 12), true);
+      person(folk({ v: 2, expr: "grin", look: Math.sin(f / 12) }), -1.5, 0, 0.2, 1.0, false, idle(f, 11), true);
+      person(folk({ v: 5, expr: "neutral", look: Math.sin(f / 14 + 1) }), 1.6, 0, -0.4, 1.0, true, idle(f, 12), true);
       fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 2.6, 0.7, 0, true);
       break; }
     case "amsterdam": {
@@ -174,14 +174,14 @@ const frame = (f) => {
     case "kelas": {
       const p = sm(ramp(f, 710, 800));
       C = { pos: A(lv([0, 1.9, 5.2], [0, 1.75, 4.0], p)), look: A(lv([0, 2.4, -4], [0, 2.5, -5], p)), fov: lerp(48, 44, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -2.3, 0, 0.9, 0.95, false, idle(f, 14), true);
-      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 2.3, 0, 0.9, 0.95, true, idle(f, 15), true);
+      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -2.3, 0, -2.6, 0.95, false, idle(f, 14), true);
+      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 2.3, 0, -2.6, 0.95, true, idle(f, 15), true);
       break; }
     case "tulip": {
       const p = sm(ramp(f, 826, 895));
       C = { pos: A(lv([1.2, 2.2, 11], [0.2, 1.9, 8.6], p)), look: A(lv([0, 1.5, 3.6], [0, 1.4, 3.0], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
-      person(folk({ v: 5, expr: "grin", look: Math.sin(f / 13) }), -1.6, 0, 4.8, 1.05, false, idle(f, 16), true);
-      person(guard({ expr: "neutral" }), 1.7, 0, 5.2, 1.05, true, idle(f, 17), true);
+      person(folk({ v: 5, expr: "grin", look: Math.sin(f / 13) }), -2.0, 0, 1.4, 1.05, false, idle(f, 16), true);
+      person(guard({ expr: "neutral" }), 2.1, 0, 1.0, 1.05, true, idle(f, 17), true);
       fx("spark", ((f - 826) % 28) / 28, 0.0, 1.5, 3.8, 0.65, 0, true);
       break; }
     case "kota": {
@@ -190,7 +190,7 @@ const frame = (f) => {
       break; }
     case "gelap": {
       const p = sm(ramp(f, 1004, 1070));
-      C = { pos: A(lv([0, 1.6, 3.6], [0, 1.45, 2.6], p)), look: A(lv([0, 1.15, -0.4], [0, 1.1, -0.6], p)), fov: lerp(42, 38, p), roll: lerp(-1, 1, u) };
+      C = { pos: A(lv([0, 1.8, 5.6], [0, 1.6, 4.6], p)), look: A(lv([0, 1.15, -0.8], [0, 1.1, -1.0], p)), fov: lerp(44, 40, p), roll: lerp(-1, 1, u) };
       person(folk({ v: 1, expr: "stern", look: Math.sin(f / 20) }), -1.5, 0, -1.2, 1.0, false, idle(f, 18), true);
       person(guard({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 1.5, 0, -1.2, 1.0, true, idle(f, 19), true);
       fx("glow", ((f - 1004) % 40) / 40, 1.15, 1.35, 0.55, 1.1, 0, true);
