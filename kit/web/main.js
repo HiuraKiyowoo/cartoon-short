@@ -95,6 +95,10 @@ const idle = (f, seed) => Math.sin(f / 14 + seed * 2) * 0.012;
 const hyOf = (seed, stout, s) => (975 - headGeo(seed, 0, stout).hc) * SU * s;
 
 const frame = (f) => {
+  // Sembunyikan SEMUA kartu sebelum menggambar frame ini. Tanpa ini, kartu dari shot
+  // sebelumnya tetap "visible" (pool-nya cuma di-reset penghitungnya) sehingga muncul
+  // sebagai hantu di frame berikutnya — dan audit jadi salah mengukur.
+  for (const k in pools) for (const m of pools[k]) m.visible = false;
   for (const k in used) used[k] = 0; QUEUE = [];
   const S = shotAt(f), u = (f - S.a) / Math.max(1, S.b - S.a); curStage = S.st;
   for (const k in stages) stages[k].visible = k === S.st;
