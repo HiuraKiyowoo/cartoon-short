@@ -1,0 +1,166 @@
+{
+ "duration": 48.352625,
+ "frames30": 1451,
+ "source": "silence-align (cost 1.77)",
+ "segments": [
+  [
+   0.0,
+   1.818254
+  ],
+  [
+   1.994104,
+   4.890884
+  ],
+  [
+   5.558707,
+   7.660431
+  ],
+  [
+   8.128889,
+   10.547937
+  ],
+  [
+   10.921905,
+   16.297347
+  ],
+  [
+   16.833356,
+   18.972721
+  ],
+  [
+   19.31068,
+   20.551315
+  ],
+  [
+   20.832993,
+   23.648594
+  ],
+  [
+   24.182494,
+   24.620363
+  ],
+  [
+   24.803651,
+   27.51619
+  ],
+  [
+   27.964739,
+   30.268186
+  ],
+  [
+   30.573719,
+   33.437596
+  ],
+  [
+   34.051134,
+   34.450907
+  ],
+  [
+   34.623605,
+   36.22356
+  ],
+  [
+   36.780295,
+   39.441429
+  ],
+  [
+   39.765941,
+   43.125714
+  ],
+  [
+   43.628753,
+   45.509161
+  ],
+  [
+   45.922653,
+   48.112336
+  ]
+ ],
+ "phrases": [
+  {
+   "text": "Bagaimana jika suatu hari,",
+   "s": 0.0,
+   "e": 1.818
+  },
+  {
+   "text": "Belanda justru menjadi negara jajahan Indonesia?",
+   "s": 1.994,
+   "e": 4.891
+  },
+  {
+   "text": "Bayangkan tahun 1600-an.",
+   "s": 5.559,
+   "e": 7.66
+  },
+  {
+   "text": "Alih-alih VOC menguasai Nusantara,",
+   "s": 8.129,
+   "e": 10.548
+  },
+  {
+   "text": "kerajaan-kerajaan di Indonesia justru bersatu dan membangun armada laut yang sangat kuat.",
+   "s": 10.922,
+   "e": 16.297
+  },
+  {
+   "text": "Mereka menyerang pelabuhan-pelabuhan Belanda,",
+   "s": 16.833,
+   "e": 18.973
+  },
+  {
+   "text": "menguasai perdagangan,",
+   "s": 19.311,
+   "e": 20.551
+  },
+  {
+   "text": "bahkan mendirikan pemerintahan kolonial di Amsterdam.",
+   "s": 20.833,
+   "e": 23.649
+  },
+  {
+   "text": "Kini,",
+   "s": 24.182,
+   "e": 24.62
+  },
+  {
+   "text": "orang Belanda harus belajar bahasa Indonesia.",
+   "s": 24.804,
+   "e": 27.516
+  },
+  {
+   "text": "Tulip dan keju dikirim ke Nusantara,",
+   "s": 27.965,
+   "e": 30.268
+  },
+  {
+   "text": "dan Amsterdam menjadi pusat pemerintahan kolonial.",
+   "s": 30.574,
+   "e": 33.438
+  },
+  {
+   "text": "Tapi ada satu pertanyaan besar.",
+   "s": 34.051,
+   "e": 36.224
+  },
+  {
+   "text": "Apakah Indonesia akan menjadi negara adidaya,",
+   "s": 36.78,
+   "e": 39.441
+  },
+  {
+   "text": "atau justru mengulangi kesalahan yang pernah dilakukan Belanda?",
+   "s": 39.766,
+   "e": 43.126
+  },
+  {
+   "text": "Karena sejarah punya kebiasaan:",
+   "s": 43.629,
+   "e": 45.509
+  },
+  {
+   "text": "yang berkuasa jarang mau berhenti.",
+   "s": 45.923,
+   "e": 48.112
+  }
+ ]
+}
