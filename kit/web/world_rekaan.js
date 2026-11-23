@@ -84,7 +84,7 @@ export const buildKotaKanal = (par) => {
   }
   // tiang panji rekaan + perahu kanal
   o.banner = [];
-  for (const [x, z, tipe] of [[-1.25, 4.6, "kota"], [1.5, -13.5, "armada"]]) {
+  for (const [x, z, tipe] of [[-1.25, 4.6, "kota"]]) {
     addM(g, cyl(0.09, 0.11, 6.2, 8), mkMat(0x5a3b28), [x, 3.1, z], { ink: 0.02 });
     const b = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), bannerMat(tipe));
     b.position.set(x, 5.05, z); b.rotation.y = Math.PI; g.add(b); o.banner.push(b);
