@@ -3,8 +3,8 @@ import { drawAny, headGeo, CW, CH } from "./cast.js";
 import { drawFx4 as drawFx2 } from "./fx4.js";
 import { Pen, INK } from "./toon.ts";
 import { addM, mkMat, buildDesk, buildHall } from "./world.js";
-import { buildHarbor, buildTown, buildQuayProps } from "./world2.js";
 import { buildKelas, buildRuangPeta } from "./world_belanda.js";
+import { buildKotaKanal, buildPelabuhanNusantara } from "./world_rekaan.js";
 
 const Q = new URLSearchParams(location.search), W = +(Q.get("w") || 1080), H = Math.round((W * 16) / 9);
 const FPS = 30, TOTAL = 1180, SU = 0.00216;
@@ -28,7 +28,7 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x555555, 1), sun = new THREE.D
 const ORG = { H: [0, 0, 0], T: [400, 0, 0], K: [800, 0, 0], S: [1200, 0, 0] };
 const grp = (k) => { const g = new THREE.Group(); g.position.set(...ORG[k]); scene.add(g); return g; };
 const gH = grp("H"), gT = grp("T"), gK = grp("K"), gS = grp("S");
-const WH = buildHarbor(gH), WT = buildTown(gT); const WP = buildQuayProps(gH);
+const WH = buildPelabuhanNusantara(gH), WT = buildKotaKanal(gT);
 const WK = buildKelas(gK), WS2 = buildRuangPeta(gS);
 const stages = { H: gH, T: gT, K: gK, S: gS };
 
@@ -100,16 +100,14 @@ const SHOTS = [
   { id: "ulang", a: 1201, b: 1299, st: "H", look: "malam" },
   { id: "akhir", a: 1300, b: 1451, st: "H", look: "senja" },
 ];
-const TOTALF = 1451;
+// ATURAN KAMERA (dari catatan user): frontal atau 3/4 saja, JANGAN profil.
+// Kartu karakter selalu menghadap kamera; kalau adegan dilihat dari samping, karakter
+// tampak seperti tempelan dan bayangan kontaknya jadi garis.
 const shotAt = (f) => SHOTS.find((s) => f >= s.a && f < s.b) || SHOTS[SHOTS.length - 1];
 const blink = (f, seed) => ((f * 7 + seed * 31) % 96) < 4 ? 1 : 0;
 const idle = (f, seed) => Math.sin(f / 14 + seed * 2) * 0.012;
-const hyOf = (seed, stout, s) => (975 - headGeo(seed, 0, stout).hc) * SU * s;
 
 const frame = (f) => {
-  // Sembunyikan SEMUA kartu sebelum menggambar frame ini. Tanpa ini, kartu dari shot
-  // sebelumnya tetap "visible" (pool-nya cuma di-reset penghitungnya) sehingga muncul
-  // sebagai hantu di frame berikutnya — dan audit jadi salah mengukur.
   for (const k in pools) for (const m of pools[k]) m.visible = false;
   for (const k in used) used[k] = 0; QUEUE = [];
   const S = shotAt(f), u = (f - S.a) / Math.max(1, S.b - S.a); curStage = S.st;
@@ -118,104 +116,102 @@ const frame = (f) => {
   const [ox, oy, oz] = ORG[S.st]; const A = (a) => [a[0] + ox, a[1] + oy, a[2] + oz];
   let flashA = 0, tintA = 0, C = null;
 
-  // tokoh: penduduk Nusantara (folk) dan serdadu Eropa (guard)
-  const folk = (o = {}) => ({ kind: "folk", v: o.v ?? 2, seed: 20 + (o.v ?? 2), blink: blink(f, 20 + (o.v ?? 2)), expr: o.expr ?? "neutral", ...o });
-  const guard = (o = {}) => ({ kind: "guard", seed: 30, blink: blink(f, 30), expr: o.expr ?? "stern", ...o });
+  // tokoh cerita ini
+  const tokoh = (kind, o = {}, seed0 = 20) => ({ kind, seed: seed0, blink: blink(f, seed0), expr: o.expr ?? "neutral", ...o });
+  const pelaut = (o = {}) => tokoh("pelaut", o, 20);
+  const raja = (o = {}) => tokoh("raja", o, 21);
+  const murid = (o = {}) => tokoh("murid", o, 22);
+  const serdadu = (o = {}) => tokoh("serdadu", o, 23);
 
   switch (S.id) {
     case "armada": {
-      // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
-      const p = sm(ramp(f, 0, 120));
-      C = { pos: A(lv([3.0, 3.4, -64], [1.0, 3.8, -58], p)), look: A(lv([0, 4.4, -22], [-1, 4.2, -16], p)), fov: lerp(50, 46, p), roll: lerp(-1.5, 1.5, u) };
-      if (f > 50) fx("bird", ((f - 50) % 40) / 40, -6.0 + ((f - 50) % 40) / 40 * 12, 7.2, -26, 0.9, 0, false);
-      if (f > 90) fx("cloud", ((f - 90) % 60) / 60, -9.0, 9.5, -20, 7.0, 0, true);
-      if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 5.0, 1.4, -0.5, 9.0, 0, true);
+      const p = sm(ramp(f, 0, 130));
+      C = { pos: A(lv([0, 6.4, 22], [0.7, 7.0, 18], p)), look: A(lv([0, 4.0, -28], [-1, 3.7, -34], p)), fov: lerp(52, 48, p), roll: lerp(-1.5, 1.5, u) };
+      if (f > 40) fx("bird", ((f - 40) % 44) / 44, -7.0 + ((f - 40) % 44) / 44 * 13, 7.8, -22, 0.9, 0, false);
+      if (f > 80) fx("cloud", ((f - 80) % 62) / 62, -9.5, 10.0, -16, 8.0, 0, true);
       break; }
     case "dermaga": {
-      const p = sm(ramp(f, 150, 215));
-      C = { pos: A(lv([-9.5, 3.0, 14], [-8.0, 2.6, 12], p)), look: A(lv([-0.2, 1.7, 2.0], [-0.1, 1.68, 2.0], p)), fov: lerp(48, 42, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 12) }), 0.0, 0, 2.0, 1.05, false, idle(f, 3), true);
-      fx("steam", ((f - 150) % 30) / 30, 0.0, 1.35, 2.0, 0.5);
+      const p = sm(ramp(f, 150, 214));
+      C = { pos: A(lv([1.6, 2.3, 12.5], [0.5, 1.95, 9.5], p)), look: A(lv([0, 1.9, 3.0], [0, 1.8, 2.8], p)), fov: lerp(44, 39, p), roll: lerp(-1, 1, u) };
+      person(pelaut({ expr: "neutral", look: Math.sin(f / 12) }), -0.95, 0, 2.6, 1.0, false, idle(f, 3), true);
+      fx("steam", ((f - 150) % 30) / 30, -0.95, 1.45, 2.6, 0.5);
       break; }
     case "datang": {
       const p = sm(ramp(f, 233, 300));
-      C = { pos: A(lv([10.0, 2.8, -34], [6.0, 3.0, -30], p)), look: A(lv([-6, 4.0, -14], [-9, 4.2, -8], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
-      
-      fx("splash", ((f - 233) % 24) / 24, -2.0, 0.05, -14.0, 1.1);
+      C = { pos: A(lv([5.5, 3.0, 15], [2.5, 3.3, 11], p)), look: A(lv([-4, 3.4, -28], [-8, 3.6, -32], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
+      fx("splash", ((f - 233) % 26) / 26, -3.2, 0.05, -12.0, 1.1);
       break; }
     case "hadapan": {
       const p = sm(ramp(f, 317, 430));
-      C = { pos: A(lv([-2.6, 2.2, 16.0], [-2.0, 1.9, 13.5], p)), look: A(lv([0.2, 1.7, 2.4], [0.1, 1.66, 2.3], p)), fov: lerp(46, 42, p), roll: lerp(-2, 2, u) };
-      person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 1.25, 0, 2.6, 1.12, false, idle(f, 7), true);
-      person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -1.05, 0, 2.3, 1.1, true, idle(f, 8), true);
-      if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -1.05, 2.15, 2.3, 0.7, 0.1);
+      C = { pos: A(lv([0, 2.0, 10.4], [0, 1.8, 8.8], p)), look: A(lv([0, 1.75, 3.0], [0, 1.7, 2.9], p)), fov: lerp(40, 35, p), roll: lerp(-2, 2, u) };
+      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 0.85, 0, 2.9, 1.05, false, idle(f, 7), true);
+      person(pelaut({ expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.85, 0, 2.7, 1.02, true, idle(f, 8), true);
+      if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -0.85, 2.1, 2.7, 0.7, 0.1);
       break; }
     case "serang": {
-      const p = sm(ramp(f, 488, 560));
-      C = { pos: A(lv([0, 4.2, 20], [-2.0, 3.4, 15], p)), look: A(lv([0, 3.6, -6], [0, 3.2, -8], p)), fov: lerp(50, 46, p), roll: lerp(2, -2, u) };
-      const hit = 500 + ((f - 500) % 34);
-      const st = ramp(f, hit, hit + 8);
-      if (f > 500) fx("boom", ((f - 500) % 34) / 34, (f % 2 ? 1 : -1) * 5.5, 4.0, -5.4, 1.6 * (1 - st * 0.4), 0, true);
-      if (f > 500) fx("smoke", ((f - 500) % 34) / 34, (f % 2 ? 1 : -1) * 5.0, 4.6, -5.6, 2.6, 0, true);
+      const p = sm(ramp(f, 488, 556));
+      C = { pos: A(lv([0, 3.6, 19], [-1.0, 3.0, 15], p)), look: A(lv([0, 3.8, -8], [0, 3.5, -11], p)), fov: lerp(50, 46, p), roll: lerp(2, -2, u) };
+      if (f > 500) fx("boom", ((f - 500) % 34) / 34, 11.0, 4.6, -26, 1.8, 0, true);
+      if (f > 500) fx("smoke", ((f - 500) % 34) / 34, 9.0, 5.4, -27, 2.8, 0, true);
       break; }
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
-      C = { pos: A(lv([1.6, 2.0, 9], [0.4, 1.85, 6.6], p)), look: A(lv([0, 2.3, -2], [0.2, 2.1, -3.4], p)), fov: lerp(46, 41, p), roll: lerp(-1.5, 1.5, u) };
-      person(folk({ v: 2, expr: "grin", look: Math.sin(f / 12) }), -0.95, 0, 0.2, 0.95, false, idle(f, 11), true);
-      person(folk({ v: 5, expr: "neutral", look: Math.sin(f / 14 + 1) }), 1.0, 0, -0.4, 0.95, true, idle(f, 12), true);
-      fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 2.6, 0.7, 0, true);
+      C = { pos: A(lv([0, 2.1, 8.4], [0, 1.95, 7.0], p)), look: A(lv([0, 2.0, 1.0], [0, 1.95, 0.8], p)), fov: lerp(44, 40, p), roll: lerp(-1.5, 1.5, u) };
+      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.95, 0, 1.0, 0.98, false, idle(f, 11), true);
+      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.98, 0, 0.8, 0.94, true, idle(f, 12), true);
+      fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 0.4, 0.7, 0, true);
       break; }
     case "amsterdam": {
       const p = sm(ramp(f, 617, 690));
-      C = { pos: A(lv([3.0, 2.8, 15], [1.0, 3.4, 10], p)), look: A(lv([0, 3.0, -8], [0, 3.6, -12], p)), fov: lerp(50, 46, p), roll: lerp(-2, 2, u) };
-      person(folk({ v: 4, expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.6, 0, 2.4, 1.06, false, idle(f, 13), true);
-      if (f > 660) fx("spark", ((f - 660) % 22) / 22, -0.6, 2.5, 2.4, 0.8, 0, true);
+      C = { pos: A(lv([0, 3.0, 12], [0, 3.6, 9.4], p)), look: A(lv([0, 3.0, -2], [0, 3.3, -3], p)), fov: lerp(48, 44, p), roll: lerp(-2, 2, u) };
+      person(raja({ expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.6, 0, 1.2, 1.04, false, idle(f, 13), true);
+      if (f > 660) fx("spark", ((f - 660) % 22) / 22, -0.6, 2.5, 1.2, 0.8, 0, true);
       break; }
     case "kelas": {
       const p = sm(ramp(f, 710, 800));
-      C = { pos: A(lv([0, 1.9, 5.2], [0, 1.75, 4.0], p)), look: A(lv([0, 2.4, -4], [0, 2.5, -5], p)), fov: lerp(48, 44, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 1, expr: "neutral", look: Math.sin(f / 16) }), -0.9, 0, -2.9, 0.88, false, idle(f, 14), true);
-      person(folk({ v: 3, expr: "neutral", look: Math.sin(f / 18 + 1) }), 0.95, 0, -2.9, 0.88, true, idle(f, 15), true);
+      C = { pos: A(lv([0, 1.95, 4.8], [0, 1.82, 4.0], p)), look: A(lv([0, 2.4, -4.4], [0, 2.5, -4.8], p)), fov: lerp(46, 42, p), roll: lerp(-1, 1, u) };
+      person(murid({ expr: "neutral", look: Math.sin(f / 16) }), -0.9, 0, -2.9, 0.88, false, idle(f, 14), true);
+      person(murid({ expr: "neutral", look: Math.sin(f / 18 + 1) }), 0.95, 0, -2.9, 0.88, true, idle(f, 15), true);
       break; }
     case "tulip": {
       const p = sm(ramp(f, 826, 895));
-      C = { pos: A(lv([1.2, 2.2, 11], [0.2, 1.9, 8.6], p)), look: A(lv([0, 1.5, 3.6], [0, 1.4, 3.0], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
-      person(folk({ v: 5, expr: "grin", look: Math.sin(f / 13) }), -1.35, 0, 1.4, 0.98, false, idle(f, 16), true);
-      person(guard({ expr: "neutral" }), 1.45, 0, 1.0, 0.98, true, idle(f, 17), true);
-      fx("spark", ((f - 826) % 28) / 28, 0.0, 1.5, 3.8, 0.65, 0, true);
+      C = { pos: A(lv([0, 2.2, 12], [0, 2.0, 10.4], p)), look: A(lv([0, 1.6, 4.4], [0, 1.5, 4.0], p)), fov: lerp(44, 40, p), roll: lerp(1.5, -1.5, u) };
+      person(pelaut({ expr: "grin", look: Math.sin(f / 13) }), -0.95, 0, 4.6, 0.98, false, idle(f, 16), true);
+      person(serdadu({ expr: "neutral" }), 0.95, 0, 4.9, 0.98, true, idle(f, 17), true);
+      fx("spark", ((f - 826) % 28) / 28, 0.0, 1.5, 4.2, 0.65, 0, true);
       break; }
     case "kota": {
       const p = sm(ramp(f, 909, 990));
-      C = { pos: A(lv([0, 10.5, 30], [0, 15.0, 40], p)), look: A(lv([0, 2.0, -14], [0, 1.4, -20], p)), fov: lerp(52, 48, p), roll: lerp(-2, 2, u) };
+      C = { pos: A(lv([0, 10.0, 22], [0, 14.0, 30], p)), look: A(lv([0, 2.4, -6], [0, 1.8, -10], p)), fov: lerp(50, 46, p), roll: lerp(-2, 2, u) };
       break; }
     case "gelap": {
       const p = sm(ramp(f, 1004, 1070));
-      C = { pos: A(lv([0, 1.8, 5.6], [0, 1.6, 4.6], p)), look: A(lv([0, 1.15, -0.8], [0, 1.1, -1.0], p)), fov: lerp(44, 40, p), roll: lerp(-1, 1, u) };
-      person(folk({ v: 1, expr: "stern", look: Math.sin(f / 20) }), -0.8, 0, -1.4, 0.92, false, idle(f, 18), true);
-      person(guard({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 0.85, 0, -1.4, 0.92, true, idle(f, 19), true);
-      fx("glow", ((f - 1004) % 40) / 40, 1.15, 1.35, 0.55, 1.1, 0, true);
+      C = { pos: A(lv([0, 1.8, 5.4], [0, 1.6, 4.4], p)), look: A(lv([0, 1.15, -0.9], [0, 1.1, -1.1], p)), fov: lerp(42, 38, p), roll: lerp(-1, 1, u) };
+      person(raja({ expr: "stern", look: Math.sin(f / 20) }), -0.8, 0, -1.4, 0.95, false, idle(f, 18), true);
+      person(serdadu({ expr: "stern", headTilt: Math.sin(f / 14) * 3 }), 0.8, 0, -1.4, 0.95, true, idle(f, 19), true);
+      fx("glow", ((f - 1004) % 40) / 40, 0.5, 1.3, 0.3, 1.0, 0, true);
       break; }
     case "adidaya": {
       const p = sm(ramp(f, 1089, 1180));
-      C = { pos: A(lv([-7.5, 3.4, 12], [7.0, 3.4, 12], p)), look: A(lv([0, 2.6, -8], [0, 2.6, -8], p)), fov: 50, roll: lerp(-1, 1, u) };
+      C = { pos: A(lv([-4.5, 3.2, 10.5], [4.5, 3.2, 10.5], p)), look: A(lv([0, 2.6, -5], [0, 2.6, -5], p)), fov: 48, roll: lerp(-1, 1, u) };
       break; }
     case "ulang": {
       const p = sm(ramp(f, 1201, 1280));
-      C = { pos: A(lv([0, 3.4, 22], [0, 3.0, 18], p)), look: A(lv([0, 4.2, -6], [0, 3.8, -6], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
-      if (f > 1230) fx("smoke", ((f - 1230) % 46) / 46, -3.0, 2.4, -4.0, 2.2, 0, true);
+      C = { pos: A(lv([0, 3.4, 20], [0, 3.1, 17], p)), look: A(lv([0, 4.0, -10], [0, 3.7, -11], p)), fov: lerp(46, 42, p), roll: lerp(1.5, -1.5, u) };
+      if (f > 1230) fx("smoke", ((f - 1230) % 46) / 46, -6.0, 3.0, -20, 2.4, 0, true);
       break; }
     case "akhir": {
       const p = sm(ramp(f, 1300, 1430));
-      C = { pos: A(lv([3.0, 3.4, -62], [8.0, 5.2, -84], p)), look: A(lv([0, 4.4, -20], [-2, 5.2, -14], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
-      if (f > 1340) fx("bird", ((f - 1340) % 44) / 44, -8.0 + ((f - 1340) % 44) / 44 * 14, 7.6, -30, 0.9, 0, false);
+      C = { pos: A(lv([0, 5.6, 24], [3.0, 8.2, 40], p)), look: A(lv([0, 4.6, -26], [-1, 4.4, -32], p)), fov: lerp(50, 46, p), roll: lerp(1.5, -1.5, u) };
+      if (f > 1340) fx("bird", ((f - 1340) % 44) / 44, -8.0 + ((f - 1340) % 44) / 44 * 15, 8.2, -26, 0.9, 0, false);
       break; }
     default: {
-      C = { pos: A([0, 6.5, 50]), look: A([0, 3.0, -28]), fov: 48, roll: Math.sin(f / 90) * 1.2 };
+      C = { pos: A([0, 6.0, 20]), look: A([0, 3.0, -20]), fov: 50, roll: 0 };
       break; }
   }
 
   for (const q of QUEUE) q();
-  if (!C) C = { pos: A([0, 3, 30]), look: A([0, 2, -10]), fov: 45, roll: 0 };
+  if (!C) C = { pos: A([0, 3, 20]), look: A([0, 2, -10]), fov: 45, roll: 0 };
   cam.fov = C.fov; cam.position.set(C.pos[0], C.pos[1], C.pos[2]); cam.up.set(0, 1, 0); cam.lookAt(C.look[0], C.look[1], C.look[2]);
   cam.rotateZ((C.roll * Math.PI) / 180); cam.updateProjectionMatrix(); cam.updateMatrixWorld(); CAMP.copy(cam.position);
   sun.position.set(cam.position.x + LOOK[S.look].dir[2][0], cam.position.y + LOOK[S.look].dir[2][1], cam.position.z + LOOK[S.look].dir[2][2]);

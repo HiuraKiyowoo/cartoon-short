@@ -7,7 +7,19 @@ export const OUT = {
   lawyer: { ...ROBE, jacket: "#27222f", pants: "#27222f", boots: "#241726", buttons: "#27222f", skin: "#e8c6a2", moustache: "#4a3a30", build: undefined },
   guard: { ...soldier(2), rifle: false },
 };
-export const outfitOf = (kind, v = 0) => (kind === "folk" ? townsfolk(v) : OUT[kind]);
+
+// ---- pakaian khusus cerita "Belanda jadi jajahan Indonesia" ----
+// pelaut Nusantara: kemeja bergaris, kain ikat kepala, sabuk kain, telanjang kaki
+export const PELAUT = { ...townsfolk(3), jacket: "#3f6fb5", pants: "#e6d9bd", boots: "#c9a06a", hat: "hair", hair: "#2a201a", sash: "#b0453c", belt: null, buttons: "#f2e6c8" };
+// raja/penguasa Nusantara: jubah gelap, kain emas, penutup kepala tinggi
+export const RAJA = { ...OFFICER, jacket: "#5a2f6e", pants: "#3a2440", boots: "#241726", hat: "cap", cap: "#e8c45a", sash: "#e8c45a", sword: true, rifle: false, belt: null, moustache: null, skin: "#e8c39a", build: "stout" };
+// murid sekolah: seragam sederhana + topi
+export const MURID = { jacket: "#4a5a86", pants: "#3d4440", boots: "#4a3426", hat: "cap", cap: "#2f3a52", buttons: "#e8e2d0" };
+// serdadu kolonial: shako, mantel merah, tali silang
+export const SERDADU = { ...soldier(1), jacket: "#a5352f", pants: "#2f3540", hat: "shako_tall", sash: "#f1efe6", buttons: "#e8c45a", rifle: false, moustache: "#4a3020" };
+
+export const OUTFIT_BARU = { pelaut: PELAUT, raja: RAJA, murid: MURID, serdadu: SERDADU };
+export const outfitOf = (kind, v = 0) => (OUTFIT_BARU[kind] ? OUTFIT_BARU[kind] : kind === "folk" ? townsfolk(v) : OUT[kind]);
 export const headGeo = (seed = 1, facing = 0, stout = false) => {
   const H = headBlob(seed, 118, facing), HH = 2 * H.b, torso = stout ? 1.15 : 1.1, legs = stout ? 1.32 : 1.4;
   const torsoBot = 975 - legs * HH, chin = torsoBot - torso * HH, hc = chin - H.b;
