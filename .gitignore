@@ -6,3 +6,12 @@ out/
 assets/voice*.mp3
 assets/*.wav
 public/voice*.mp3
+
+# Kit cartoon (engine kedua): hanya sumber yang di-commit, hasil tidak
+kit/node_modules/
+kit/web/bundle.js
+kit/frames/
+kit/stills/
+kit/out/
+kit/work/voice*.mp3
+kit/work/*.wav

@@ -1,0 +1,88 @@
+name: render-kit
+
+# Render kit cartoon (Playwright + Chromium swiftshader) di runner GitHub.
+#
+# Kenapa di sini: Chromium tidak bisa hidup di proot/Android (GPU process exit 5,
+# "Target page, context or browser has been closed" untuk semua set flag yang diuji).
+# Runner GitHub = Ubuntu x86_64 dengan Chromium resmi, jadi ini jalur yang masuk akal.
+#
+# Langkah pertama workflow ini SELALU menguji WebGL lebih dulu. Kalau "GAGAL" muncul di
+# log uji, jangan lanjut render panjang: artinya swiftshader tidak hidup di runner.
+
+on:
+  workflow_dispatch:
+    inputs:
+      frames:
+        description: "rentang frame (mis. 0-2 untuk uji murah, 0-599 untuk 20 detik)"
+        default: "0-2"
+      width:
+        description: "lebar piksel: 540 uji cepat, 1080 final"
+        default: "540"
+      audio:
+        description: "1 = jalankan work/audio.py + work/mix.py (butuh work/voice.mp3)"
+        default: "0"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Pasang dependensi kit (esbuild, three, playwright)
+        working-directory: kit
+        run: npm install --no-audit --no-fund
+
+      - name: Pasang Chromium untuk Playwright
+        working-directory: kit
+        run: npx playwright install chromium
+
+      - name: Pasang dependensi audio (numpy, pillow, scipy)
+        run: pip install --quiet numpy pillow scipy
+
+      - name: Bundle engine
+        working-directory: kit
+        run: npx esbuild web/main.js --bundle --outfile=web/bundle.js --loader:.ts=ts --format=iife
+
+      - name: UJI WEBGL — baca hasilnya sebelum render panjang
+        working-directory: kit
+        run: node probe_gl.mjs
+
+      - name: Render frame
+        working-directory: kit
+        run: |
+          set -o pipefail
+          node render.mjs frames "${{ inputs.frames }}" ${{ inputs.width }}
+
+      - name: Contact sheet (kalau lebih dari 3 frame)
+        if: ${{ inputs.frames != '0-2' }}
+        working-directory: kit
+        run: python3 sheet.py frames stills/sheet.jpg 6 || true
+
+      - name: Audio (opsional)
+        if: ${{ inputs.audio == '1' }}
+        working-directory: kit
+        run: |
+          set -o pipefail
+          python3 work/audio.py
+          python3 work/mix.py
+
+      - name: Unggah hasil
+        uses: actions/upload-artifact@v4
+        with:
+          name: hasil-render
+          path: |
+            kit/frames
+            kit/stills
+          if-no-files-found: warn

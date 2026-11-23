@@ -1,0 +1,11 @@
+Kamu akan membuat video kartun vertikal (1080x1920, 30fps) memakai kit di folder ini. Baca README.md dulu, lalu pelajari examples/tikus/ (main.js, cast.js, audio.py) karena itu referensi hasil yang saya mau.
+
+Tugas: buat video untuk voiceover yang saya lampirkan (work/voice.mp3) dengan naskah: <TEMPEL NASKAH>.
+
+Langkah wajib:
+1. Ukur durasi voiceover dan cari jeda kalimat (silencedetect) untuk menentukan rentang frame tiap adegan. Jangan menebak timing.
+2. Salin kit ke proyek baru, tulis cast.js dan main.js baru berdasarkan contoh. Satu adegan per kalimat, kamera bergerak halus, efek kartu (fx) di momen penting, kick kamera di klimaks.
+3. Render dulu still 540px per adegan dan kirim contact sheet ke saya untuk dicek sebelum render penuh.
+4. Render penuh, buat musik+SFX lewat audio.py, mix dengan mix.py (musik dan SFX 50% dari level suara, tanpa ducking), lalu finish.sh.
+5. Cek qa_sheet.jpg, loudness (sekitar -14 LUFS, true peak di bawah -1 dBTP), tidak ada freeze atau layar hitam. Kirim MP4 (kompres jika di atas 30 MB).
+Jangan mengubah naskah. Jangan menulis teks panjang di layar. Balas dalam bahasa Indonesia.
