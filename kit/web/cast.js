@@ -12,7 +12,7 @@ export const OUT = {
 // pelaut Nusantara: kemeja bergaris, kain ikat kepala, sabuk kain, telanjang kaki
 export const PELAUT = { ...townsfolk(3), jacket: "#3f6fb5", pants: "#e6d9bd", boots: "#c9a06a", hat: "hair", hair: "#2a201a", sash: "#b0453c", belt: null, buttons: "#f2e6c8" };
 // raja/penguasa Nusantara: jubah gelap, kain emas, penutup kepala tinggi
-export const RAJA = { ...OFFICER, jacket: "#5a2f6e", pants: "#3a2440", boots: "#241726", hat: "cap", cap: "#e8c45a", sash: "#e8c45a", sword: true, rifle: false, belt: null, moustache: null, skin: "#e8c39a", build: "stout" };
+export const RAJA = { ...OFFICER, jacket: "#5a2f6e", pants: "#3a2440", boots: "#241726", hat: "shako_tall", cap: "#e8c45a", sash: "#e8c45a", sword: true, rifle: false, belt: null, moustache: null, skin: "#e8c39a", build: "stout" };
 // murid sekolah: seragam sederhana + topi
 export const MURID = { jacket: "#4a5a86", pants: "#3d4440", boots: "#4a3426", hat: "cap", cap: "#2f3a52", buttons: "#e8e2d0" };
 // serdadu kolonial: shako, mantel merah, tali silang
