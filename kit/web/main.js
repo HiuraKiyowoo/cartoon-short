@@ -114,8 +114,9 @@ const frame = (f) => {
     case "armada": {
       // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
       const p = sm(ramp(f, 0, 120));
-      C = { pos: A(lv([0, 2.4, -13], [1.6, 2.9, -17], p)), look: A(lv([0, 3.8, -34], [-2, 4.0, -42], p)), fov: lerp(54, 50, p), roll: lerp(-1.5, 1.5, u) };
-      if (f > 60) fx("bird", ((f - 60) % 40) / 40, -4.5 + ((f - 60) % 40) / 40 * 9, 6.4, -30, 0.9, 0, false);
+      C = { pos: A(lv([0, 4.6, 3], [1.2, 5.0, 1], p)), look: A(lv([0, 3.4, -28], [-1, 3.2, -34], p)), fov: lerp(52, 48, p), roll: lerp(-1.5, 1.5, u) };
+      if (f > 50) fx("bird", ((f - 50) % 40) / 40, -6.0 + ((f - 50) % 40) / 40 * 12, 7.2, -26, 0.9, 0, false);
+      if (f > 90) fx("cloud", ((f - 90) % 60) / 60, -9.0, 9.5, -20, 7.0, 0, true);
       if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 5.0, 1.4, -0.5, 9.0, 0, true);
       break; }
     case "dermaga": {

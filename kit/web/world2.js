@@ -83,7 +83,7 @@ export const buildHarbor = (par) => {
   for (let i = 0; i < 9; i++) addM(g, new THREE.SphereGeometry(0.28, 8, 6), mkMat(0x34363f), [-2 + (i % 3) * 0.55, 0.28, -1.0 + Math.floor(i / 3) * 0.55], { ink: 0.02 });
   for (let i = 0; i < 9; i++) palm(g, (r() - 0.5) * 60, 6 + r() * 26, 0.9 + r() * 0.6, r() * 6);
   // fleet
-  o.ships = [ship(g, -15, -24, 1.2, 0, true), ship(g, 1, -34, 1.35, 0, true), ship(g, 19, -26, 1.2, 0, true), ship(g, -32, -42, 1.25, 0, true), ship(g, 36, -46, 1.2, 0, true)];
+  o.ships = [ship(g, -8.5, -22, 1.15, 0, true), ship(g, 3.5, -30, 1.3, 0, true), ship(g, 14, -24, 1.15, 0, true), ship(g, -16, -38, 1.2, 0, true), ship(g, 9, -44, 1.2, 0, true), ship(g, -2, -52, 1.25, 0.12, true)];
   for (let i = 0; i < 4; i++) addM(g, new THREE.SphereGeometry(30 + r() * 14, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), mkMat(0x6aa07a), [-90 + i * 60, -1, -170], { ink: 0.1 });
   o.g = g; return o;
 };
