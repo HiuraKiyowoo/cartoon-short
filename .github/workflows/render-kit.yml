@@ -69,7 +69,9 @@ jobs:
 
       - name: Lembar uji tokoh (selalu, murah)
         working-directory: kit
-        run: node probe_tokoh.mjs
+        run: |
+          npx esbuild web/tokoh_entry.js --bundle --outfile=web/tokoh.bundle.js --loader:.ts=ts --format=iife
+          node probe_tokoh.mjs
 
       - name: Render frame
         working-directory: kit
