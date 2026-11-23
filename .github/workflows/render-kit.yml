@@ -76,7 +76,9 @@ jobs:
       - name: Contact sheet (kalau lebih dari 3 frame)
         if: ${{ inputs.frames != '0-2' }}
         working-directory: kit
-        run: python3 sheet.py frames stills/sheet.jpg 6 || true
+        run: |
+          mkdir -p stills
+          python3 sheet.py frames stills/sheet.jpg 6 || true
 
       - name: Audio (opsional)
         if: ${{ inputs.audio == '1' }}
