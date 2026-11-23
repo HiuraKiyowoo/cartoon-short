@@ -111,8 +111,8 @@ const frame = (f) => {
       // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
       const p = sm(ramp(f, 0, 120));
       C = { pos: A(lv([0, 2.2, 46], [0, 8.5, 58], p)), look: A(lv([0, 2.0, -20], [0, 3.4, -32], p)), fov: lerp(50, 46, p), roll: lerp(-1.5, 1.5, u) };
-      person(folk({ v: 1, expr: "proud", look: Math.sin(f / 18) }), -1.5, 0, 9.5, 1.05, false, idle(f, 1), true);
-      person(folk({ v: 4, expr: "proud", look: Math.sin(f / 16 + 2) }), 1.7, 0, 10.5, 1.05, true, idle(f, 2), true);
+      person(folk({ v: 1, expr: "grin", look: Math.sin(f / 18) }), -1.5, 0, 9.5, 1.05, false, idle(f, 1), true);
+      person(folk({ v: 4, expr: "grin", look: Math.sin(f / 16 + 2) }), 1.7, 0, 10.5, 1.05, true, idle(f, 2), true);
       if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 3.5, 0.6, -6.0, 9.0, 0, true);
       break; }
     case "dermaga": {
@@ -124,14 +124,14 @@ const frame = (f) => {
     case "datang": {
       const p = sm(ramp(f, 233, 300));
       C = { pos: A(lv([-6.5, 1.5, 24], [-3.0, 1.7, 18], p)), look: A(lv([8, 3.4, -26], [4, 3.0, -30], p)), fov: 46, roll: lerp(1.5, -1.5, u) };
-      person(folk({ v: 5, expr: "wary", look: 1 }), -0.5, 0, 8.5, 1.0, false, idle(f, 5), true);
+      person(folk({ v: 5, expr: "nervous", look: 1 }), -0.5, 0, 8.5, 1.0, false, idle(f, 5), true);
       fx("splash", ((f - 233) % 24) / 24, -2.2, 0.05, 6.0, 0.9);
       break; }
     case "hadapan": {
       const p = sm(ramp(f, 317, 430));
       C = { pos: A(lv([0.9, 2.0, 15.5], [0.2, 1.75, 12.6], p)), look: A(lv([-0.4, 1.75, 8.6], [0, 1.7, 9.0], p)), fov: lerp(40, 34, p), roll: lerp(-2, 2, u) };
       person(guard({ expr: "stern", headTilt: Math.sin(f / 10) * 3 }), 0.75, 0, 9.4, 1.15, false, idle(f, 7), true);
-      person(folk({ v: 2, expr: "wary", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.85, 0, 8.9, 1.12, true, idle(f, 8), true);
+      person(folk({ v: 2, expr: "nervous", look: Math.sin(f / 9) * 0.6, headTilt: Math.sin(f / 12) * 4 }), -0.85, 0, 8.9, 1.12, true, idle(f, 8), true);
       if (f > 430 && f < 470) fx("exclaim", ramp(f, 430, 442), -0.85, 2.05, 8.9, 0.7, 0.1);
       break; }
     default: {
