@@ -1,7 +1,13 @@
 # Original synthesized stems for "Pengadilan Tikus": music.wav + sfx.wav (mix levels are set later by mix.py)
 import numpy as np, subprocess, sys
 from scipy import signal
-SR = 44100; DUR = 39.3143; N = int(DUR * SR); rng = np.random.default_rng(7)
+SR = 44100
+# Durasi WAJIB dari voiceover nyata. Dulu hardcode 39,3143 (contoh lain) sehingga
+# musik/SFX berhenti 9 detik sebelum video selesai.
+DUR = float(subprocess.run(
+    ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", "work/voice.mp3"],
+    capture_output=True, text=True).stdout)
+N = int(DUR * SR); rng = np.random.default_rng(7)
 t_ = lambda d: np.arange(int(d * SR)) / SR
 def place(buf, x, at, g=1.0):
     i = int(at * SR); 
@@ -47,66 +53,78 @@ def step(g=1.0): d = 0.1; return g * lp(noise(d), 1200) * ex(d, 40)
 def cricket(g=1.0): d = 0.3; t = t_(d); return g * np.sin(2 * np.pi * 4200 * t) * (np.sin(2 * np.pi * 28 * t) > 0) * np.sin(np.pi * t / d) * 0.5
 S = np.zeros(N)
 sec = lambda fr: fr / 30
-# hook
-place(S, thunk(0.7), 0.1); [place(S, squeak(0.7), tt) for tt in (0.6, 1.1, 1.8)]; place(S, whoosh(0.4, True), sec(76), 0.6); place(S, pluck(587, 0.7, 0.7), sec(82)); place(S, thunk(0.7), sec(82)); place(S, bell(1175, 1.0, 0.25), sec(84))
-# village
-[place(S, chirp(0.6), 5.0 + i * 0.5) for i in range(3)]; place(S, whoosh(0.6, True), sec(138), 0.5); place(S, rustle(2.0, 0.4), 5.2)
-# swarm
-for i in range(34): place(S, crunch(0.9), 8.1 + i * 0.09 + (i % 3) * 0.02)
-[place(S, squeak(0.6), 8.2 + i * 0.37) for i in range(8)]; place(S, pluck(330, 0.5, 0.6), sec(270)); place(S, bell(880, 0.8, 0.3), sec(270))
-# march
-for i in range(15): place(S, step(0.9), sec(334) + i * 0.29); place(S, step(0.5), sec(334) + i * 0.29 + 0.14)
-place(S, rustle(1.0, 0.5), 11.2); [place(S, squeak(0.5), 11.6 + i * 0.5) for i in range(4)]
-# call
-place(S, bell(196, 2.5, 0.4), sec(416)); [place(S, pluck(440 - 40 * i, 0.5, 0.8), sec(424 + i * 13)) for i in range(3)]; place(S, thunk(0.6), sec(416))
-# empty
-[place(S, cricket(0.7), sec(484) + i * 0.4) for i in range(4)]; place(S, drip(0.6), sec(500)); place(S, np.sin(2 * np.pi * 180 * t_(1.4) + 4 * np.sin(2 * np.pi * 14 * t_(1.4))) * np.sin(np.pi * t_(1.4) / 1.4) * 0.25, sec(488))
-# lawyer
-place(S, whoosh(0.4, True), sec(530), 0.6); place(S, twinkle := bell(1760, 0.9, 0.25), sec(548)); place(S, bell(220, 2.0, 0.45), sec(575)); place(S, thunk(0.5), sec(575)); place(S, pluck(740, 0.6, 0.7), sec(611)); place(S, bell(1320, 0.8, 0.25), sec(612))
-# letter
-place(S, whoosh(0.5, True), sec(644), 0.7); [place(S, drip(0.5), sec(656) + i * 0.09) for i in range(6)]; place(S, thunk(0.9), sec(682)); place(S, sad(330, 1.0, 0.45), sec(684)); place(S, whoosh(0.4, False), sec(688), 0.5)
-# migrate
-for i in range(70): place(S, step(0.5), sec(702) + i * 0.034 + (i % 4) * 0.01)
-[place(S, squeak(0.5), 23.5 + i * 0.28) for i in range(8)]
-# pula
-place(S, pluck(494, 0.5, 0.6), sec(776)); place(S, pluck(587, 0.5, 0.6), sec(784)); place(S, pluck(740, 0.7, 0.7), sec(792))
-# road: heartbeat + meows
-for i in range(12): place(S, drum(52, 0.9), sec(806) + i * 0.52)
-for i in range(6): place(S, meow(0.45), sec(812 + i * 12) + 0.2); 
-place(S, lp(noise(3.4), 300) * np.sin(np.pi * t_(3.4) / 3.4), sec(806), 0.8)
-# cat close
-place(S, hiss(0.9, 0.9), sec(930)); place(S, thunk(1.0), sec(915)); place(S, meow(0.9), sec(916)); place(S, bell(98, 2.5, 0.4), sec(915))
-# agree / gavel
-place(S, pluck(392, 0.5, 0.6), sec(950)); place(S, pluck(392, 0.5, 0.6), sec(962)); place(S, pluck(494, 0.6, 0.7), sec(974)); place(S, whoosh(0.3, True), sec(985), 0.5)
-place(S, stamp_hit(), sec(1000), 1.0); place(S, bp(noise(0.12), 1500, 5000) * ex(0.12, 40), sec(1000), 0.8)
-# escape
-place(S, whoosh(0.8, True), sec(1026), 0.7); [place(S, pop(500 + 60 * i, 0.8), sec(1030 + i * 5)) for i in range(6)]; place(S, rustle(1.4, 0.7), sec(1030))
-for i in range(30): place(S, step(0.45), sec(1030) + i * 0.045)
-[place(S, bell(1568 + 120 * i, 0.7, 0.2), sec(1032 + 4 * i)) for i in range(6)]
-# sneaky
-for i in range(22): place(S, crunch(0.9), sec(1076) + i * 0.1)
-place(S, pluck(311, 0.6, 0.6), sec(1102)); place(S, pluck(293, 0.6, 0.6), sec(1110)); place(S, pluck(277, 0.8, 0.6), sec(1118))
-# finale
-place(S, np.sin(2 * np.pi * 70 * t_(0.7)) * np.sin(np.pi * t_(0.7) / 0.7) * 0.5, sec(1136)); place(S, whoosh(0.4, True), sec(1150), 0.8)
-place(S, thunk(1.2), sec(1158)); place(S, hiss(1.1, 1.0), sec(1159)); place(S, meow(1.0), sec(1160)); [place(S, squeak(0.8), sec(1160) + i * 0.13) for i in range(6)]; place(S, bell(98, 3.0, 0.5), sec(1158))
 
-# ---------------- MUSIC ----------------
-M = np.zeros(N); beat = 60 / 112
-chords = [(146.83, 174.61, 220.0), (196.0, 233.08, 293.66), (220.0, 277.18, 329.63), (146.83, 174.61, 220.0)]  # Dm Gm A Dm
-t1 = 38.4; bar = 4 * beat; i = 0
-while i * bar < t1:
-    a = i * bar; c = chords[i % 4]; L = min(bar, t1 - a) + 0.3
-    for f in c: place(M, pad(f, L, 0.22), a)
-    place(M, pad(c[0] / 2, L, 0.45), a)
+# ================= CUE: "Belanda jadi jajahan Indonesia" (1451 frame = 48,35 s) =================
+# ambience laut
+place(S, lp(noise(16.0), 320) * 0.5, 0.0, 0.5)
+for fr in (60, 150, 233, 317):
+    place(S, whoosh(0.5, True), sec(fr), 0.5)
+for fr in (96, 180, 260):
+    place(S, scratch(1.1, 0.5), sec(fr), 0.45)          # derit dermaga
+for fr in (120, 210, 300):
+    place(S, bell(1568, 0.45, 0.16), sec(fr))           # camar
+# serangan pelabuhan (488-569): 4 tembakan meriam
+place(S, lp(noise(3.2), 220) * np.sin(np.pi * t_(3.2) / 3.2), sec(500), 0.85)
+for i, fr in enumerate((500, 517, 534, 551)):
+    place(S, stamp_hit(), sec(fr), 0.85 - i * 0.06)
+    place(S, thunk(0.9), sec(fr) + 0.05)
+place(S, whoosh(0.6, True), sec(488), 0.6)
+# pasar (570-616): koin + kerumunan
+place(S, rustle(2.4, 0.5), sec(572))
+for i in range(5):
+    place(S, bell(1568 + 120 * (i % 3), 0.5, 0.15), sec(578 + i * 5))
+place(S, pluck(330, 0.6, 0.55), sec(586)); place(S, pluck(392, 0.6, 0.55), sec(598))
+# Amsterdam (617-709)
+place(S, whoosh(0.7, True), sec(617), 0.6)
+for fr in (640, 668, 696):
+    place(S, clang(0.5), sec(fr), 0.45)
+place(S, bell(784, 1.4, 0.28), sec(660))
+# kelas (710-825): kapur + kertas
+for i in range(10):
+    place(S, scratch(0.35, 0.45), sec(720 + i * 10))
+place(S, rustle(1.2, 0.4), sec(760)); place(S, thunk(0.4), sec(790))
+# tulip & keju (826-908): peti dimuat
+for fr in (830, 848, 866, 884):
+    place(S, thunk(0.7), sec(fr), 0.75)
+place(S, rustle(1.6, 0.45), sec(840)); place(S, bell(1568, 0.4, 0.14), sec(870))
+# kota dari atas (909-1003)
+place(S, whoosh(1.0, True), sec(909), 0.65)
+# ruang gelap (1004-1088): sting + drone pengganti musik
+place(S, bell(98, 3.2, 0.6), sec(1021))
+place(S, lp(noise(2.4), 200) * np.sin(np.pi * t_(2.4) / 2.4), sec(1021), 0.45)
+place(S, pad(73.42, 15.0, 0.30), sec(1002))
+# adidaya / ulang (1089-1299)
+place(S, whoosh(0.8, True), sec(1089), 0.55)
+place(S, bell(131, 3.0, 0.5), sec(1103))
+for i in range(10):
+    place(S, drum(58, 0.5), sec(1201 + i * 9), 0.45)
+place(S, whoosh(0.9, False), sec(1250), 0.5)
+# finale (1300-1451)
+place(S, whoosh(1.1, False), sec(1300), 0.55)
+place(S, pad(146.83, 3.4, 0.45), sec(1320))
+place(S, rustle(3.0, 0.5), sec(1330))
+for i in range(6):
+    place(S, drum(52, 0.5), sec(1340 + i * 12), max(0.1, 0.45 - i * 0.06))
+place(S, bell(98, 4.0, 0.35), sec(1420))
+
+# ---------------- MUSIK: mars, berhenti di kalimat "pertanyaan besar" ----------------
+M = np.zeros(N); beat = 60 / 108; STOP = 33.4
+chords = [(220.0, 261.63, 329.63), (174.61, 220.0, 261.63), (196.0, 246.94, 293.66), (220.0, 261.63, 329.63)]
+bar = 4 * beat; i = 0
+while i * bar < STOP:
+    a = i * bar; c = chords[i % 4]; L = min(bar, STOP - a) + 0.3
+    for f in c: place(M, pad(f, L, 0.20), a)
+    place(M, pad(c[0] / 2, L, 0.42), a)
     for k in range(8):
         tt = a + k * beat / 2
-        if tt < t1: place(M, pluck(c[[0, 1, 2, 1, 2, 1, 0, 2][k]] * 4, 0.45, 0.5), tt)
-    if a >= 2.5:
-        for k in (0, 2):
-            if a + k * beat < t1 - 0.2: place(M, drum(60, 0.7), a + k * beat)
-        for k in (1, 3):
-            if a + k * beat < t1 - 0.2: place(M, hp(noise(0.08), 4500) * ex(0.08, 60), a + k * beat, 0.25)
+        if tt < STOP: place(M, pluck(c[[0, 1, 2, 1, 2, 1, 0, 2][k]] * 4, 0.45, 0.45), tt)
+    for k in (0, 2):
+        if a + k * beat < STOP - 0.2: place(M, drum(60, 0.65), a + k * beat)
+    for k in (1, 3):
+        if a + k * beat < STOP - 0.2: place(M, hp(noise(0.08), 4500) * ex(0.08, 60), a + k * beat, 0.22)
     i += 1
+M[int(STOP * SR):] = 0.0
+
 fade = np.minimum(t_(DUR) / 0.8, 1.0) * np.minimum((DUR - t_(DUR)) / 1.0, 1.0); M = M * fade
 def wav(name, x):
     s = np.clip(np.stack([x, x]).T, -1, 1).astype(np.float32); import soundfile as sf

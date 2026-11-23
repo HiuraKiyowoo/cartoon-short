@@ -88,6 +88,15 @@ jobs:
           python3 work/audio.py
           python3 work/mix.py
 
+      - name: Encode video (tanpa audio)
+        working-directory: kit
+        run: |
+          set -o pipefail
+          mkdir -p out
+          ffmpeg -y -hide_banner -loglevel error -framerate 30 -i frames/f%04d.jpg \
+            -c:v libx264 -preset veryfast -crf 17 -pix_fmt yuv420p out/video.mp4
+          ls -l out/video.mp4
+
       - name: Unggah hasil
         uses: actions/upload-artifact@v4
         with:
@@ -95,4 +104,5 @@ jobs:
           path: |
             kit/frames
             kit/stills
+            kit/out
           if-no-files-found: warn
