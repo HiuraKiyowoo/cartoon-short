@@ -156,15 +156,15 @@ const frame = (f) => {
       break; }
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
-      C = { pos: A(lv([0, 2.1, 8.4], [0, 1.95, 7.0], p)), look: A(lv([0, 2.0, 1.0], [0, 1.95, 0.8], p)), fov: lerp(44, 40, p), roll: lerp(-1.5, 1.5, u) };
-      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.72, 0, 1.0, 0.92, false, idle(f, 11), true);
-      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.75, 0, 0.8, 0.9, true, idle(f, 12), true);
+      C = { pos: A(lv([0, 3.4, 9.6], [0, 3.2, 8.2], p)), look: A(lv([0, 3.0, 2.2], [0, 2.95, 2.0], p)), fov: lerp(46, 42, p), roll: lerp(-1.5, 1.5, u) };
+      person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.8, 1.68, 2.2, 0.92, false, idle(f, 11), false);
+      person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 0.85, 1.68, 2.0, 0.9, true, idle(f, 12), false);
       fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 0.4, 0.7, 0, true);
       break; }
     case "amsterdam": {
       const p = sm(ramp(f, 617, 690));
-      C = { pos: A(lv([0, 3.0, 12], [0, 3.6, 9.4], p)), look: A(lv([0, 3.0, -2], [0, 3.3, -3], p)), fov: lerp(48, 44, p), roll: lerp(-2, 2, u) };
-      person(raja({ expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.6, 0, 1.2, 1.04, false, idle(f, 13), true);
+      C = { pos: A(lv([0, 3.2, 10.6], [0, 3.8, 8.6], p)), look: A(lv([0, 3.1, 1.6], [0, 3.5, 0.6], p)), fov: lerp(48, 44, p), roll: lerp(-2, 2, u) };
+      person(raja({ expr: "grin", lift: 150 + Math.sin(f / 9) * 10 }), -0.75, 1.68, 2.2, 1.0, false, idle(f, 13), false);
       if (f > 660) fx("spark", ((f - 660) % 22) / 22, -0.6, 2.5, 1.2, 0.8, 0, true);
       break; }
     case "kelas": {
@@ -241,7 +241,13 @@ window.__audit = (f) => {
       x0 = Math.min(x0, v.x); x1 = Math.max(x1, v.x); y0 = Math.min(y0, v.y); y1 = Math.max(y1, v.y);
     }
     const r = (n) => Math.round(n * 1000) / 1000;
-    out.push({ pool: k, x0: r(x0), x1: r(x1), y0: r(y0), y1: r(y1), minY: r(bb.min.y), cut: x0 < -1 || x1 > 1 || y0 < -1 || y1 > 1 });
+    // uji okulasi: apakah ada benda lain antara kamera dan titik tengah kartu?
+    const pusat = bb.getCenter(new THREE.Vector3());
+    const arah = pusat.clone().sub(cam.position).normalize();
+    const rc = new THREE.Raycaster(cam.position.clone(), arah, 0.1, pusat.distanceTo(cam.position) - 0.05);
+    const tabrak = rc.intersectObjects(scene.children, true).filter((h) => h.object !== m);
+    out.push({ pool: k, x0: r(x0), x1: r(x1), y0: r(y0), y1: r(y1), minY: r(bb.min.y), cut: x0 < -1 || x1 > 1 || y0 < -1 || y1 > 1,
+      terhalang: tabrak.length ? (tabrak[0].object.material && tabrak[0].object.material.name ? tabrak[0].object.material.name : "benda") : null });
   }
   return out;
 };

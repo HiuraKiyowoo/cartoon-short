@@ -75,15 +75,18 @@ export const buildKotaKanal = (par) => {
   }
   // jembatan kanal
   for (const z of [-16, 2]) {
-    addM(g, box(12, 0.35, 3.0), mkMat(T("plain", "#8a6a4a", null, 3, 2)), [0, 1.5, z], { ink: 0.03 });
-    for (const sx of [-1, 1]) addM(g, box(0.3, 1.5, 3.0), mkMat(T("stone", "#8a8172", null, 1, 2)), [sx * 5.6, 0.75, z], { ink: 0.03 });
+    // dek jembatan + pagar supaya tidak terbaca sebagai papan nyangkut
+    addM(g, box(13, 0.35, 3.6), mkMat(T("plain", "#8a6a4a", null, 3, 2)), [0, 1.5, z], { ink: 0.03 });
+    for (const sx of [-1, 1]) addM(g, box(0.3, 1.5, 3.6), mkMat(T("stone", "#8a8172", null, 1, 2)), [sx * 6.2, 0.75, z], { ink: 0.03 });
+    for (const sz of [-1, 1]) for (let i = -3; i <= 3; i++) addM(g, box(0.14, 0.9, 0.14), mkMat(0x6e4a30), [i * 1.9, 2.15, z + sz * 1.7], { ink: 0.02 });
+    for (const sz of [-1, 1]) addM(g, box(12.6, 0.12, 0.12), mkMat(0x6e4a30), [0, 2.55, z + sz * 1.7], { ink: 0.02 });
   }
   // tiang panji rekaan + perahu kanal
   o.banner = [];
-  for (const [x, z, tipe] of [[-9.4, -10, "kota"], [9.4, -2, "kota"], [-9.4, 6, "armada"]]) {
+  for (const [x, z, tipe] of [[-3.4, 5.2, "kota"], [3.6, 4.8, "armada"], [-9.6, -12, "kota"], [9.6, -6, "kota"]]) {
     addM(g, cyl(0.09, 0.11, 6.4, 8), mkMat(0x5a3b28), [x, 3.2, z], { ink: 0.02 });
     const b = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), bannerMat(tipe));
-    b.position.set(x + 1.2, 5.6, z); g.add(b); o.banner.push(b);
+    b.position.set(x + 1.3, 5.6, z); b.rotation.y = Math.PI; g.add(b); o.banner.push(b);
   }
   const kapalKanal = (x, z) => { addM(g, box(4.6, 0.7, 1.7), mkMat(T("plain", "#7a5133", null, 2, 1)), [x, 0.35, z], { ink: 0.03 }); addM(g, box(0.1, 2.6, 0.1), mkMat(0x5a3b26), [x - 1.4, 2.0, z], { ink: 0.02 }); };
   kapalKanal(-2.0, -12); kapalKanal(2.4, 4);

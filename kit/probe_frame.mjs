@@ -37,7 +37,9 @@ for (const f of frames) {
   const rawan = kartu.filter((k) => !k.cut && (Math.abs(k.x0) > 0.94 || Math.abs(k.x1) > 0.94 || Math.abs(k.y0) > 0.94 || Math.abs(k.y1) > 0.94));
   const mengapung = kartu.filter((k) => k.minY > ambang);
   masalah += terpotong.length + mengapung.length;
-  console.log(`frame ${f}: ${kartu.length} kartu | terpotong ${terpotong.length} | rawan ${rawan.length} | mengapung ${mengapung.length}`);
+  console.log(`frame ${f}: ${kartu.length} kartu | terpotong ${terpotong.length} | terhalang ${kartu.filter((k)=>k.terhalang).length} | mengapung ${mengapung.length}`);
+  const terhalang = kartu.filter((k) => k.terhalang);
+  for (const k of terhalang) console.log(`   [TERHALANG] ${k.pool} oleh ${k.terhalang}`);
   for (const k of terpotong) console.log(`   [POTONG] ${k.pool} x=[${k.x0},${k.x1}] y=[${k.y0},${k.y1}] minY=${k.minY}`);
   for (const k of mengapung) console.log(`   [APUNG ] ${k.pool} minY=${k.minY} (ambang ${ambang}) x=[${k.x0},${k.x1}]`);
   for (const k of rawan) console.log(`   [RAWAN ] ${k.pool} hampir tepi x=[${k.x0},${k.x1}] y=[${k.y0},${k.y1}]`);
