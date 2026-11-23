@@ -114,7 +114,9 @@ const frame = (f) => {
     case "armada": {
       // frame 0 sudah gambar hook: armada terlihat penuh dari atas air
       const p = sm(ramp(f, 0, 120));
-      C = { pos: A(lv([3.0, 3.4, -64], [1.0, 3.8, -58], p)), look: A(lv([0, 4.4, -22], [-1, 4.2, -16], p)), fov: lerp(50, 46, p), roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0, 9.2, 12.5], [0.9, 9.6, 9.5], p)), look: A(lv([0, 2.2, -32], [-1, 1.8, -38], p)), fov: lerp(50, 47, p), roll: lerp(-1.5, 1.5, u) };
+      person(folk({ v: 1, expr: "grin", look: Math.sin(f / 20) }), -2.6, 0, 6.0, 0.75, false, idle(f, 1), true);
+      person(guard({ expr: "stern", look: Math.sin(f / 24) }), 2.4, 0, 6.8, 0.78, true, idle(f, 4), true);
       if (f > 50) fx("bird", ((f - 50) % 40) / 40, -6.0 + ((f - 50) % 40) / 40 * 12, 7.2, -26, 0.9, 0, false);
       if (f > 90) fx("cloud", ((f - 90) % 60) / 60, -9.0, 9.5, -20, 7.0, 0, true);
       if (f % 26 < 13) fx("cloud", ((f % 26) / 13), 5.0, 1.4, -0.5, 9.0, 0, true);
