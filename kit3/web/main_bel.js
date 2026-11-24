@@ -182,9 +182,9 @@ const frame = (f) => {
       fx("splash", (f % 34) / 34, -2.6, 0.4, -13, 1.6); fx("splash", ((f + 14) % 34) / 34, 3.4, 0.4, -15, 1.4);
       flashA = f >= 430 && f < 434 ? 0.25 : 0; break; }
     case "krat": {
-      C = { pos: A(lv([-4.0, Y_JALAN + 2.6, 8.8], [-4.0, Y_JALAN + 2.3, 7.8], sm(u))), look: A([-12.8, Y_JALAN + 0.75, 6.2]), fov: 40, roll: lerp(1.5, -1.5, u) };   // kamera DI ATAS KANAL: terlihat air, peti di tepi, rumah di belakang
-      fx("star", (f % 40) / 40, -13.2, Y_JALAN + 1.5, 6.6, 0.9, 0, true);
-      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -14.9, Y_JALAN, 8.4, 1.0, false, idle(f, 23), true);
+      C = { pos: A(lv([-4.6, Y_JALAN + 2.4, 8.0], [-4.6, Y_JALAN + 2.1, 7.2], sm(u))), look: A([-10.9, Y_JALAN + 0.75, 6.2]), fov: 42, roll: lerp(1.5, -1.5, u) };   // kamera DI ATAS KANAL: air di depan, peti di bibir, rumah di belakang
+      fx("star", (f % 40) / 40, -10.6, Y_JALAN + 1.5, 6.6, 0.9, 0, true);
+      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -10.3, Y_JALAN, 4.2, 1.0, false, idle(f, 23), true);
       break; }
     case "klaim": {
       C = { pos: A(lv([0, Y_JALAN + 1.2, 9.6], [0, Y_JALAN + 1.1, 8.4], sm(u))), look: A([0, Y_JALAN + 0.95, 3.4]), fov: 46, roll: lerp(-1.5, 1.5, u) };
@@ -208,9 +208,9 @@ const frame = (f) => {
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
       break; }
     case "kirim": {
-      C = { pos: A(lv([-3.6, Y_JALAN + 2.5, 9.4], [-3.6, Y_JALAN + 2.2, 8.4], sm(u))), look: A([-13.0, Y_JALAN + 0.8, 6.6]), fov: 40, roll: lerp(-1.5, 1.5, u) };
-      fx("star", ((f + 12) % 40) / 40, -13.6, Y_JALAN + 1.6, 6.8, 0.95, 0, true);
-      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -11.0, Y_JALAN, 8.6, 1.0, true, idle(f, 27), true);
+      C = { pos: A(lv([-4.4, Y_JALAN + 2.5, 9.0], [-4.4, Y_JALAN + 2.2, 8.2], sm(u))), look: A([-10.9, Y_JALAN + 0.8, 6.6]), fov: 42, roll: lerp(-1.5, 1.5, u) };
+      fx("star", ((f + 12) % 40) / 40, -10.6, Y_JALAN + 1.6, 6.8, 0.95, 0, true);
+      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -10.2, Y_JALAN, 9.6, 1.0, true, idle(f, 27), true);
       break; }
     case "kota_wide": {
       C = { pos: A([lerp(15, -15, sm(u)), Y_JALAN + 5.2, 14]), look: A([0, Y_JALAN + 2.6, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };

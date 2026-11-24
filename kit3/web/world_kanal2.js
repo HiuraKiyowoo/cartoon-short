@@ -75,10 +75,12 @@ export const buildKanal = (par) => {
   addM(o.blades, cyl(0.4, 0.4, 0.5, 8), mkMat(0x4a3020), [0, 0, 0.2], { rot: [Math.PI / 2, 0, 0], ink: 0.02 });
   // peti tulip TERBUKA di tepi kanal barat (x -12,4): dinding 4 sisi, tulip tumbuh dari DALAM peti
   o.krat = [];
-  for (let i = 0; i < 6; i++) {
-    const kx = -12.6 - (i % 3) * 0.02, kz = 6.6 - Math.floor(i / 3) * 1.6, kx2 = kx - (i % 3) * 1.3;
-    const k = new THREE.Group(); k.position.set(kx2, Y_JALAN, kz); g.add(k);
-    addM(k, box(1.3, 0.12, 1.3), mkMat(0x9a7448), [0, 0.06, 0], { ink: 0.03 });            // alas
+  // peti di BIBIR KANAL (x -10,6; bibir kanal = x 9,5…11,7) supaya kamera dari sisi kanal
+  // melihat: air di depan, peti di bibir, rumah di belakang — bukan dinding bata memenuhi layar.
+  for (let i = 0; i < 4; i++) {
+    const kz = 8.2 - i * 1.45;
+    const k = new THREE.Group(); k.position.set(-10.6, Y_JALAN, kz); g.add(k);
+    addM(k, box(1.3, 0.12, 1.3), mkMat(0x9a7448), [0, 0.06, 0], { ink: 0.03 });
     for (const sx of [-1, 1]) addM(k, box(0.12, 0.62, 1.3), mkMat(0xb08a5a), [sx * 0.59, 0.31, 0], { ink: 0.025 });
     for (const sz of [-1, 1]) addM(k, box(1.3, 0.62, 0.12), mkMat(0xb08a5a), [0, 0.31, sz * 0.59], { ink: 0.025 });
     for (let j = 0; j < 4; j++) { const bx = -0.36 + (j % 2) * 0.72, bz = -0.34 + Math.floor(j / 2) * 0.68;

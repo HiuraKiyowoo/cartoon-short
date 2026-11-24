@@ -1,6 +1,6 @@
 // Audit penempatan: cetak laporan JSON untuk beberapa frame (dipakai CI).
 import { chromium } from "playwright";
-const [, , spec = "40,120,200,290,370,460,530,600,640,690,730,790,860,940,1100,1240,1390", w = "540"] = process.argv;
+const [, , spec = "40,120,200,290,370,460,530,600,650,690,730,790,860,940,1100,1240,1390", w = "540"] = process.argv;
 const frames = []; for (const part of spec.split(",")) { const [a, b] = part.split("-").map(Number); for (let i = a; i <= (b ?? a); i++) frames.push(i); }
 const b = await chromium.launch({ args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--allow-file-access-from-files"] });
 const pg = await b.newPage({ viewport: { width: +w, height: Math.round(+w * 16 / 9) } });
