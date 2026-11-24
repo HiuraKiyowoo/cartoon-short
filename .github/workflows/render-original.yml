@@ -1,6 +1,8 @@
 name: render-original
 
 on:
+  push:
+    branches: [opencode-original]
   workflow_dispatch:
     inputs:
       frames:
@@ -30,7 +32,7 @@ jobs:
         run: npm run bundle
       - name: Render
         working-directory: original
-        run: node render.mjs frames "${{ inputs.frames }}" "${{ inputs.width }}"
+        run: node render.mjs frames "${{ inputs.frames || '400' }}" "${{ inputs.width || '1080' }}"
       - name: Upload frames
         if: always()
         uses: actions/upload-artifact@v4
