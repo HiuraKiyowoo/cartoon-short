@@ -85,9 +85,9 @@ export const buildKotaKanal = (par) => {
   // tiang panji rekaan + perahu kanal
   o.banner = [];
   for (const [x, z, tipe] of [[-1.25, 4.6, "kota"]]) {
-    addM(g, cyl(0.09, 0.11, 6.2, 8), mkMat(0x5a3b28), [x, 3.1, z], { ink: 0.02 });
+    addM(g, cyl(0.09, 0.11, 5.6, 8), mkMat(0x5a3b28), [x, 2.8, z], { ink: 0.02 });
     const b = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), bannerMat(tipe));
-    b.position.set(x, 5.05, z); b.rotation.y = Math.PI; g.add(b); o.banner.push(b);
+    b.position.set(x, 4.45, z); b.rotation.y = Math.PI; g.add(b); o.banner.push(b);
   }
   const kapalKanal = (x, z) => { addM(g, box(4.6, 0.7, 1.7), mkMat(T("plain", "#7a5133", null, 2, 1)), [x, 0.35, z], { ink: 0.03 }); addM(g, box(0.1, 2.6, 0.1), mkMat(0x5a3b26), [x - 1.4, 2.0, z], { ink: 0.02 }); };
   kapalKanal(-2.0, -12); kapalKanal(2.4, 4);

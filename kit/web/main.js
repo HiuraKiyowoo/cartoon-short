@@ -156,7 +156,7 @@ const frame = (f) => {
       break; }
     case "pasar": {
       const p = sm(ramp(f, 570, 606));
-      C = { pos: A(lv([0, 3.4, 9.6], [0, 3.2, 8.2], p)), look: A(lv([0, 3.0, 2.2], [0, 2.95, 2.0], p)), fov: lerp(46, 42, p), roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0, 3.1, 7.4], [0, 2.95, 6.4], p)), look: A(lv([0, 2.9, 2.4], [0, 2.85, 2.2], p)), fov: lerp(44, 40, p), roll: lerp(-1.5, 1.5, u) };
       person(pelaut({ expr: "grin", look: Math.sin(f / 12) }), -0.95, 1.68, 2.85, 1.15, false, idle(f, 11), true);
       person(murid({ expr: "neutral", look: Math.sin(f / 14 + 1) }), 1.0, 1.68, 2.65, 1.12, true, idle(f, 12), true);
       fx("spark", ((f - 570) % 26) / 26, 0.1, 1.6, 0.4, 0.7, 0, true);
