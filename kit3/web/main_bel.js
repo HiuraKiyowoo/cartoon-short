@@ -182,7 +182,7 @@ const frame = (f) => {
       fx("splash", (f % 34) / 34, -2.6, 0.4, -13, 1.6); fx("splash", ((f + 14) % 34) / 34, 3.4, 0.4, -15, 1.4);
       flashA = f >= 430 && f < 434 ? 0.25 : 0; break; }
     case "krat": {
-      C = { pos: A(lv([-4.6, Y_JALAN + 2.4, 8.0], [-4.6, Y_JALAN + 2.1, 7.2], sm(u))), look: A([-10.9, Y_JALAN + 0.75, 6.2]), fov: 42, roll: lerp(1.5, -1.5, u) };   // kamera DI ATAS KANAL: air di depan, peti di bibir, rumah di belakang
+      C = { pos: A(lv([-2.5, Y_JALAN + 3.6, 11.5], [-2.5, Y_JALAN + 3.3, 10.6], sm(u))), look: A([-10.9, Y_JALAN + 1.2, 6.4]), fov: 46, roll: lerp(1.5, -1.5, u) };   // kamera di atas kanal: air depan, peti di bibir, rumah + atap di belakang
       fx("star", (f % 40) / 40, -10.6, Y_JALAN + 1.5, 6.6, 0.9, 0, true);
       break; }
     case "klaim": {
@@ -197,8 +197,8 @@ const frame = (f) => {
     case "kelas_wide": {
       C = { pos: A(lv([0.3, 2.45, 4.7], [0.25, 2.4, 3.9], sm(u))), look: A([0, 1.95, -2.6]), fov: 44, roll: lerp(-1.5, 1.5, u) };
       const pop = (t0) => bk(ramp(f, t0, t0 + 9));
-      if (f >= 628) person(F({ kind: "guru", seed: 9, expr: "neutral", look: -0.8 }), -1.0, 0, -2.0, 1.05 * pop(628), false, idle(f, 9), true);
-      if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 1.0, 0, -2.0, 0.85 * pop(640), false, idle(f, 13), true);
+      if (f >= 628) person(F({ kind: "guru", seed: 9, expr: "neutral", look: -0.5 }), -0.72, 0, -2.0, 1.05 * pop(628), false, idle(f, 9), true);
+      if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 0.78, 0, -2.0, 0.85 * pop(640), false, idle(f, 13), true);
       break; }
     case "kelas_close": {
       C = { pos: A(lv([0.35, 1.62, 1.9], [0.3, 1.58, 1.3], sm(u))), look: A([0.2, 1.30, -4.6]), fov: 44, roll: lerp(1.2, -1.2, u) };
@@ -207,7 +207,7 @@ const frame = (f) => {
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
       break; }
     case "kirim": {
-      C = { pos: A(lv([-4.4, Y_JALAN + 2.5, 9.0], [-4.4, Y_JALAN + 2.2, 8.2], sm(u))), look: A([-10.9, Y_JALAN + 0.8, 6.6]), fov: 42, roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([-2.2, Y_JALAN + 3.8, 12.2], [-2.2, Y_JALAN + 3.5, 11.2], sm(u))), look: A([-10.9, Y_JALAN + 1.25, 6.6]), fov: 46, roll: lerp(-1.5, 1.5, u) };
       fx("star", ((f + 12) % 40) / 40, -10.6, Y_JALAN + 1.6, 6.8, 0.95, 0, true);
       break; }
     case "kota_wide": {
