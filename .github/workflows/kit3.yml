@@ -35,6 +35,10 @@ jobs:
       - name: Bundle
         working-directory: kit3
         run: npm run bundle
+      - name: Audit penempatan (denah: terpotong / terhalang / kaki)
+        working-directory: kit3
+        run: node audit.mjs
+
       - name: Render stills + kontak sheet
         if: ${{ inputs.mode == 'stills' }}
         working-directory: kit3
