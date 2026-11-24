@@ -136,12 +136,15 @@ const frame = (f) => {
   let flashA = 0, tintA = 0;
   const F = (o) => ({ kind: o.kind, v: o.v ?? 0, seed: o.seed ?? 7, blink: blink(f, o.seed ?? 7), mode: "stand", ...o });
   // gerak ambient (playbook 3): tidak ada frame yang benar-benar diam
-  WN.sea.material.map.offset.set(f * 0.0006, f * 0.00035);
-  WN.ships.forEach((s, i) => { s.g.position.y = Math.sin(f / 16 + i) * 0.16; s.g.rotation.z = Math.sin(f / 21 + i) * 0.025; s.sail.rotation.z = Math.sin(f / 13 + i) * 0.015; s.fl.rotation.y = Math.sin(f / 5 + i) * 0.35; s.fl2.rotation.y = Math.sin(f / 5 + i) * 0.35; });
-  WN.banner.forEach((b, i) => { b.rotation.y = Math.sin(f / 6 + i) * 0.3; });
-  WK.air.material.map.offset.set(-f * 0.0004, f * 0.00025);
-  WK.blades.rotation.z = f * 0.012;
-  WI.lilin.forEach((fl, i) => { fl.scale.set(1 + Math.sin(f / 5 + i) * 0.12, 1 + Math.sin(f / 4 + i * 2) * 0.2, 1); });
+  // semua animasi ambient WAJIB tahan nilai kosong: panggung bisa tidak punya bagian itu
+  const each = (arr, fn) => { if (arr && arr.length) arr.forEach(fn); };
+  if (WN.sea) WN.sea.material.map.offset.set(f * 0.0006, f * 0.00035);
+  each(WN.ships, (s, i) => { s.g.position.y = Math.sin(f / 16 + i) * 0.16; s.g.rotation.z = Math.sin(f / 21 + i) * 0.025; if (s.sail) s.sail.rotation.z = Math.sin(f / 13 + i) * 0.015; if (s.fl) s.fl.rotation.y = Math.sin(f / 5 + i) * 0.35; if (s.fl2) s.fl2.rotation.y = Math.sin(f / 5 + i) * 0.35; });
+  each(WN.banner, (b, i) => { b.rotation.y = Math.sin(f / 6 + i) * 0.3; });
+  if (WK.air) WK.air.material.map.offset.set(-f * 0.0004, f * 0.00025);
+  if (WK.blades) WK.blades.rotation.z = f * 0.012;
+  each(WI.lilin, (fl, i) => { fl.scale.set(1 + Math.sin(f / 5 + i) * 0.12, 1 + Math.sin(f / 4 + i * 2) * 0.2, 1); });
+  each(WP.lilin, (fl, i) => { fl.scale.set(1 + Math.sin(f / 5 + i) * 0.14, 1 + Math.sin(f / 4 + i * 2) * 0.22, 1); });
   switch (S.id) {
     case "hook_wide": {
       C = { pos: A(lv([18, 11, 26], [8, 6, 14], sm(u))), look: A([0, 5, -30]), fov: 46, roll: lerp(2, -1, u) };
