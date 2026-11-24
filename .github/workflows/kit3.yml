@@ -1,0 +1,64 @@
+name: Kit3 — cerita baru (Belanda jadi jajahan)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "stills (kontak sheet) atau render (video penuh)"
+        default: "stills"
+      frames:
+        description: "daftar frame: 20,110,540 (stills) — diabaikan saat mode=render"
+        default: "20,110,200,280,360,450,530,600,640,690,730,790,860,940,1100,1240,1390"
+      width:
+        description: "lebar frame"
+        default: "540"
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Pasang dependensi
+        working-directory: kit3
+        run: npm install --no-audit --no-fund
+      - name: Bundle
+        working-directory: kit3
+        run: npm run bundle
+      - name: Render stills + kontak sheet
+        if: ${{ inputs.mode == 'stills' }}
+        working-directory: kit3
+        run: |
+          node render.mjs stills "${{ inputs.frames }}" "${{ inputs.width }}"
+          python3 sheet.py stills stills/contact.jpg 6
+      - name: Render penuh 1080 (2 proses paralel)
+        if: ${{ inputs.mode == 'render' }}
+        working-directory: kit3
+        run: |
+          node render.mjs frames "0-725" 1080 > r1.log 2>&1 &
+          node render.mjs frames "726-1450" 1080 > r2.log 2>&1 &
+          wait
+          tail -3 r1.log r2.log
+          ls frames | wc -l
+      - name: Pasang ffmpeg + encode
+        if: ${{ inputs.mode == 'render' }}
+        working-directory: kit3
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+          ffmpeg -y -hide_banner -loglevel error -framerate 30 -i frames/f%04d.jpg -i work/voice.mp3 \
+            -c:v libx264 -crf 23 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart out/video.mp4
+          ffprobe -v error -show_entries format=duration,size -of csv=p=0 out/video.mp4
+      - name: Unggah hasil
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hasil-kit3
+          path: |
+            kit3/stills
+            kit3/out
+            kit3/r1.log
+            kit3/r2.log
+          if-no-files-found: warn

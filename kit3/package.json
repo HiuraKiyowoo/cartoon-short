@@ -1,0 +1,17 @@
+{
+  "name": "belanda-jadi-jajahan-kit3",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bundle": "esbuild web/main_bel.js --bundle --outfile=web/bundle.js --loader:.ts=ts --format=iife"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "three": "0.160.0",
+    "playwright": "^1.40.0"
+  }
+}
