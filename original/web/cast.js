@@ -8,6 +8,9 @@ const P = {
   merchant: { skin: "#c98f62", coat: "#7a3b2e", coat2: "#5f2c22", trim: "#d9b45a", shirt: "#efe0c0", pants: "#4a3a2a", boots: "#2a2020", sash: "#2f6b5f", hat: "cap", hair: "#241a20" },
   teacher: { skin: "#e0b48c", coat: "#6b4a2e", coat2: "#543820", trim: "#c9a05a", shirt: "#f4ead2", pants: "#3a3038", boots: "#241a20", sash: null, hat: null, hair: "#3a2a20" },
   student: { skin: "#d9a878", coat: "#e8dcc0", coat2: "#d9c9a8", trim: "#2f6b66", shirt: "#f6efdc", pants: "#2f4a5a", boots: "#2a2020", sash: null, hat: null, hair: "#241a20" },
+  dutchman: { skin: "#f2d3b3", coat: "#33405a", coat2: "#26304a", trim: "#d9c9a4", shirt: "#f7f0de", pants: "#3a3442", boots: "#241c22", sash: null, hat: "tricorn", hair: "#c9a869" },
+  dutchwoman: { skin: "#f6ddc2", coat: "#6d5570", coat2: "#57435a", trim: "#e6d3a4", shirt: "#fbf4e2", pants: "#4a3f52", boots: "#2a2228", sash: null, hat: "cap", hair: "#d9b878" },
+  dutchStudent: { skin: "#f2d3b3", coat: "#4a5a6e", coat2: "#3a4758", trim: "#b8453c", shirt: "#f7f0de", pants: "#3a3442", boots: "#241c22", sash: null, hat: null, hair: "#c9a869" },
   official: { skin: "#e6c09a", coat: "#2a2230", coat2: "#1e1824", trim: "#c9a05a", shirt: "#f4ead2", pants: "#2a2230", boots: "#1e1820", sash: "#6b2f3a", hat: null, hair: "#d8d0c0" },
 };
 
@@ -246,6 +249,19 @@ export function drawPerson(cv, o = {}) {
     g.fill();
     blob(g, -headRX + 10, 26, 18, 34, c.hair);
     blob(g, headRX - 10, 26, 18, 34, c.hair);
+  }
+
+  if (o.back) {
+    g.fillStyle = c.hair;
+    g.beginPath();
+    g.ellipse(0, -10, headRX + 2, headRY * 0.95, 0, 0, 7);
+    g.fill();
+    g.fillStyle = "rgba(0,0,0,.12)";
+    g.beginPath();
+    g.ellipse(0, 26, headRX * 0.82, 34, 0, 0, 7);
+    g.fill();
+    g.restore();
+    return;
   }
 
   // face

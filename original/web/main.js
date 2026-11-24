@@ -28,6 +28,7 @@ const LOOK = {
   pagi: { sky: ["#79c3e8", "#ffe8bd"], fog: 0xf5dfb6, fn: [55, 230], hemi: [0xfff4e0, 0x667a68, 1.18], dir: [0xfff0c8, 1.55], sun: [-7, 9, 6] },
   senja: { sky: ["#4f6fa8", "#ffd096"], fog: 0xe9cdb4, fn: [150, 520], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
   malam: { sky: ["#16203c", "#463a58"], fog: 0x2a2a44, fn: [30, 150], hemi: [0x9fb0ff, 0x2a2a3a, 0.82], dir: [0x9fb0ff, 0.7], sun: [-4, 8, 5] },
+  lilin: { sky: ["#241a20", "#5e3c26"], fog: 0x3a2a20, fn: [5, 42], hemi: [0xffd9a0, 0x2a1a18, 1.02], dir: [0xffc27c, 1.25], sun: [-2, 5, 3] },
   kelas: { sky: ["#3a2f28", "#6a5444"], fog: 0x5a4a3a, fn: [12, 55], hemi: [0xffe8c8, 0x5a4a3a, 1.0], dir: [0xffe0b0, 1.0], sun: [-3, 6, 4] },
 };
 const skyTex = {};
@@ -164,20 +165,21 @@ ovS.add(depth);
 
 // ---------------------------------------------------------------- shots
 const SHOTS = [
-  { id: "armada", a: 0, b: 146, st: "sea", look: "pagi" },
-  { id: "dermaga", a: 146, b: 229, st: "sea", look: "pagi" },
-  { id: "datang", a: 229, b: 317, st: "sea", look: "senja" },
-  { id: "hadapan", a: 317, b: 488, st: "sea", look: "senja" },
-  { id: "serang", a: 488, b: 570, st: "sea", look: "senja" },
-  { id: "pasar", a: 570, b: 617, st: "town", look: "pagi" },
-  { id: "amsterdam", a: 617, b: 710, st: "town", look: "senja" },
-  { id: "kelas", a: 710, b: 826, st: "class", look: "kelas" },
-  { id: "tulip", a: 826, b: 909, st: "town", look: "pagi" },
-  { id: "kota", a: 909, b: 1004, st: "town", look: "senja" },
-  { id: "gelap", a: 1004, b: 1089, st: "map", look: "malam" },
-  { id: "adidaya", a: 1089, b: 1201, st: "town", look: "pagi" },
-  { id: "ulang", a: 1201, b: 1300, st: "sea", look: "malam" },
-  { id: "akhir", a: 1300, b: 1452, st: "sea", look: "senja" },
+  { id: "hook",      a: 0,    b: 164,  st: "map",    look: "lilin" },
+  { id: "peta",      a: 164,  b: 241,  st: "map",    look: "lilin" },
+  { id: "pelabuhan", a: 241,  b: 325,  st: "dock",   look: "pagi" },
+  { id: "armada",    a: 325,  b: 502,  st: "sea",    look: "senja" },
+  { id: "serang",    a: 502,  b: 576,  st: "dock",   look: "senja" },
+  { id: "dagang",    a: 576,  b: 622,  st: "market", look: "pagi" },
+  { id: "kolonial",  a: 622,  b: 722,  st: "town",   look: "senja" },
+  { id: "kelas",     a: 722,  b: 836,  st: "class",  look: "kelas" },
+  { id: "tulip",     a: 836,  b: 915,  st: "market", look: "pagi" },
+  { id: "istana",    a: 915,  b: 1014, st: "palace", look: "lilin" },
+  { id: "tanya",     a: 1014, b: 1100, st: "map",    look: "lilin" },
+  { id: "adidaya",   a: 1100, b: 1190, st: "palace", look: "lilin" },
+  { id: "salah",     a: 1190, b: 1306, st: "town",   look: "malam" },
+  { id: "kebiasaan", a: 1306, b: 1374, st: "map",    look: "lilin" },
+  { id: "akhir",     a: 1374, b: 1452, st: "sea",    look: "malam" },
 ];
 const shotAt = (f) => {
   let s = SHOTS[0];
@@ -188,20 +190,21 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
+    case "hook": return { pos: [0.7 - 0.3 * e, 2.55, 4.4 - 0.9 * e], look: [-0.3, 1.9, -1.6], fov: 36, roll: 0.6 - 0.4 * e };
+    case "peta": return { pos: [-0.6 + 1.2 * e, 3.1 - 0.3 * e, 5.2 - 0.8 * e], look: [0, 1.8, -2], fov: 42, roll: -0.5 + 0.6 * e };
+    case "pelabuhan": return { pos: [-1.5 + 3 * e, 2.8, 17 - 4 * e], look: [0, 3.4, -15], fov: 44, roll: -1 + 1.4 * e };
     case "armada": return { pos: [-2 + 2.5 * e, 5.2 - 0.7 * e, 25 - 7 * e], look: [-2, 2.4, -13], fov: 42, roll: -1.2 + 2.4 * e };
-    case "dermaga": return { pos: [-16 + 3 * e, 2.2, 9 - 2 * e], look: [-22, 1.4, -16], fov: 44, roll: 1.5 - 3 * e };
-    case "datang": return { pos: [7 - 3 * e, 2.0, 11 - 4 * e], look: [0, 1.7, -9], fov: 46, roll: -2 + 4 * e };
-    case "hadapan": return { pos: [0, 8.4 - 1.2 * e, 42 - 6 * e], look: [0, 2.6, -14], fov: 50 - 3 * e, roll: -1.5 + 3 * e };
-    case "serang": return { pos: [9 + 5 * e, 2.2, 7 - 5 * e], look: [20, 1.7, -20], fov: 44, roll: 2 - 4 * e };
-    case "pasar": return { pos: [-2.5 + 1.5 * e, 2.1, 8 - 3 * e], look: [0, 1.4, -9], fov: 44, roll: -1 + 2 * e };
-    case "amsterdam": return { pos: [2.5 - 2 * e, 3.6, 15 - 4 * e], look: [0, 2.2, -17], fov: 46, roll: 1 - 2 * e };
-    case "kelas": return { pos: [0, 3.2, 9 - 2 * e], look: [0, 3.0, -8], fov: 46, roll: -1 + 2 * e };
-    case "tulip": return { pos: [-3.5 + 2 * e, 2.1, 8 - 2 * e], look: [0, 1.2, -8], fov: 42, roll: 1 - 2 * e };
-    case "kota": return { pos: [0, 11 - 2 * e, 17 - 4 * e], look: [0, 2.0, -22], fov: 48, roll: -2 + 3 * e };
-    case "gelap": return { pos: [0, 2.7, 5.8 - 1.5 * e], look: [0, 1.7, -2.2], fov: 40, roll: -1 + 2 * e };
-    case "adidaya": return { pos: [-9 + 18 * e, 3.6, 13 - 2 * e], look: [0, 2.2, -13], fov: 46, roll: 0 };
-    case "ulang": return { pos: [0, 2.5, 26 - 9 * e], look: [0, 1.8, -11], fov: 46, roll: 2 - 3 * e };
-    default: return { pos: [0, 3.2, 21 + 20 * e], look: [0, 2.2, -32], fov: 50, roll: -1 + 1 * e };
+    case "serang": return { pos: [8 - 2 * e, 2.0, 10 - 3.5 * e], look: [-5, 3.4, -15], fov: 48, roll: 2 - 3 * e };
+    case "dagang": return { pos: [-2.0 + 1.4 * e, 2.1, 8.5 - 2.5 * e], look: [-3.4, 1.7, -2.5], fov: 42, roll: -1 + 1.6 * e };
+    case "kolonial": return { pos: [1.5 - 1.0 * e, 4.4 - 0.4 * e, 16 - 3.5 * e], look: [0, 2.6, -20], fov: 44, roll: 1 - 1.6 * e };
+    case "kelas": return { pos: [0.4 - 0.8 * e, 2.85, 7.6 - 1.3 * e], look: [-0.4, 3.4, -6.5], fov: 40, roll: -0.6 + 1.0 * e };
+    case "tulip": return { pos: [2.2 + 1.6 * e, 1.95, 6.8 - 1.8 * e], look: [5.2, 1.5, -2.6], fov: 40, roll: 0.8 - 1.2 * e };
+    case "istana": return { pos: [0, 2.8, 8.5 - 2.5 * e], look: [0, 3.9, -6], fov: 44, roll: -0.7 + 1.2 * e };
+    case "tanya": return { pos: [0.5 - 0.6 * e, 2.45, 4.2 - 1.0 * e], look: [0, 1.95, -1.5], fov: 34, roll: 0.8 - 1.0 * e };
+    case "adidaya": return { pos: [-1.2 - 1.6 * e, 2.35, 4.6 - 1.1 * e], look: [-3.6, 2.9, -5.2], fov: 34, roll: -0.8 + 1.2 * e };
+    case "salah": return { pos: [0, 7.0 - 1.0 * e, 12 - 2 * e], look: [0, 2.2, -24], fov: 48, roll: 1.4 - 2.2 * e };
+    case "kebiasaan": return { pos: [1.1, 2.2, 3.4 - 0.5 * e], look: [1.9, 2.35, -1.3], fov: 30, roll: -0.6 + 1.0 * e };
+    default: return { pos: [0, 2.6, 26 - 7 * e], look: [0, 2.0, -16], fov: 44, roll: 1.2 - 1.6 * e };
   }
 }
 
@@ -240,6 +243,13 @@ const frame = (f) => {
   glitter.rotation.y = Math.atan2(cam.position.x - 16, cam.position.z + 152);
   for (const d of glitter.userData.dash) {
     d.material.opacity = Math.max(0, d.material.opacity * 0.92 + 0.08 * (0.25 + 0.35 * Math.sin(f * 0.09 * d.userData.sp + d.position.z)));
+  }
+
+  const vis = stages[S.st];
+  if (vis && vis.userData.cards) {
+    for (const c of vis.userData.cards) {
+      c.rotation.y = Math.atan2(cam.position.x - c.position.x, cam.position.z - c.position.z);
+    }
   }
 
   flash.material.opacity = 0;

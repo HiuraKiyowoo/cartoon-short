@@ -1,7 +1,8 @@
 // Set & properti asli untuk "Belanda menjadi jajahan Indonesia".
 // Semua bentuk, tekstur, panji, dan warna di file ini ditulis dari nol.
 import * as THREE from "three";
-import { makeFleet } from "./ship.js";
+import { makeFleet, makeShip } from "./ship.js";
+import { makeCard, cardRow, textTexture } from "./cards.js";
 
 export const INK = 0x241a24;
 
@@ -279,12 +280,72 @@ const banner = (a, b, emblem) => tex(256, 128, (g, w, h) => {
   g.restore();
 });
 
+const earth = tex(256, 256, (g, w, h) => {
+  g.fillStyle = "#9a7a55";
+  g.fillRect(0, 0, w, h);
+  const r = rng(311);
+  for (let i = 0; i < 500; i++) {
+    g.fillStyle = `rgba(${90 + r() * 60},${68 + r() * 44},${44 + r() * 34},${0.06 + r() * 0.16})`;
+    g.beginPath();
+    g.ellipse(r() * w, r() * h, 2 + r() * 9, 1 + r() * 5, r() * 3, 0, 7);
+    g.fill();
+  }
+  g.strokeStyle = "rgba(70,52,36,.25)";
+  for (let i = 0; i < 14; i++) {
+    g.lineWidth = 1 + r() * 2;
+    const x = r() * w, y = r() * h;
+    g.beginPath();
+    g.moveTo(x, y);
+    g.quadraticCurveTo(x + 20, y + 8, x + 44, y - 4);
+    g.stroke();
+  }
+}, [6, 6]);
+
+const awning = tex(256, 128, (g, w, h) => {
+  for (let i = 0; i < 8; i++) {
+    g.fillStyle = i % 2 ? "#f1e4c8" : "#b4462f";
+    g.fillRect((i * w) / 8, 0, w / 8, h);
+  }
+  g.fillStyle = "rgba(60,40,30,.18)";
+  g.fillRect(0, h - 16, w, 16);
+});
+
+const tulipSign = textTexture(512, 256, (g, w, h) => {
+  g.fillStyle = "#f2e6cc";
+  g.fillRect(0, 0, w, h);
+  g.strokeStyle = "#3a2a24";
+  g.lineWidth = 14;
+  g.strokeRect(8, 8, w - 16, h - 16);
+  g.fillStyle = "#2f3f6b";
+  g.font = "bold 96px Georgia, serif";
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.fillText("TULIP", w / 2, h / 2 - 4);
+});
+
+const cheeseSign = textTexture(512, 256, (g, w, h) => {
+  g.fillStyle = "#f2e6cc";
+  g.fillRect(0, 0, w, h);
+  g.strokeStyle = "#3a2a24";
+  g.lineWidth = 14;
+  g.strokeRect(8, 8, w - 16, h - 16);
+  g.fillStyle = "#8e2f3a";
+  g.font = "bold 96px Georgia, serif";
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  g.fillText("KEJU", w / 2, h / 2 - 4);
+});
+
 export const T = {
   wood, sail, water, plaster, roof, stone, grass, cloud, foam,
   bannerWave: banner("#1d6b66", "#e8c45a", "wave"),
   bannerSun: banner("#8e2f3a", "#f0d9a8", "sun"),
   bannerKris: banner("#2f3f6b", "#d9b45a", "kris"),
   sailPattern,
+  earth,
+  awning,
+  tulipSign,
+  cheeseSign,
 };
 
 // ---------------------------------------------------------------- helpers
@@ -575,8 +636,35 @@ export function buildClassStage() {
   sideR.position.x = 11;
   g.add(sideR);
 
-  const board = box(9.2, 4.4, 0.12, toon(0x24352e));
-  board.position.set(0, 4.6, -7.75);
+  const boardTex = textTexture(1024, 512, (c, w, h) => {
+    c.fillStyle = "#22352c";
+    c.fillRect(0, 0, w, h);
+    const dust = c.createRadialGradient(w * 0.3, h * 0.4, 20, w * 0.5, h * 0.5, w * 0.7);
+    dust.addColorStop(0, "rgba(255,255,255,.07)");
+    dust.addColorStop(1, "rgba(255,255,255,0)");
+    c.fillStyle = dust;
+    c.fillRect(0, 0, w, h);
+    c.fillStyle = "#f4efdc";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.font = "bold 92px Georgia, serif";
+    c.fillText("BAHASA INDONESIA", w / 2, 96);
+    c.strokeStyle = "rgba(244,239,220,.7)";
+    c.lineWidth = 6;
+    c.beginPath();
+    c.moveTo(w * 0.2, 146);
+    c.lineTo(w * 0.8, 146);
+    c.stroke();
+    c.font = "64px Georgia, serif";
+    c.fillText("selamat pagi", w / 2, 236);
+    c.fillText("terima kasih", w / 2, 326);
+    c.fillText("apa kabar?", w / 2, 416);
+  });
+  const board = new THREE.Mesh(
+    new THREE.PlaneGeometry(9.2, 4.4),
+    new THREE.MeshBasicMaterial({ map: boardTex })
+  );
+  board.position.set(0, 4.6, -7.68);
   g.add(board);
   const frame = box(9.7, 4.9, 0.08, toon(0x6b4a2e));
   frame.position.set(0, 4.6, -7.83);
@@ -597,6 +685,13 @@ export function buildClassStage() {
   const teacher = box(2.6, 0.2, 1.2, toon(0xffffff, T.wood));
   teacher.position.set(-6.0, 1.7, -4.6);
   g.add(teacher);
+
+  cardRow(g, [
+    { kind: "teacher", expr: "grin", pose: "point", x: -3.6, z: -4.4, h: 3.4, seed: 3 },
+    { kind: "dutchStudent", expr: "neutral", pose: "stand", x: -2.2, z: 0.3, h: 3.2, back: true, seed: 5 },
+    { kind: "dutchStudent", expr: "neutral", pose: "stand", x: 1.6, z: 0.3, h: 3.2, back: true, seed: 6 },
+    { kind: "dutchwoman", expr: "neutral", pose: "stand", x: 5.2, z: 0.3, h: 3.1, back: true, seed: 7 },
+  ]);
 
   g.userData = { kind: "class" };
   return g;
@@ -637,6 +732,9 @@ export function buildWorld(scene) {
     town: buildTownStage(),
     class: buildClassStage(),
     map: buildMapStage(),
+    dock: buildDockStage(),
+    market: buildMarketStage(),
+    palace: buildPalaceStage(),
   };
   for (const k in stages) {
     stages[k].position.set(0, 0, 0);
@@ -644,4 +742,327 @@ export function buildWorld(scene) {
     scene.add(stages[k]);
   }
   return stages;
+}
+
+// ---------------------------------------------------------------- docks
+export function buildDockStage() {
+  const g = new THREE.Group();
+
+  const sea = new THREE.Mesh(new THREE.PlaneGeometry(170, 170), toon(0xffffff, T.water));
+  sea.rotation.x = -Math.PI / 2;
+  sea.position.y = -0.02;
+  g.add(sea);
+
+  const quay = box(54, 1.0, 28, toon(0xffffff, T.stone));
+  quay.position.set(0, 0.5, -14);
+  ink(quay, 1.005);
+  g.add(quay);
+
+  const lip = box(54, 0.26, 1.4, toon(0xa8a294));
+  lip.position.set(0, 1.03, -0.6);
+  g.add(lip);
+
+  for (let i = -5; i <= 5; i++) {
+    const b = cyl(0.2, 0.24, 0.55, toon(0x3a3430), 7);
+    b.position.set(i * 4.8, 1.28, -1.2);
+    g.add(b);
+    const rope = cyl(0.04, 0.04, 0.9, toon(0x8a7a5c), 4);
+    rope.rotation.z = Math.PI / 2;
+    rope.position.set(i * 4.8 + 0.45, 1.35, -1.2);
+    g.add(rope);
+  }
+
+  const warehouse = (cx, w, h, d, tone) => {
+    const b = box(w, h, d, toon(tone, T.plaster));
+    b.position.set(cx, 1 + h / 2, -24);
+    ink(b, 1.01);
+    g.add(b);
+    const rf1 = box(w * 0.62, 0.34, d * 1.1, toon(0xffffff, T.roof));
+    rf1.rotation.z = 0.42;
+    rf1.position.set(cx - w * 0.24, 1 + h + 1.0, -24);
+    g.add(rf1);
+    const rf2 = box(w * 0.62, 0.34, d * 1.1, toon(0xffffff, T.roof));
+    rf2.rotation.z = -0.42;
+    rf2.position.set(cx + w * 0.24, 1 + h + 1.0, -24);
+    g.add(rf2);
+    const door = box(2.6, 3.4, 0.16, toon(0x4a3324));
+    door.position.set(cx, 1 + 1.7, -24 + d / 2 + 0.06);
+    g.add(door);
+    for (let i = -1; i <= 1; i += 2) {
+      const win = box(1.3, 1.6, 0.14, toon(0xf0dca8, null, { emissive: 0x6b4a1a }));
+      win.position.set(cx + i * w * 0.26, 1 + h * 0.62, -24 + d / 2 + 0.06);
+      g.add(win);
+    }
+  };
+  warehouse(-17, 13, 8.5, 9, 0xf2e6cc);
+  warehouse(0, 15, 10, 9.5, 0xe8d8b8);
+  warehouse(17.5, 12, 7.5, 8.5, 0xf6ebd4);
+
+  // derek kayu
+  const post = box(0.4, 7.2, 0.4, toon(0x6b4a2e));
+  post.position.set(10.5, 1 + 3.6, -7);
+  ink(post, 1.02);
+  g.add(post);
+  const jib = box(5.4, 0.32, 0.32, toon(0x6b4a2e));
+  jib.rotation.z = 0.5;
+  jib.position.set(12.6, 1 + 7.0, -7);
+  g.add(jib);
+  const rope = cyl(0.035, 0.035, 4.2, toon(0x8a7a5c), 4);
+  rope.position.set(14.9, 1 + 4.9, -7);
+  g.add(rope);
+  const hookCrate = box(1.05, 1.05, 1.05, toon(0xb98a5a, T.wood));
+  hookCrate.position.set(14.9, 1 + 2.7, -7);
+  ink(hookCrate, 1.02);
+  g.add(hookCrate);
+
+  // peti dan tong di dermaga
+  const rand = rng(401);
+  for (let i = 0; i < 16; i++) {
+    const x = -22 + rand() * 44;
+    const z = -4 - rand() * 10;
+    if (Math.abs(x) < 3.5) continue;
+    if (rand() > 0.5) {
+      const c = box(1.1, 1.0, 1.1, toon(0xc09060, T.wood));
+      c.position.set(x, 1.5, z);
+      c.rotation.y = rand() * 0.8;
+      ink(c, 1.02);
+      g.add(c);
+    } else {
+      const bar = cyl(0.62, 0.5, 1.3, toon(0x8a5a3a, T.wood), 9);
+      bar.position.set(x, 1.65, z);
+      ink(bar, 1.02);
+      g.add(bar);
+      for (const yy of [1.25, 2.05]) {
+        const ring = cyl(0.64, 0.64, 0.1, toon(0x3a3430), 9);
+        ring.position.set(x, yy, z);
+        g.add(ring);
+      }
+    }
+  }
+
+  // kapal bersandar
+  const s1 = makeShip({ T }, { x: -15, z: 2.0, yaw: 1.45, scale: 1.0, hullColor: 0xf2e2cc, banner: T.bannerKris, seed: 2 });
+  const s2 = makeShip({ T }, { x: 14, z: 3.0, yaw: -1.4, scale: 0.94, hullColor: 0xe9cbb0, banner: T.bannerWave, seed: 5 });
+  g.add(s1, s2);
+
+  // panji di dermaga
+  for (const x of [-6.5, 6.5]) {
+    const pole = cyl(0.09, 0.12, 7, toon(0x5a3a24), 6);
+    pole.position.set(x, 1 + 3.5, -3.5);
+    ink(pole, 1.04);
+    g.add(pole);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 1.15), new THREE.MeshBasicMaterial({ map: T.bannerSun, side: THREE.DoubleSide, transparent: true }));
+    flag.position.set(x + 1.0, 1 + 6.5, -3.5);
+    g.add(flag);
+  }
+
+  cardRow(g, [
+    { kind: "sailor", expr: "stern", pose: "point", x: -3.2, z: -2.0, h: 3.3, seed: 4 },
+    { kind: "merchant", expr: "neutral", pose: "hold", x: 2.6, z: -3.4, h: 3.3, seed: 9 },
+  ]);
+
+  g.userData = { kind: "dock" };
+  return g;
+}
+
+// ---------------------------------------------------------------- market
+export function buildMarketStage() {
+  const g = new THREE.Group();
+
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), toon(0xffffff, T.earth));
+  ground.rotation.x = -Math.PI / 2;
+  g.add(ground);
+
+  const stall = (cx, sign) => {
+    for (const [dx, dz, hh] of [[-2.8, -1.6, 3.4], [2.8, -1.6, 3.4], [-2.8, 1.6, 3.0], [2.8, 1.6, 3.0]]) {
+      const p = cyl(0.09, 0.11, hh, toon(0x6b4a2e), 6);
+      p.position.set(cx + dx, hh / 2, dz - 2);
+      ink(p, 1.04);
+      g.add(p);
+    }
+    const roof = new THREE.Mesh(new THREE.PlaneGeometry(6.6, 4.2), toon(0xffffff, T.awning, { side: THREE.DoubleSide }));
+    roof.rotation.x = -Math.PI / 2 + 0.16;
+    roof.position.set(cx, 3.5, -2);
+    g.add(roof);
+    const counter = box(5.8, 0.9, 1.9, toon(0xc09060, T.wood));
+    counter.position.set(cx, 0.45, -2);
+    ink(counter, 1.02);
+    g.add(counter);
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.3), new THREE.MeshBasicMaterial({ map: sign }));
+    board.position.set(cx, 4.2, -2.2);
+    g.add(board);
+  };
+  stall(-6.5, T.tulipSign);
+  stall(6.5, T.cheeseSign);
+
+  // tulip: pot, batang, kelopak
+  const tulip = (x, z, col) => {
+    const pot = cyl(0.26, 0.2, 0.42, toon(0xb4462f), 8);
+    pot.position.set(x, 0.95, z);
+    g.add(pot);
+    const st = cyl(0.03, 0.03, 0.62, toon(0x3f7a4a), 4);
+    st.position.set(x, 1.45, z);
+    g.add(st);
+    const bl = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 6), toon(col));
+    bl.scale.y = 1.35;
+    bl.position.set(x, 1.82, z);
+    g.add(bl);
+  };
+  const cols = [0xd94f3a, 0xf0c14a, 0xd94f3a, 0xe88ab0, 0xf0c14a];
+  for (let i = 0; i < 10; i++) {
+    tulip(-3.4 + (i % 5) * 0.62, -2.9 + Math.floor(i / 5) * 0.7, cols[i % cols.length]);
+    tulip(3.4 + (i % 5) * 0.62, -2.9 + Math.floor(i / 5) * 0.7, cols[(i + 2) % cols.length]);
+  }
+
+  // keju: roda besar
+  for (let i = 0; i < 5; i++) {
+    const ch = cyl(0.75, 0.75, 0.42, toon(0xf0c14a), 14);
+    ch.rotation.x = Math.PI / 2;
+    ch.position.set(4.2 + (i % 3) * 1.6, 1.35 + Math.floor(i / 3) * 0.9, -2.4);
+    ink(ch, 1.02);
+    g.add(ch);
+    const rind = cyl(0.7, 0.7, 0.44, toon(0xd9a441), 14);
+    rind.rotation.x = Math.PI / 2;
+    rind.position.copy(ch.position);
+    g.add(rind);
+  }
+
+  // keranjang rempah
+  for (let i = 0; i < 6; i++) {
+    const x = -9 + i * 1.5;
+    const bask = cyl(0.5, 0.36, 0.5, toon(0xb98a5a, T.wood), 10);
+    bask.position.set(x, 0.95, 1.5);
+    ink(bask, 1.02);
+    g.add(bask);
+    const mound = new THREE.Mesh(new THREE.SphereGeometry(0.42, 10, 7), toon(i % 2 ? 0x8e3f2a : 0x6b4a2e));
+    mound.scale.y = 0.45;
+    mound.position.set(x, 1.18, 1.5);
+    g.add(mound);
+  }
+
+  // pohon dan rumah latar
+  for (const [x, z, s] of [[-15, -12, 1.25], [-12, -17, 1.0], [14, -13, 1.15], [17, -18, 0.95]]) {
+    const trunk = cyl(0.11 * s, 0.17 * s, 3.2 * s, toon(0x7b5a3a), 6);
+    trunk.position.set(x, 1.6 * s, z);
+    g.add(trunk);
+    for (let i = 0; i < 7; i++) {
+      const leaf = new THREE.Mesh(new THREE.SphereGeometry(1.3 * s, 8, 6), toon(0x3f7a4a));
+      leaf.scale.set(1, 0.14, 0.32);
+      leaf.position.set(x + Math.cos((i / 7) * 6.28) * 1.1 * s, 3.3 * s, z + Math.sin((i / 7) * 6.28) * 1.1 * s);
+      g.add(leaf);
+    }
+  }
+  for (let i = 0; i < 5; i++) {
+    const b = box(3.4, 2.6 + (i % 2), 3, toon(0xf2e6cc));
+    b.position.set(-20 + i * 9, 1.6, -22 - (i % 3) * 3);
+    g.add(b);
+    const rf = new THREE.Mesh(new THREE.ConeGeometry(2.6, 1.2, 4), toon(0xffffff, T.roof));
+    rf.rotation.y = Math.PI / 4;
+    rf.position.set(-20 + i * 9, 3.6, -22 - (i % 3) * 3);
+    g.add(rf);
+  }
+
+  cardRow(g, [
+    { kind: "merchant", expr: "grin", pose: "hold", x: 0, z: -1.2, h: 3.3, seed: 11 },
+    { kind: "dutchwoman", expr: "grin", pose: "point", x: -2.0, z: 2.4, h: 3.2, seed: 13 },
+    { kind: "sailor", expr: "neutral", pose: "stand", x: 2.4, z: 3.0, h: 3.2, seed: 15 },
+  ]);
+
+  g.userData = { kind: "market" };
+  return g;
+}
+
+// ---------------------------------------------------------------- palace
+export function buildPalaceStage() {
+  const g = new THREE.Group();
+
+  const floor = box(34, 0.3, 30, toon(0xffffff, T.stone));
+  floor.position.y = -0.15;
+  g.add(floor);
+
+  const back = box(34, 11, 0.4, toon(0xe8d8b8, T.plaster));
+  back.position.set(0, 5.5, -14);
+  g.add(back);
+
+  const banner = new THREE.Mesh(
+    new THREE.PlaneGeometry(7.4, 4.2),
+    new THREE.MeshBasicMaterial({ map: T.bannerKris })
+  );
+  banner.position.set(0, 7.2, -13.7);
+  g.add(banner);
+  const rod = cyl(0.09, 0.09, 7.8, toon(0x5a3a24), 6);
+  rod.rotation.z = Math.PI / 2;
+  rod.position.set(0, 9.35, -13.7);
+  g.add(rod);
+
+  for (let i = 0; i < 4; i++) {
+    const win = box(2.2, 5.4, 0.14, toon(0xffe9bd, null, { emissive: 0xa87838 }));
+    win.position.set(-12 + i * 8, 5.6, -13.6);
+    if (i === 1 || i === 2) win.position.x += 1.2;
+    if (Math.abs(win.position.x) < 4.4) continue;
+    g.add(win);
+  }
+
+  for (const x of [-13, -7.5, 7.5, 13]) {
+    const col = cyl(0.52, 0.6, 9.6, toon(0xf4ead2), 12);
+    col.position.set(x, 4.8, -7.5);
+    ink(col, 1.015);
+    g.add(col);
+    const cap = box(1.5, 0.3, 1.5, toon(0xe0cfa8));
+    cap.position.set(x, 9.7, -7.5);
+    g.add(cap);
+    const baseC = box(1.5, 0.35, 1.5, toon(0xe0cfa8));
+    baseC.position.set(x, 0.18, -7.5);
+    g.add(baseC);
+  }
+
+  const table = box(11, 0.32, 3.4, toon(0x6b4a2e, T.wood));
+  table.position.set(0, 1.7, -3);
+  ink(table, 1.015);
+  g.add(table);
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
+    const leg = box(0.3, 1.7, 0.3, toon(0x5a3a24));
+    leg.position.set(sx * 4.9, 0.85, -3 + sz * 1.3);
+    g.add(leg);
+  }
+
+  const map = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 2.2), toon(0xe6d3a4));
+  map.rotation.x = -Math.PI / 2;
+  map.position.set(-0.4, 1.88, -3);
+  g.add(map);
+
+  for (const [x, z] of [[-3.6, -2.2], [-1.2, -2.4], [1.4, -2.2], [3.8, -2.4]]) {
+    const candle = cyl(0.06, 0.07, 0.55, toon(0xf4ead2), 6);
+    candle.position.set(x, 2.15, z);
+    g.add(candle);
+    const flame = new THREE.Mesh(new THREE.SphereGeometry(0.075, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+    flame.scale.y = 1.6;
+    flame.position.set(x, 2.5, z);
+    g.add(flame);
+  }
+
+  const chand = cyl(0.12, 0.12, 2.2, toon(0x3a3430), 6);
+  chand.position.set(0, 8.9, -2);
+  g.add(chand);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.09, 6, 18), toon(0x8a6a3a));
+  ring.rotation.x = Math.PI / 2;
+  ring.position.set(0, 7.8, -2);
+  g.add(ring);
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2;
+    const fl = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 5), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+    fl.scale.y = 1.5;
+    fl.position.set(Math.cos(a) * 1.5, 7.95, -2 + Math.sin(a) * 1.5);
+    g.add(fl);
+  }
+
+  cardRow(g, [
+    { kind: "laksamana", expr: "stern", pose: "hold", x: -3.4, z: -5.2, h: 3.5, seed: 21 },
+    { kind: "official", expr: "neutral", pose: "point", x: -0.4, z: -5.4, h: 3.4, seed: 22 },
+    { kind: "dutchman", expr: "shock", pose: "stand", x: 2.8, z: -5.2, h: 3.45, seed: 23 },
+    { kind: "merchant", expr: "grin", pose: "hold", x: 5.6, z: -5.0, h: 3.35, seed: 24 },
+  ]);
+
+  g.userData = { kind: "palace" };
+  return g;
 }
