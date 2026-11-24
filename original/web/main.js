@@ -26,7 +26,7 @@ const stages = buildWorld(scene);
 // ---------------------------------------------------------------- looks
 const LOOK = {
   pagi: { sky: ["#79c3e8", "#ffe8bd"], fog: 0xf5dfb6, fn: [55, 230], hemi: [0xfff4e0, 0x667a68, 1.18], dir: [0xfff0c8, 1.55], sun: [-7, 9, 6] },
-  senja: { sky: ["#4f6fa8", "#ffcf8a"], fog: 0xfad2a2, fn: [95, 400], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
+  senja: { sky: ["#4f6fa8", "#ffd096"], fog: 0xe8c8ac, fn: [130, 460], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
   malam: { sky: ["#16203c", "#463a58"], fog: 0x2a2a44, fn: [30, 150], hemi: [0x9fb0ff, 0x2a2a3a, 0.82], dir: [0x9fb0ff, 0.7], sun: [-4, 8, 5] },
   kelas: { sky: ["#3a2f28", "#6a5444"], fog: 0x5a4a3a, fn: [12, 55], hemi: [0xffe8c8, 0x5a4a3a, 1.0], dir: [0xffe0b0, 1.0], sun: [-3, 6, 4] },
 };
@@ -62,10 +62,10 @@ for (const k in LOOK) {
     const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
     g.save();
     g.filter = "blur(5px)";
-    for (let i = 0; i < 7; i++) {
-      const cx = 30 + rand() * 300;
-      const cy = 40 + rand() * 210;
-      const sc = 16 + rand() * 26;
+    for (let i = 0; i < 13; i++) {
+      const cx = 20 + rand() * 320;
+      const cy = 30 + rand() * 250;
+      const sc = 9 + rand() * 15;
       for (let j = 0; j < 6; j++) {
         g.fillStyle = `rgba(255,248,236,${0.45 + rand() * 0.35})`;
         g.beginPath();
@@ -87,13 +87,13 @@ let curLook = null;
 const glitter = (() => {
   const g = new THREE.Group();
   const mat = new THREE.MeshBasicMaterial({ color: 0xffe6b4, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
-  for (let i = 0; i < 46; i++) {
-    const t = 0.06 + Math.pow(i / 46, 0.8) * 0.94;
+  for (let i = 0; i < 56; i++) {
+    const t = 0.62 + Math.pow(i / 56, 0.7) * 0.38;
     const w = 0.5 + Math.random() * 2.4;
     const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 0.1 + Math.random() * 0.22), mat.clone());
-    m.material.opacity = 0.16 + Math.random() * 0.42 * (1 - t * 0.6);
+    m.material.opacity = 0.2 + Math.random() * 0.45;
     m.rotation.x = -Math.PI / 2;
-    m.position.set((Math.random() - 0.5) * (2.4 + t * 9), 0.04, t * 190);
+    m.position.set((Math.random() - 0.5) * (3.5 + t * 14), 0.04, t * 190);
     m.userData.sp = 0.6 + Math.random();
     g.add(m);
   }
@@ -128,6 +128,23 @@ const vig = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMat
 ovS.add(vig);
 const flash = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ color: 0xfff6e8, transparent: true, opacity: 0, depthTest: false }));
 ovS.add(flash);
+
+const depth = (() => {
+  const c = document.createElement("canvas");
+  c.width = 8;
+  c.height = 512;
+  const g = c.getContext("2d");
+  const gr = g.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, "rgba(10,46,44,0)");
+  gr.addColorStop(0.55, "rgba(10,46,44,.1)");
+  gr.addColorStop(1, "rgba(8,38,38,.42)");
+  g.fillStyle = gr;
+  g.fillRect(0, 0, 8, 512);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthTest: false }));
+})();
+ovS.add(depth);
 
 // ---------------------------------------------------------------- shots
 const SHOTS = [
