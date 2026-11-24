@@ -56,7 +56,7 @@ export const buildKanal = (par) => {
   }
   const warnas = [0x6b3f30, 0x2f4a44, 0x7a5a34, 0x503a4a, 0x8a4a34, 0x3a4a60];
   for (const sx of [-1, 1]) for (let i = 0; i < 7; i++) {
-    const z = 20 - i * 8.5, w = 5.6 + r() * 1.4, h = 11 + r() * 7;
+    const z = 20 - i * 8.5, w = 5.6 + r() * 1.4, h = 6.5 + r() * 4.0;   // tinggi 6,5-10,5: atap pelana ikut masuk bingkai dari jalan
     rumahKanal(g, sx * (12.6 + r() * 1.4), z, w, h, warnas[(i + (sx > 0 ? 3 : 0)) % 6], sx > 0 ? 0 : Math.PI);
   }
   const jb = new THREE.Group(); jb.position.set(0, 0, 2); g.add(jb);
