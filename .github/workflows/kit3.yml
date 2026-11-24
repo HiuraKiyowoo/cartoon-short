@@ -25,6 +25,10 @@ jobs:
       - name: Pasang dependensi
         working-directory: kit3
         run: npm install --no-audit --no-fund
+      - name: Pasang Chromium (Playwright)
+        working-directory: kit3
+        run: npx playwright install --with-deps chromium
+
       - name: Bundle
         working-directory: kit3
         run: npm run bundle
