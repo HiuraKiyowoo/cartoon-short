@@ -32,7 +32,10 @@ jobs:
         run: npm run bundle
       - name: Render
         working-directory: original
-        run: node render.mjs frames "${{ inputs.frames || '400' }}" "${{ inputs.width || '1080' }}"
+        run: |
+          FRAMES=$(cat frames.txt 2>/dev/null || echo 400)
+          echo "frames: $FRAMES"
+          node render.mjs frames "$FRAMES" 1080
       - name: Upload frames
         if: always()
         uses: actions/upload-artifact@v4
