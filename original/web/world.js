@@ -1,6 +1,7 @@
 // Set & properti asli untuk "Belanda menjadi jajahan Indonesia".
 // Semua bentuk, tekstur, panji, dan warna di file ini ditulis dari nol.
 import * as THREE from "three";
+import { makeFleet } from "./ship.js";
 
 export const INK = 0x241a24;
 
@@ -266,135 +267,8 @@ function ink(mesh, k = 1.035) {
 }
 
 // ---------------------------------------------------------------- ships
-export function makeShip(o = {}) {
-  const g = new THREE.Group();
-  const hullMat = toon(o.hullColor || 0xffffff, T.wood);
-
-  const s = new THREE.Shape();
-  s.moveTo(-3.5, 0.05);
-  s.lineTo(2.8, 0.05);
-  s.quadraticCurveTo(3.8, 0.32, 3.3, 1.0);
-  s.lineTo(-2.6, 1.0);
-  s.quadraticCurveTo(-3.8, 0.78, -3.5, 0.05);
-  const hullGeo = new THREE.ExtrudeGeometry(s, { depth: 1.7, bevelEnabled: false, curveSegments: 8 });
-  hullGeo.translate(0, 0, -0.85);
-  const hull = new THREE.Mesh(hullGeo, hullMat);
-  hull.position.y = 0.1;
-  ink(hull, 1.02);
-  g.add(hull);
-
-  for (const sz of [-0.87, 0.87]) {
-    const stripe = box(5.6, 0.12, 0.05, toon(0x2a1c26));
-    stripe.position.set(-0.1, 0.56, sz);
-    g.add(stripe);
-    for (let i = -2; i <= 2; i++) {
-      const port = box(0.24, 0.2, 0.05, toon(0x1e1418));
-      port.position.set(i * 1.05, 0.8, sz);
-      g.add(port);
-    }
-  }
-
-  const deck = box(5.5, 0.14, 1.55, toon(0xc9a06a));
-  deck.position.set(-0.1, 1.02, 0);
-  ink(deck, 1.02);
-  g.add(deck);
-
-  const castle = box(1.8, 0.85, 1.55, hullMat);
-  castle.position.set(-2.4, 1.48, 0);
-  ink(castle, 1.03);
-  g.add(castle);
-
-  const bow = cyl(0.06, 0.1, 2.3, toon(0x5a3524), 6);
-  bow.rotation.z = -1.25;
-  bow.position.set(3.7, 1.25, 0);
-  ink(bow, 1.05);
-  g.add(bow);
-
-  const mastMat = toon(0x6b4226);
-  const masts = [[-1.8, 4.4], [0.1, 5.3], [1.9, 3.7]];
-  for (const [x, h] of masts) {
-    const m = cyl(0.07, 0.11, h, mastMat, 6);
-    m.position.set(x, 1.05 + h / 2, 0);
-    ink(m, 1.06);
-    g.add(m);
-
-    const yard = cyl(0.05, 0.05, 3.0, mastMat, 5);
-    yard.rotation.x = Math.PI / 2;
-    yard.position.set(x, 1.05 + h * 0.8, 0);
-    ink(yard, 1.06);
-    g.add(yard);
-
-    const mkSail = (sw, sh, y) => {
-      const sg = new THREE.PlaneGeometry(sw, sh, 10, 6);
-      const p = sg.attributes.position;
-      for (let i = 0; i < p.count; i++) {
-        const u = p.getX(i) / sw + 0.5;
-        p.setZ(i, Math.sin(u * Math.PI) * 0.3);
-      }
-      sg.computeVertexNormals();
-      const sm = new THREE.MeshToonMaterial({ map: T.sail, gradientMap: GRAD, side: THREE.DoubleSide, color: 0xfff4dc });
-      const m = new THREE.Mesh(sg, sm);
-      m.rotation.y = Math.PI / 2;
-      m.position.set(x, y, 0);
-      g.add(m);
-    };
-    mkSail(3.15, h * 0.6, 1.05 + h * 0.5);
-    mkSail(2.2, h * 0.42, 1.05 + h * 0.86);
-  }
-
-  const flag = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.15, 0.66),
-    new THREE.MeshBasicMaterial({ map: o.banner || T.bannerWave, side: THREE.DoubleSide, transparent: true })
-  );
-  flag.position.set(0.68, 1.05 + 5.3 - 0.3, 0);
-  g.add(flag);
-
-  const pennant = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.9, 0.26),
-    new THREE.MeshBasicMaterial({ map: T.bannerSun, side: THREE.DoubleSide, transparent: true })
-  );
-  pennant.position.set(2.36, 1.05 + 3.7 - 0.15, 0);
-  g.add(pennant);
-
-  const f = new THREE.Mesh(
-    new THREE.PlaneGeometry(7.4, 2.6),
-    new THREE.MeshBasicMaterial({ map: T.foam, transparent: true, depthWrite: false, opacity: 0.85 })
-  );
-  f.rotation.x = -Math.PI / 2;
-  f.position.y = 0.03;
-  g.add(f);
-
-  g.scale.setScalar(o.scale || 1);
-  g.rotation.y = o.yaw || 0;
-  g.position.set(o.x || 0, 0, o.z || 0);
-  g.userData.bob = (o.x || 0) * 0.7 + (o.z || 0) * 0.3;
-  return g;
-}
-
-export function buildFleet() {
-  const g = new THREE.Group();
-  const ships = [];
-  const layout = [
-    [-8.6, -6.5, 1.0, -0.3], [-4.3, -6.0, 1.04, -0.24], [0, -5.6, 1.08, -0.18],
-    [4.3, -6.0, 1.04, -0.24], [8.6, -6.5, 1.0, -0.3],
-    [-6.4, -13.5, 0.98, 0.3], [-2.2, -13.0, 1.02, 0.26], [2.2, -13.0, 1.02, 0.26], [6.4, -13.5, 0.98, 0.3],
-    [0, -20.5, 0.94, 0.0],
-  ];
-  const tints = [0xffffff, 0xe6c6ac, 0xc6d6cc, 0xd8b0a8];
-  layout.forEach(([x, z, s, yaw], i) => {
-    const ship = makeShip({
-      x, z, scale: s, yaw,
-      hullColor: tints[i % tints.length],
-      banner: i % 3 === 0 ? T.bannerKris : i % 2 ? T.bannerWave : T.bannerSun,
-    });
-    ships.push(ship);
-    g.add(ship);
-  });
-  const flag = makeShip({ x: -5.8, z: 1.5, scale: 1.3, yaw: -0.32, hullColor: 0xffffff, banner: T.bannerKris });
-  ships.push(flag);
-  g.add(flag);
-  g.userData.ships = ships;
-  return g;
+function buildFleet() {
+  return makeFleet({ T });
 }
 
 // ---------------------------------------------------------------- coasts

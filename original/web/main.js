@@ -63,7 +63,8 @@ vc.width = 256; vc.height = 456;
   const g = vc.getContext("2d");
   const gr = g.createRadialGradient(128, 228, 70, 128, 228, 300);
   gr.addColorStop(0, "rgba(16,8,22,0)");
-  gr.addColorStop(1, "rgba(16,8,22,.55)");
+  gr.addColorStop(0.65, "rgba(16,8,22,.06)");
+  gr.addColorStop(1, "rgba(16,8,22,.34)");
   g.fillStyle = gr; g.fillRect(0, 0, 256, 456);
 }
 const vig = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(vc), transparent: true, depthTest: false }));
@@ -97,7 +98,7 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
-    case "armada": return { pos: [-5 + 8 * e, 3.4 + 0.4 * e, 26 - 12 * e], look: [0, 2.1, -11], fov: 50, roll: -1.5 + 3 * e };
+    case "armada": return { pos: [-6 + 9 * e, 3.2 + 0.5 * e, 21 - 9 * e], look: [0, 3.1, -13], fov: 46, roll: -1.5 + 3 * e };
     case "dermaga": return { pos: [-16 + 3 * e, 2.2, 9 - 2 * e], look: [-22, 1.4, -16], fov: 44, roll: 1.5 - 3 * e };
     case "datang": return { pos: [7 - 3 * e, 2.0, 11 - 4 * e], look: [0, 1.7, -9], fov: 46, roll: -2 + 4 * e };
     case "hadapan": return { pos: [0, 8.4 - 1.2 * e, 42 - 6 * e], look: [0, 2.6, -14], fov: 50 - 3 * e, roll: -1.5 + 3 * e };
@@ -123,9 +124,9 @@ const frame = (f) => {
 
   if (stages.sea.userData.ships) {
     for (const s of stages.sea.userData.ships) {
-      const b = s.userData.bob || 0;
-      s.position.y = Math.sin(f / 26 + b) * 0.035;
-      s.rotation.z = Math.sin(f / 31 + b) * 0.012;
+      const b = s.userData.bob || { amp: 0.03, spd: 26, ph: 0 };
+      s.position.y = Math.sin(f / b.spd + b.ph) * b.amp;
+      s.rotation.z = Math.sin(f / (b.spd * 1.25) + b.ph) * 0.011;
     }
   }
   T.water.offset.set(f * 0.0012, f * 0.0006);
