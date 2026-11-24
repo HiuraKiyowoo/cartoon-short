@@ -449,7 +449,7 @@ export function buildSeaStage() {
     [-48, 17, -110, 1.7], [54, 27, -140, 2.4], [2, 35, -160, 3.6],
   ]) g.add(cloudCard(x, y, z, s));
 
-  g.userData = { fleet, sea, kind: "sea" };
+  g.userData = { fleet, sea, kind: "sea", ships: fleet.userData.ships };
   return g;
 }
 

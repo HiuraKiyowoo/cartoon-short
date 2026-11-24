@@ -166,7 +166,7 @@ export function makeShip(ctx, o = {}) {
 
   g.scale.setScalar(o.scale || 1);
   g.rotation.y = o.yaw || 0;
-  g.position.set(o.x || 0, o.bob ? o.bob.y : 0, o.z || 0);
+  g.position.set(o.x || 0, 0, o.z || 0);
   g.userData.bob = o.bob || { amp: 0.035, spd: 26, ph: (o.x || 0) * 0.7 };
   return g;
 }
