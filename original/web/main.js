@@ -26,7 +26,7 @@ const stages = buildWorld(scene);
 // ---------------------------------------------------------------- looks
 const LOOK = {
   pagi: { sky: ["#79c3e8", "#ffe8bd"], fog: 0xf5dfb6, fn: [55, 230], hemi: [0xfff4e0, 0x667a68, 1.18], dir: [0xfff0c8, 1.55], sun: [-7, 9, 6] },
-  senja: { sky: ["#4f6fa8", "#ffd096"], fog: 0xe8c8ac, fn: [130, 460], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
+  senja: { sky: ["#4f6fa8", "#ffd096"], fog: 0xe9cdb4, fn: [150, 520], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
   malam: { sky: ["#16203c", "#463a58"], fog: 0x2a2a44, fn: [30, 150], hemi: [0x9fb0ff, 0x2a2a3a, 0.82], dir: [0x9fb0ff, 0.7], sun: [-4, 8, 5] },
   kelas: { sky: ["#3a2f28", "#6a5444"], fog: 0x5a4a3a, fn: [12, 55], hemi: [0xffe8c8, 0x5a4a3a, 1.0], dir: [0xffe0b0, 1.0], sun: [-3, 6, 4] },
 };
@@ -84,14 +84,30 @@ for (const k in LOOK) {
 let curLook = null;
 
 // kilau matahari: deret goresan terang di permukaan air
+const sparkTex = (() => {
+  const c = document.createElement("canvas");
+  c.width = 128;
+  c.height = 32;
+  const g = c.getContext("2d");
+  const gr = g.createRadialGradient(64, 16, 1, 64, 16, 60);
+  gr.addColorStop(0, "rgba(255,248,222,1)");
+  gr.addColorStop(0.45, "rgba(255,234,186,.5)");
+  gr.addColorStop(1, "rgba(255,228,176,0)");
+  g.fillStyle = gr;
+  g.fillRect(0, 0, 128, 32);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+})();
+
 const glitter = (() => {
   const g = new THREE.Group();
-  const mat = new THREE.MeshBasicMaterial({ color: 0xffe6b4, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+  const mat = new THREE.MeshBasicMaterial({ map: sparkTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
   for (let i = 0; i < 56; i++) {
     const t = 0.62 + Math.pow(i / 56, 0.7) * 0.38;
     const w = 0.5 + Math.random() * 2.4;
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 0.1 + Math.random() * 0.22), mat.clone());
-    m.material.opacity = 0.2 + Math.random() * 0.45;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w * 2.1, 0.5 + Math.random() * 0.9), mat.clone());
+    m.material.opacity = 0.25 + Math.random() * 0.5;
     m.rotation.x = -Math.PI / 2;
     m.position.set((Math.random() - 0.5) * (3.5 + t * 14), 0.04, t * 190);
     m.userData.sp = 0.6 + Math.random();

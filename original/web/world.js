@@ -36,11 +36,11 @@ const tex = (w, h, draw, rep = [1, 1]) => {
 
 // ---------------------------------------------------------------- painters
 const wood = tex(256, 256, (g, w, h) => {
-  g.fillStyle = "#8a5a3b";
+  g.fillStyle = "#9c6a45";
   g.fillRect(0, 0, w, h);
   const r = rng(7);
   for (let x = 0; x < w; x += 32) {
-    g.fillStyle = x % 64 ? "#7d4f33" : "#956343";
+    g.fillStyle = x % 64 ? "#8d5c3c" : "#a9744c";
     g.fillRect(x + 2, 0, 28, h);
     g.strokeStyle = "rgba(52,30,20,.75)";
     g.lineWidth = 4;
@@ -88,6 +88,28 @@ const sail = tex(256, 256, (g, w, h) => {
     g.beginPath();
     g.moveTo(0, y);
     g.lineTo(w, y);
+    g.stroke();
+  }
+});
+
+const sailPattern = tex(256, 256, (g, w, h) => {
+  const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, "#fdf4dd");
+  gr.addColorStop(1, "#efdfbc");
+  g.fillStyle = gr;
+  g.fillRect(0, 0, w, h);
+  g.fillStyle = "#b4462f";
+  g.fillRect(0, 58, w, 26);
+  g.fillStyle = "#d9a441";
+  g.fillRect(0, 100, w, 16);
+  g.fillStyle = "#b4462f";
+  g.fillRect(0, 168, w, 20);
+  g.strokeStyle = "rgba(140,110,76,.3)";
+  g.lineWidth = 2;
+  for (let x = 34; x < w; x += 52) {
+    g.beginPath();
+    g.moveTo(x, 0);
+    g.lineTo(x, h);
     g.stroke();
   }
 });
@@ -262,6 +284,7 @@ export const T = {
   bannerWave: banner("#1d6b66", "#e8c45a", "wave"),
   bannerSun: banner("#8e2f3a", "#f0d9a8", "sun"),
   bannerKris: banner("#2f3f6b", "#d9b45a", "kris"),
+  sailPattern,
 };
 
 // ---------------------------------------------------------------- helpers
@@ -386,6 +409,20 @@ function buildCoast(side) {
   base.rotation.x = -Math.PI / 2;
   base.position.set(s * 28, 0.06, -158);
   g.add(base);
+
+  const bank = box(9, 1.4, 250, toon(0x7f8f5a, T.grass));
+  bank.position.set(s * 9.5, 0.7, -155);
+  ink(bank, 1.01);
+  g.add(bank);
+
+  for (let i = 0; i < 12; i++) {
+    const hh = 2.4 + ((i * 5) % 4) * 1.5;
+    const knoll = new THREE.Mesh(new THREE.SphereGeometry(hh, 12, 8), toon(0x5c7a4a));
+    knoll.scale.set(1.6, 0.55, 1.1);
+    knoll.position.set(s * (8 + (i % 5) * 3.2), hh * 0.2, -34 - Math.floor(i / 5) * 12 - (i % 3) * 4);
+    ink(knoll, 1.02);
+    g.add(knoll);
+  }
 
   for (let i = 0; i < 7; i++) {
     const h = 3.0 + (i % 3) * 1.6;

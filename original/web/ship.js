@@ -95,17 +95,20 @@ export function makeShip(ctx, o = {}) {
   }
 
   // --- bangunan buritan
-  const castle = box(1.7, 0.95, 1.46, toon(o.hullColor || 0xffffff, T.wood));
-  castle.position.set(-2.75, 1.55, 0);
+  const castle = box(1.7, 1.3, 1.46, toon(o.hullColor || 0xffffff, T.wood));
+  castle.position.set(-2.75, 1.72, 0);
   ink(castle, 1.025);
   g.add(castle);
-  const cRoof = box(1.9, 0.12, 1.58, toon(0x7a4a30));
-  cRoof.position.set(-2.75, 2.06, 0);
+  const cRoof = box(1.9, 0.14, 1.58, toon(0x7a4a30));
+  cRoof.position.set(-2.75, 2.4, 0);
   g.add(cRoof);
+  const lamp = box(0.22, 0.3, 0.22, toon(0xffd98a, null, { emissive: 0xc98a30 }));
+  lamp.position.set(-2.75, 2.62, 0);
+  g.add(lamp);
   for (const sz of [-0.74, 0.74]) {
     for (let i = 0; i < 3; i++) {
       const win = box(0.24, 0.3, 0.04, toon(0xf0d79a, null, { emissive: 0x6b4a1a }));
-      win.position.set(-3.3 + i * 0.55, 1.62, sz);
+      win.position.set(-3.3 + i * 0.55, 1.78, sz);
       g.add(win);
     }
   }
@@ -132,8 +135,9 @@ export function makeShip(ctx, o = {}) {
   const mastMat = toon(0x6b4226);
   const masts = [[-1.85, 4.2], [0.25, 5.5], [2.15, 3.4]];
   const sailCol = SAILS[(o.seed || 0) % SAILS.length];
+  const sailTex = (o.seed || 0) % 3 === 1 ? T.sailPattern : T.sail;
   const addSail = (x, y, w, h, bulge) => {
-    const m = new THREE.Mesh(sailGeometry(w, h, bulge), toon(sailCol, T.sail, { side: THREE.DoubleSide }));
+    const m = new THREE.Mesh(sailGeometry(w, h, bulge), toon(sailCol, sailTex, { side: THREE.DoubleSide }));
     m.position.set(x, y, 0);
     g.add(m);
     const yard = cyl(0.045, 0.045, w * 1.04, mastMat, 5);
