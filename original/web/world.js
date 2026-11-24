@@ -84,8 +84,8 @@ const sail = tex(256, 256, (g, w, h) => {
 
 const water = tex(512, 512, (g, w, h) => {
   const gr = g.createLinearGradient(0, 0, 0, h);
-  gr.addColorStop(0, "#2f7f8c");
-  gr.addColorStop(1, "#1d5a6a");
+  gr.addColorStop(0, "#3f9aa8");
+  gr.addColorStop(1, "#226878");
   g.fillStyle = gr;
   g.fillRect(0, 0, w, h);
   const r = rng(31);
@@ -107,7 +107,7 @@ const water = tex(512, 512, (g, w, h) => {
     g.lineTo(x + l, y);
     g.stroke();
   }
-}, [9, 9]);
+}, [18, 18]);
 
 const plaster = tex(256, 256, (g, w, h) => {
   g.fillStyle = "#e9dcc0";
@@ -268,7 +268,7 @@ function ink(mesh, k = 1.035) {
 // ---------------------------------------------------------------- ships
 export function makeShip(o = {}) {
   const g = new THREE.Group();
-  const hullMat = toon(0xffffff, T.wood);
+  const hullMat = toon(o.hullColor || 0xffffff, T.wood);
 
   const s = new THREE.Shape();
   s.moveTo(-3.5, 0.05);
@@ -282,6 +282,17 @@ export function makeShip(o = {}) {
   hull.position.y = 0.1;
   ink(hull, 1.02);
   g.add(hull);
+
+  for (const sz of [-0.87, 0.87]) {
+    const stripe = box(5.6, 0.12, 0.05, toon(0x2a1c26));
+    stripe.position.set(-0.1, 0.56, sz);
+    g.add(stripe);
+    for (let i = -2; i <= 2; i++) {
+      const port = box(0.24, 0.2, 0.05, toon(0x1e1418));
+      port.position.set(i * 1.05, 0.8, sz);
+      g.add(port);
+    }
+  }
 
   const deck = box(5.5, 0.14, 1.55, toon(0xc9a06a));
   deck.position.set(-0.1, 1.02, 0);
@@ -313,33 +324,36 @@ export function makeShip(o = {}) {
     ink(yard, 1.06);
     g.add(yard);
 
-    const sw = 2.75, sh = h * 0.56;
-    const sg = new THREE.PlaneGeometry(sw, sh, 10, 6);
-    const p = sg.attributes.position;
-    for (let i = 0; i < p.count; i++) {
-      const u = p.getX(i) / sw + 0.5;
-      p.setZ(i, Math.sin(u * Math.PI) * 0.24);
-    }
-    sg.computeVertexNormals();
-    const sm = new THREE.MeshToonMaterial({ map: T.sail, gradientMap: GRAD, side: THREE.DoubleSide, color: 0xfff4dc });
-    const sailMesh = new THREE.Mesh(sg, sm);
-    sailMesh.rotation.y = Math.PI / 2;
-    sailMesh.position.set(x, 1.05 + h * 0.55, 0);
-    g.add(sailMesh);
+    const mkSail = (sw, sh, y) => {
+      const sg = new THREE.PlaneGeometry(sw, sh, 10, 6);
+      const p = sg.attributes.position;
+      for (let i = 0; i < p.count; i++) {
+        const u = p.getX(i) / sw + 0.5;
+        p.setZ(i, Math.sin(u * Math.PI) * 0.3);
+      }
+      sg.computeVertexNormals();
+      const sm = new THREE.MeshToonMaterial({ map: T.sail, gradientMap: GRAD, side: THREE.DoubleSide, color: 0xfff4dc });
+      const m = new THREE.Mesh(sg, sm);
+      m.rotation.y = Math.PI / 2;
+      m.position.set(x, y, 0);
+      g.add(m);
+    };
+    mkSail(3.15, h * 0.6, 1.05 + h * 0.5);
+    mkSail(2.2, h * 0.42, 1.05 + h * 0.86);
   }
 
   const flag = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.5, 0.82),
+    new THREE.PlaneGeometry(1.15, 0.66),
     new THREE.MeshBasicMaterial({ map: o.banner || T.bannerWave, side: THREE.DoubleSide, transparent: true })
   );
-  flag.position.set(1.05, 1.05 + 5.3 + 0.35, 0);
+  flag.position.set(0.68, 1.05 + 5.3 - 0.3, 0);
   g.add(flag);
 
   const pennant = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.0, 0.3),
+    new THREE.PlaneGeometry(0.9, 0.26),
     new THREE.MeshBasicMaterial({ map: T.bannerSun, side: THREE.DoubleSide, transparent: true })
   );
-  pennant.position.set(-2.3, 1.05 + 5.3 + 0.1, 0);
+  pennant.position.set(2.36, 1.05 + 3.7 - 0.15, 0);
   g.add(pennant);
 
   const f = new THREE.Mesh(
@@ -360,20 +374,23 @@ export function makeShip(o = {}) {
 export function buildFleet() {
   const g = new THREE.Group();
   const ships = [];
-  for (let i = 0; i < 12; i++) {
-    const row = Math.floor(i / 6), col = i % 6;
-    const x = (col - 2.5) * 2.9 + (row ? 1.1 : 0);
-    const z = -6.2 - row * 5.4 - Math.abs(col - 2.5) * 0.35;
+  const layout = [
+    [-8.6, -6.5, 1.0, -0.3], [-4.3, -6.0, 1.04, -0.24], [0, -5.6, 1.08, -0.18],
+    [4.3, -6.0, 1.04, -0.24], [8.6, -6.5, 1.0, -0.3],
+    [-6.4, -13.5, 0.98, 0.3], [-2.2, -13.0, 1.02, 0.26], [2.2, -13.0, 1.02, 0.26], [6.4, -13.5, 0.98, 0.3],
+    [0, -20.5, 0.94, 0.0],
+  ];
+  const tints = [0xffffff, 0xe6c6ac, 0xc6d6cc, 0xd8b0a8];
+  layout.forEach(([x, z, s, yaw], i) => {
     const ship = makeShip({
-      x, z,
-      scale: 0.94 + ((i * 7) % 5) * 0.035,
-      yaw: (row ? 0.34 : -0.3) + ((i % 3) - 1) * 0.07,
-      banner: i % 2 ? T.bannerWave : T.bannerSun,
+      x, z, scale: s, yaw,
+      hullColor: tints[i % tints.length],
+      banner: i % 3 === 0 ? T.bannerKris : i % 2 ? T.bannerWave : T.bannerSun,
     });
     ships.push(ship);
     g.add(ship);
-  }
-  const flag = makeShip({ x: -0.8, z: -2.4, scale: 1.22, yaw: -0.18, banner: T.bannerKris });
+  });
+  const flag = makeShip({ x: -5.8, z: 1.5, scale: 1.3, yaw: -0.32, hullColor: 0xffffff, banner: T.bannerKris });
   ships.push(flag);
   g.add(flag);
   g.userData.ships = ships;
@@ -428,43 +445,96 @@ function windmill(x, z, s = 1) {
   return g;
 }
 
+function fort(x, z, s = 1) {
+  const g = new THREE.Group();
+  const wall = box(5.2 * s, 2.2 * s, 2.6 * s, toon(0xffffff, T.stone));
+  wall.position.y = 1.1 * s;
+  ink(wall, 1.03);
+  g.add(wall);
+  for (let i = 0; i < 5; i++) {
+    const m = box(0.7 * s, 0.55 * s, 0.5 * s, toon(0xffffff, T.stone));
+    m.position.set(-2.1 * s + i * 1.05 * s, 2.45 * s, 1.1 * s);
+    g.add(m);
+  }
+  const tower = cyl(0.9 * s, 1.1 * s, 3.2 * s, toon(0xffffff, T.stone), 8);
+  tower.position.set(-2.6 * s, 1.6 * s, 0);
+  ink(tower, 1.03);
+  g.add(tower);
+  const rf = new THREE.Mesh(new THREE.ConeGeometry(1.3 * s, 1.2 * s, 8), toon(0xffffff, T.roof));
+  rf.position.set(-2.6 * s, 3.7 * s, 0);
+  ink(rf, 1.03);
+  g.add(rf);
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.2 * s, 0.7 * s), new THREE.MeshBasicMaterial({ map: T.bannerSun, side: THREE.DoubleSide, transparent: true }));
+  flag.position.set(-1.6 * s, 4.1 * s, 0.1);
+  g.add(flag);
+  g.position.set(x, 0, z);
+  return g;
+}
+
+function shrine(x, z, s = 1) {
+  const g = new THREE.Group();
+  const base = box(5.0 * s, 1.0 * s, 4.0 * s, toon(0xffffff, T.stone));
+  base.position.y = 0.5 * s;
+  ink(base, 1.02);
+  g.add(base);
+  for (let i = 0; i < 3; i++) {
+    const w = (4.2 - i * 0.9) * s;
+    const tier = box(w, 1.1 * s, w * 0.78, toon(0xffffff, T.plaster));
+    tier.position.y = (1.0 + i * 1.05) * s;
+    ink(tier, 1.02);
+    g.add(tier);
+    const rf = new THREE.Mesh(new THREE.ConeGeometry(w * 0.78, 1.0 * s, 4), toon(0xffffff, T.roof));
+    rf.rotation.y = Math.PI / 4;
+    rf.position.y = (1.95 + i * 1.05) * s;
+    ink(rf, 1.02);
+    g.add(rf);
+  }
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.0 * s, 0.6 * s), new THREE.MeshBasicMaterial({ map: T.bannerWave, side: THREE.DoubleSide, transparent: true }));
+  flag.position.set(1.4 * s, 4.6 * s, 0);
+  g.add(flag);
+  g.position.set(x, 0, z);
+  return g;
+}
+
 function buildCoast(side) {
   const g = new THREE.Group();
   const s = side < 0 ? -1 : 1;
-  const base = new THREE.Mesh(new THREE.PlaneGeometry(60, 26), toon(0xffffff, T.grass));
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(70, 34), toon(0xffffff, T.grass));
   base.rotation.x = -Math.PI / 2;
-  base.position.set(s * 36, 0.05, -48);
+  base.position.set(s * 24, 0.06, -46);
   g.add(base);
 
-  for (let i = 0; i < 6; i++) {
-    const h = 2.2 + (i % 3) * 1.3;
+  for (let i = 0; i < 7; i++) {
+    const h = 3.0 + (i % 3) * 1.6;
     const hill = new THREE.Mesh(new THREE.SphereGeometry(h, 14, 10), toon(0x5f7d4a));
-    hill.scale.y = 0.55;
-    hill.position.set(s * (30 + i * 4.2), h * 0.25, -56 - (i % 2) * 5);
+    hill.scale.y = 0.6;
+    hill.position.set(s * (19 + i * 3.1), h * 0.3, -52 - (i % 2) * 6);
     ink(hill, 1.03);
     g.add(hill);
   }
 
-  for (let i = 0; i < 7; i++) {
-    const x = s * (28 + i * 3.1), z = -44 - (i % 3) * 2.2;
-    const h = 1.8 + (i % 4) * 0.55;
-    const house = box(2.0, h, 1.8, toon(0xffffff, T.plaster));
+  for (let i = 0; i < 8; i++) {
+    const x = s * (15 + i * 2.3), z = -40 - (i % 3) * 2.4;
+    const h = 2.2 + (i % 4) * 0.65;
+    const house = box(2.1, h, 1.9, toon(0xffffff, T.plaster));
     house.position.set(x, h / 2, z);
     ink(house, 1.03);
     g.add(house);
-    const rf = new THREE.Mesh(new THREE.ConeGeometry(1.55, 0.9, 4), toon(0xffffff, T.roof));
+    const rf = new THREE.Mesh(new THREE.ConeGeometry(1.6, 1.0, 4), toon(0xffffff, T.roof));
     rf.rotation.y = Math.PI / 4;
-    rf.position.set(x, h + 0.42, z);
+    rf.position.set(x, h + 0.45, z);
     ink(rf, 1.03);
     g.add(rf);
   }
 
   if (side < 0) {
-    g.add(palm(s * 26, -40, 1.1));
-    g.add(palm(s * 30, -42, 0.9));
-    g.add(palm(s * 33, -39, 1.0));
+    g.add(palm(s * 14, -37, 1.15));
+    g.add(palm(s * 18, -39, 0.95));
+    g.add(palm(s * 21, -36, 1.05));
+    g.add(shrine(s * 24, -43, 1.0));
   } else {
-    g.add(windmill(s * 29, -42, 1.0));
+    g.add(windmill(s * 17, -39, 1.05));
+    g.add(fort(s * 25, -42, 1.0));
   }
   return g;
 }
@@ -504,16 +574,6 @@ export function buildSeaStage() {
     [-26, 24, -130, 2.6], [12, 30, -145, 3.2], [38, 20, -120, 2.0],
     [-48, 17, -110, 1.7], [54, 27, -140, 2.4], [2, 35, -160, 3.6],
   ]) g.add(cloudCard(x, y, z, s));
-
-  for (let i = 0; i < 9; i++) {
-    const b = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.7, 0.28),
-      new THREE.MeshBasicMaterial({ color: 0x2a2230, transparent: true, opacity: 0.75, side: THREE.DoubleSide })
-    );
-    b.position.set(-14 + i * 3.6, 12 + (i % 3) * 1.1, -60 - (i % 4) * 5);
-    b.rotation.z = 0.15 * (i % 2 ? 1 : -1);
-    g.add(b);
-  }
 
   g.userData = { fleet, sea, kind: "sea" };
   return g;

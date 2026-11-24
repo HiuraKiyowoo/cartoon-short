@@ -26,7 +26,7 @@ const stages = buildWorld(scene);
 // ---------------------------------------------------------------- looks
 const LOOK = {
   pagi: { sky: ["#79c3e8", "#ffe8bd"], fog: 0xf5dfb6, fn: [55, 230], hemi: [0xfff4e0, 0x667a68, 1.18], dir: [0xfff0c8, 1.55], sun: [-7, 9, 6] },
-  senja: { sky: ["#6d7cae", "#ffc78a"], fog: 0xefb98c, fn: [48, 210], hemi: [0xffd9b2, 0x6a5a70, 1.12], dir: [0xffbf7c, 1.5], sun: [-8, 7, 6] },
+  senja: { sky: ["#4f6fa8", "#ffcf8a"], fog: 0xf2c08a, fn: [70, 280], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
   malam: { sky: ["#16203c", "#463a58"], fog: 0x2a2a44, fn: [30, 150], hemi: [0x9fb0ff, 0x2a2a3a, 0.82], dir: [0x9fb0ff, 0.7], sun: [-4, 8, 5] },
   kelas: { sky: ["#3a2f28", "#6a5444"], fog: 0x5a4a3a, fn: [12, 55], hemi: [0xffe8c8, 0x5a4a3a, 1.0], dir: [0xffe0b0, 1.0], sun: [-3, 6, 4] },
 };
@@ -97,10 +97,10 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
-    case "armada": return { pos: [-4 + 8 * e, 2.4 + 0.5 * e, 24 - 12 * e], look: [0, 2.0, -10], fov: 52, roll: -1.5 + 3 * e };
+    case "armada": return { pos: [-5 + 8 * e, 3.4 + 0.4 * e, 26 - 12 * e], look: [0, 2.1, -11], fov: 50, roll: -1.5 + 3 * e };
     case "dermaga": return { pos: [-16 + 3 * e, 2.2, 9 - 2 * e], look: [-22, 1.4, -16], fov: 44, roll: 1.5 - 3 * e };
     case "datang": return { pos: [7 - 3 * e, 2.0, 11 - 4 * e], look: [0, 1.7, -9], fov: 46, roll: -2 + 4 * e };
-    case "hadapan": return { pos: [0, 3.6 - 0.9 * e, 38 - 10 * e], look: [0, 2.2, -9], fov: 52 - 6 * e, roll: -2 + 4 * e };
+    case "hadapan": return { pos: [0, 8.4 - 1.2 * e, 42 - 6 * e], look: [0, 2.6, -14], fov: 50 - 3 * e, roll: -1.5 + 3 * e };
     case "serang": return { pos: [9 + 5 * e, 2.2, 7 - 5 * e], look: [20, 1.7, -20], fov: 44, roll: 2 - 4 * e };
     case "pasar": return { pos: [-2.5 + 1.5 * e, 2.1, 8 - 3 * e], look: [0, 1.4, -9], fov: 44, roll: -1 + 2 * e };
     case "amsterdam": return { pos: [2.5 - 2 * e, 3.6, 15 - 4 * e], look: [0, 2.2, -17], fov: 46, roll: 1 - 2 * e };
