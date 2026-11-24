@@ -60,10 +60,10 @@ export const buildKelas = (par) => {
   addM(o.meja, box(1.0, 0.1, 0.7), mkMat(0xf2efe6), [0.7, 2.06, 0.2], { rot: [0, 0.2, 0], ink: 0.02 });
   o.bangku = [];
   for (let i = 0; i < 3; i++) {   // HANYA satu baris (di z 0,4): baris z 3,0 menghalangi kaki karakter dari kamera
-    const bx = -4.6 + (i % 3) * 4.6, bz = 0.4;
+    const bx = -4.6 + (i % 3) * 4.6, bz = 1.4;
     const b = new THREE.Group(); b.position.set(bx, 0, bz); g.add(b);
-    addM(b, box(2.6, 0.16, 0.8), mkMat(0x9a7448), [0, 1.15, 0], { ink: 0.03 });
-    for (const sx of [-1, 1]) addM(b, box(0.16, 1.15, 0.7), mkMat(0x7a5638), [sx * 1.1, 0.58, 0.15], { ink: 0.02 });
+    addM(b, box(2.6, 0.16, 0.8), mkMat(0x9a7448), [0, 0.95, 0], { ink: 0.03 });
+    for (const sx of [-1, 1]) addM(b, box(0.16, 0.95, 0.7), mkMat(0x7a5638), [sx * 1.1, 0.48, 0.15], { ink: 0.02 });
     addM(b, box(1.6, 0.14, 0.4), mkMat(0x9a7448), [0, 0.72, -0.55], { ink: 0.025 });
     o.bangku.push(b);
   }

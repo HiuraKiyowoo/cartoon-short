@@ -73,14 +73,17 @@ export const buildKanal = (par) => {
   o.blades = new THREE.Group(); o.blades.position.set(0, 8.4, 3.4); km.add(o.blades);
   for (let i = 0; i < 4; i++) addM(o.blades, box(1.0, 7.4, 0.22), mkMat(0xd8cba8), [0, 0, 0], { rot: [0, 0, (i * Math.PI) / 2], ink: 0.03 });
   addM(o.blades, cyl(0.4, 0.4, 0.5, 8), mkMat(0x4a3020), [0, 0, 0.2], { rot: [Math.PI / 2, 0, 0], ink: 0.02 });
-  // peti tulip di jalan sisi barat (x -12,4), bukan di air
+  // peti tulip TERBUKA di tepi kanal barat (x -12,4): dinding 4 sisi, tulip tumbuh dari DALAM peti
   o.krat = [];
   for (let i = 0; i < 6; i++) {
-    const k = new THREE.Group(); k.position.set(-19.0 + (i % 3) * 1.35, Y_JALAN, 6.2 - Math.floor(i / 3) * 1.5); g.add(k);   // di TENGAH jalan: kamera dari sisi kanal tidak pernah masuk rumah
-    addM(k, box(1.2, 0.62, 1.24), mkMat(0xb08a5a), [0, 0.31, 0], { ink: 0.03 });
-    for (let j = 0; j < 4; j++) { const bx = -0.44 + (j % 2) * 0.88, bz = -0.42 + Math.floor(j / 2) * 0.84;
-      addM(k, cyl(0.05, 0.05, 0.44, 6), mkMat(0x3f7a34), [bx, 0.82, bz], { ink: 0.015 });
-      addM(k, new THREE.ConeGeometry(0.16, 0.26, 6), mkMat(j % 2 ? 0xd5343b : 0xe8c45a), [bx, 1.17, bz], { ink: 0.02 }); }
+    const kx = -12.6 - (i % 3) * 0.02, kz = 6.6 - Math.floor(i / 3) * 1.6, kx2 = kx - (i % 3) * 1.3;
+    const k = new THREE.Group(); k.position.set(kx2, Y_JALAN, kz); g.add(k);
+    addM(k, box(1.3, 0.12, 1.3), mkMat(0x9a7448), [0, 0.06, 0], { ink: 0.03 });            // alas
+    for (const sx of [-1, 1]) addM(k, box(0.12, 0.62, 1.3), mkMat(0xb08a5a), [sx * 0.59, 0.31, 0], { ink: 0.025 });
+    for (const sz of [-1, 1]) addM(k, box(1.3, 0.62, 0.12), mkMat(0xb08a5a), [0, 0.31, sz * 0.59], { ink: 0.025 });
+    for (let j = 0; j < 4; j++) { const bx = -0.36 + (j % 2) * 0.72, bz = -0.34 + Math.floor(j / 2) * 0.68;
+      addM(k, cyl(0.045, 0.045, 0.5, 6), mkMat(0x3f7a34), [bx, 0.36, bz], { ink: 0.012 });
+      addM(k, new THREE.ConeGeometry(0.14, 0.3, 6), mkMat(j % 2 ? 0xd5343b : 0xe8c45a), [bx, 0.74, bz], { ink: 0.018 }); }
     o.krat.push(k);
   }
   for (let i = 0; i < 3; i++) addM(g, cyl(0.5, 0.5, 1.1, 10), mkMat(0x8a5a32), [19.0, Y_JALAN + 0.55, 4.4 - i * 1.4], { ink: 0.03 });
