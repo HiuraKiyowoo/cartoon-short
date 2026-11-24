@@ -77,21 +77,21 @@ export const buildPeta = (par, ox = 60) => {
   addM(g, box(15.8, 6, 0.2), mkMat(0x6b5240), [0, 3, -6.4], { ink: false });
   for (const sx of [-1, 1]) addM(g, box(0.2, 6, 12.8), mkMat(0x6b5240), [sx * 7.9, 3, 0], { ink: false });
   // meja peta panjang + peta tergelar
-  o.meja = new THREE.Group(); o.meja.position.set(0, 0, -1.4); g.add(o.meja);
+  o.meja = new THREE.Group(); o.meja.position.set(0, 0, -3.4); g.add(o.meja);   // di BELAKANG karakter (kalau di depan, meja menutupi mereka)
   addM(o.meja, box(7.2, 0.24, 3.6), mkMat(0x8a6a44), [0, 1.85, 0], { ink: 0.03 });
   addM(o.meja, box(6.8, 0.1, 3.2), mkMat(petaTex), [0, 2.0, 0], { ink: 0.02 });
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) addM(o.meja, box(0.22, 1.85, 0.22), mkMat(0x6b4a2c), [sx * 3.2, 0.92, sz * 1.4], { ink: 0.02 });
   // lilin (menyala)
   o.lilin = [];
   for (const [x, z] of [[-2.6, 1.2], [2.4, 1.3], [-3.0, -1.2]]) {
-    addM(g, cyl(0.26, 0.3, 0.5, 8), mkMat(0x8a7a5a), [x, 2.2, z - 1.4], { ink: 0.02 });
-    addM(g, cyl(0.09, 0.09, 0.7, 6), mkMat(0xf2e6c8), [x, 2.75, z - 1.4], { ink: 0.015 });
-    const f = addM(g, new THREE.ConeGeometry(0.11, 0.3, 6), new THREE.MeshBasicMaterial({ color: 0xffcf6a }), [x, 3.24, z - 1.4], { ink: false });
+    addM(g, cyl(0.26, 0.3, 0.5, 8), mkMat(0x8a7a5a), [x, 2.2, z - 3.4], { ink: 0.02 });
+    addM(g, cyl(0.09, 0.09, 0.7, 6), mkMat(0xf2e6c8), [x, 2.75, z - 3.4], { ink: 0.015 });
+    const f = addM(g, new THREE.ConeGeometry(0.11, 0.3, 6), new THREE.MeshBasicMaterial({ color: 0xffcf6a }), [x, 3.24, z - 3.4], { ink: false });
     o.lilin.push(f);
   }
   // kursi kayu berukir di sisi meja
   for (const sx of [-1, 1]) {
-    const c = new THREE.Group(); c.position.set(sx * 5.2, 0, -1.0); c.rotation.y = sx > 0 ? -0.6 : 0.6; g.add(c);
+    const c = new THREE.Group(); c.position.set(sx * 5.2, 0, -3.0); c.rotation.y = sx > 0 ? -0.6 : 0.6; g.add(c);
     addM(c, box(1.5, 0.18, 1.5), mkMat(0x7a5638), [0, 1.7, 0], { ink: 0.03 });
     addM(c, box(0.16, 2.6, 1.5), mkMat(0x6b4a2c), [sx * 0.7, 2.9, 0], { ink: 0.03 });
     for (const a of [-1, 1]) for (const b of [-1, 1]) addM(c, box(0.14, 1.7, 0.14), mkMat(0x6b4a2c), [a * 0.6, 0.85, b * 0.6], { ink: 0.02 });
