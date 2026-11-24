@@ -184,7 +184,7 @@ const frame = (f) => {
     case "krat": {
       C = { pos: A(lv([-12.4, Y_JALAN + 3.6, 11.4], [-12.4, Y_JALAN + 3.2, 10.2], sm(u))), look: A([-12.4, Y_JALAN + 0.7, 6.0]), fov: 40, roll: lerp(1.5, -1.5, u) };
       fx("star", (f % 40) / 40, -12.4, Y_JALAN + 1.5, 6.4, 0.85, 0, true);
-      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -10.6, Y_JALAN, 5.6, 1.0, false, idle(f, 23), true);
+      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -13.5, Y_JALAN, 5.2, 1.0, false, idle(f, 23), true);
       break; }
     case "klaim": {
       C = { pos: A(lv([0, Y_JALAN + 1.2, 9.6], [0, Y_JALAN + 1.1, 8.4], sm(u))), look: A([0, Y_JALAN + 0.95, 3.4]), fov: 46, roll: lerp(-1.5, 1.5, u) };
@@ -199,7 +199,7 @@ const frame = (f) => {
       C = { pos: A(lv([0.5, 3.2, 5.9], [0.4, 3.1, 4.9], sm(u))), look: A([0, 2.55, -4.6]), fov: 46, roll: lerp(-1.5, 1.5, u) };
       const pop = (t0) => bk(ramp(f, t0, t0 + 9));
       if (f >= 628) person(F({ kind: "guru", seed: 9, expr: "neutral", look: -1.2 }), -1.0, 0, -2.8, 1.05 * pop(628), false, idle(f, 9), true);
-      if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 0.95, 0, 1.5, 0.85 * pop(640), false, idle(f, 13), true);   // DI DEPAN baris bangku (z 0,4) supaya tidak terhalang
+      if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 1.25, 0, -2.8, 0.85 * pop(640), false, idle(f, 13), true);   // x 1,25: di luar bentang bangku (x -1,3..1,3)
       break; }
     case "kelas_close": {
       C = { pos: A(lv([0.35, 1.62, 1.9], [0.3, 1.58, 1.3], sm(u))), look: A([0.2, 1.30, -4.6]), fov: 44, roll: lerp(1.2, -1.2, u) };
@@ -210,7 +210,7 @@ const frame = (f) => {
     case "kirim": {
       C = { pos: A(lv([-12.4, Y_JALAN + 3.3, 11.8], [-12.4, Y_JALAN + 2.9, 10.6], sm(u))), look: A([-12.4, Y_JALAN + 0.75, 6.4]), fov: 40, roll: lerp(-1.5, 1.5, u) };
       fx("star", ((f + 12) % 40) / 40, -12.4, Y_JALAN + 1.6, 6.6, 0.9, 0, true);
-      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -10.4, Y_JALAN, 5.8, 1.0, true, idle(f, 27), true);
+      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -11.4, Y_JALAN, 5.0, 1.0, true, idle(f, 27), true);
       break; }
     case "kota_wide": {
       C = { pos: A([lerp(15, -15, sm(u)), Y_JALAN + 5.2, 14]), look: A([0, Y_JALAN + 2.6, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };
@@ -264,8 +264,9 @@ window.auditShot = (list) => {
       const jarak = c.distanceTo(cam.position);
       const rc = new THREE.Raycaster(cam.position.clone(), c.clone().sub(cam.position).normalize(), 0.1, jarak - 0.05);
       const tabrak = rc.intersectObjects(scene.children, true).filter((h) => !isCard(h.object) && !(h.object.parent && isCard(h.object.parent)) && h.object !== m);
+      const nama = (o) => `${o.geometry ? o.geometry.type : "?"}@(${o.position.x.toFixed(1)},${o.position.y.toFixed(1)},${o.position.z.toFixed(1)})`;
       baris.push({ x: +p.x.toFixed(2), y: +p.y.toFixed(2), kaki: +bb.min.y.toFixed(2), jarak: +jarak.toFixed(1),
-        potong: p.x < -1 || p.x > 1 || p.y < -1 || p.y > 1, terhalang: tabrak.length ? (tabrak[0].object.material && tabrak[0].object.material.name ? tabrak[0].object.material.name : "benda") : null });
+        potong: p.x < -1 || p.x > 1 || p.y < -1 || p.y > 1, terhalang: tabrak.length ? nama(tabrak[0].object.parent || tabrak[0].object) : null });
     }
     res.push({ f, shot: S.id, panggung: S.st, look: S.look, kartu: baris.length, baris });
   }
