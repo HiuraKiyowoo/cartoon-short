@@ -26,6 +26,14 @@ function ink(mesh, k = 1.03) {
   return mesh;
 }
 
+const strut = (a, b, r, mat) => {
+  const d = new THREE.Vector3().subVectors(b, a);
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 4), mat);
+  m.position.copy(a).addScaledVector(d, 0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize());
+  return m;
+};
+
 // layar persegi: lebar mengecil ke bawah, permukaan menggembung
 function sailGeometry(w, h, bulge) {
   const geo = new THREE.PlaneGeometry(w, h, 12, 8);
@@ -36,6 +44,7 @@ function sailGeometry(w, h, bulge) {
     const u = x / w + 0.5;
     const v = y / h + 0.5;
     p.setX(i, x * (0.84 + 0.16 * v));
+    p.setY(i, y + Math.sin(u * Math.PI) * h * 0.1);
     p.setZ(i, Math.sin(u * Math.PI) * bulge * (0.55 + 0.45 * v));
   }
   geo.computeVertexNormals();
@@ -140,19 +149,32 @@ export function makeShip(ctx, o = {}) {
     g.add(ball);
   }
 
+  // --- tali-temali: stay depan-belakang dan shroud ke lambung
+  const ropeMat = toon(0x3a2a20);
+  const top = (x, h) => new THREE.Vector3(x, 1.05 + h, 0);
+  g.add(strut(new THREE.Vector3(4.9, 2.85, 0), top(0.25, 5.5), 0.014, ropeMat));
+  g.add(strut(top(0.25, 5.5), top(-1.85, 4.2), 0.013, ropeMat));
+  g.add(strut(top(-1.85, 4.2), new THREE.Vector3(-3.6, 1.15, 0), 0.013, ropeMat));
+  for (const [x, h] of masts) {
+    for (const sz of [-1, 1]) {
+      g.add(strut(top(x, h * 0.96), new THREE.Vector3(x - 0.5, 1.12, sz * 0.8), 0.012, ropeMat));
+      g.add(strut(top(x, h * 0.96), new THREE.Vector3(x + 0.5, 1.12, sz * 0.8), 0.012, ropeMat));
+    }
+  }
+
   // --- panji di tiang agung
   const flag = new THREE.Mesh(
     new THREE.PlaneGeometry(1.1, 0.62),
     flagMaterial(o.banner || T.bannerWave)
   );
-  flag.position.set(0.25 + 0.56, 1.05 + 5.5 - 0.1, 0.02);
+  flag.position.set(0.25 + 0.56, 1.05 + 5.5 - 0.44, 0.02);
   g.add(flag);
 
   const pennant = new THREE.Mesh(
     new THREE.PlaneGeometry(0.8, 0.22),
     flagMaterial(T.bannerSun)
   );
-  pennant.position.set(2.15 + 0.42, 1.05 + 3.4 - 0.05, 0.02);
+  pennant.position.set(2.15 + 0.42, 1.05 + 3.4 - 0.3, 0.02);
   g.add(pennant);
 
   // --- busa di garis air
@@ -174,22 +196,22 @@ export function makeShip(ctx, o = {}) {
 export function makeFleet(ctx) {
   const g = new THREE.Group();
   const ships = [];
+  const T = ctx.T;
 
-  // baris belakang → depan, haluan menghadap kamera sedikit menyudut
   const layout = [
-    [-16.5, -30, 0.72, 0.82], [-8.5, -29, 0.8, 0.86], [-0.5, -28.5, 0.75, 0.84], [7.5, -29, 0.82, 0.86], [15.5, -30, 0.74, 0.82],
-    [-11.5, -20, 0.86, 0.92], [-4.0, -19, 0.9, 0.96], [3.5, -19, 0.88, 0.94], [11.0, -20, 0.84, 0.92],
-    [-7.5, -10.5, 0.92, 1.02], [1.5, -10, 0.96, 1.06], [10.0, -11, 0.9, 1.0],
-    [-8.0, 2.0, 0.66, 1.72],
+    [-17, -28, -0.3, 0.82], [-9, -27, -0.26, 0.84], [-1, -26.5, -0.32, 0.83], [7, -27, -0.26, 0.84], [15, -28, -0.3, 0.82],
+    [-14, -19, -0.34, 0.9], [-6.5, -18.5, -0.28, 0.92], [1.5, -18.5, -0.34, 0.92], [9.5, -19, -0.28, 0.9],
+    [-10.5, -10, -0.3, 1.0], [-2.5, -9.5, -0.36, 1.02], [6, -10, -0.3, 1.0],
+    [-9, -2, -0.5, 1.35],
   ];
-  const tints = [0xffffff, 0xe9cbb0, 0xcdd8ce, 0xdcb4aa, 0xf0e0c4];
-  layout.forEach(([x, z, yaw, s], i) => {
+  const tints = [0xf2e2cc, 0xe9cbb0, 0xdcc4b0, 0xf0dcc4, 0xd8c0ac];
+  layout.forEach(([x, z, yaw, scale], i) => {
     const hero = i === layout.length - 1;
     const ship = makeShip(ctx, {
-      x, z, scale: s, yaw,
-      hullColor: hero ? 0xb08a7c : tints[i % tints.length],
-      banner: i % 3 === 0 ? T_of(ctx).bannerKris : i % 2 ? T_of(ctx).bannerWave : T_of(ctx).bannerSun,
-      bob: { amp: 0.05 / s, spd: 30 + (i % 5) * 4, ph: i * 1.7 },
+      x, z, yaw, scale,
+      hullColor: hero ? 0xf6e2cc : tints[i % tints.length],
+      banner: hero ? T.bannerKris : i % 3 === 0 ? T.bannerKris : i % 2 ? T.bannerWave : T.bannerSun,
+      bob: { amp: 0.05 / scale, spd: 26 + (i % 5) * 5, ph: i * 1.7 },
     });
     ships.push(ship);
     g.add(ship);

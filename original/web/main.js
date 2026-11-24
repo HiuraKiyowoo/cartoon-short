@@ -33,12 +33,50 @@ const LOOK = {
 const skyTex = {};
 for (const k in LOOK) {
   const c = document.createElement("canvas");
-  c.width = 8; c.height = 256;
+  c.width = 360;
+  c.height = 640;
   const g = c.getContext("2d");
-  const gr = g.createLinearGradient(0, 0, 0, 256);
-  gr.addColorStop(0, LOOK[k].sky[0]);
-  gr.addColorStop(1, LOOK[k].sky[1]);
-  g.fillStyle = gr; g.fillRect(0, 0, 8, 256);
+  const L = LOOK[k];
+  const gr = g.createLinearGradient(0, 0, 0, 640);
+  gr.addColorStop(0, L.sky[0]);
+  gr.addColorStop(0.62, L.sky[0]);
+  gr.addColorStop(1, L.sky[1]);
+  g.fillStyle = gr;
+  g.fillRect(0, 0, 360, 640);
+
+  // pendar hangat di kaki langit
+  const glow = g.createRadialGradient(180, 640, 10, 180, 640, 380);
+  glow.addColorStop(0, k === "malam" ? "rgba(120,140,200,.35)" : "rgba(255,214,150,.55)");
+  glow.addColorStop(1, "rgba(255,214,150,0)");
+  g.fillStyle = glow;
+  g.fillRect(0, 0, 360, 640);
+
+  if (k === "malam") {
+    for (let i = 0; i < 90; i++) {
+      const x = (i * 137) % 360, y = (i * 83) % 380;
+      g.fillStyle = `rgba(255,250,235,${0.15 + ((i * 7) % 10) / 22})`;
+      g.fillRect(x, y, 1.6, 1.6);
+    }
+  } else {
+    let seed = k === "pagi" ? 11 : 23;
+    const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    g.save();
+    g.filter = "blur(5px)";
+    for (let i = 0; i < 7; i++) {
+      const cx = 30 + rand() * 300;
+      const cy = 40 + rand() * 210;
+      const sc = 16 + rand() * 26;
+      for (let j = 0; j < 6; j++) {
+        g.fillStyle = `rgba(255,248,236,${0.45 + rand() * 0.35})`;
+        g.beginPath();
+        g.ellipse(cx + (rand() - 0.5) * sc * 2.4, cy + (rand() - 0.5) * sc * 0.7,
+          sc * (0.5 + rand() * 0.6), sc * (0.26 + rand() * 0.22), 0, 0, 7);
+        g.fill();
+      }
+    }
+    g.restore();
+  }
+
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   skyTex[k] = t;
@@ -62,9 +100,9 @@ vc.width = 256; vc.height = 456;
 {
   const g = vc.getContext("2d");
   const gr = g.createRadialGradient(128, 228, 70, 128, 228, 300);
-  gr.addColorStop(0, "rgba(16,8,22,0)");
-  gr.addColorStop(0.65, "rgba(16,8,22,.06)");
-  gr.addColorStop(1, "rgba(16,8,22,.34)");
+  gr.addColorStop(0, "rgba(0,0,0,0)");
+  gr.addColorStop(0.6, "rgba(0,0,0,.03)");
+  gr.addColorStop(1, "rgba(0,0,0,.2)");
   g.fillStyle = gr; g.fillRect(0, 0, 256, 456);
 }
 const vig = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(vc), transparent: true, depthTest: false }));
@@ -98,7 +136,7 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
-    case "armada": return { pos: [-6 + 9 * e, 3.2 + 0.5 * e, 21 - 9 * e], look: [0, 3.1, -13], fov: 46, roll: -1.5 + 3 * e };
+    case "armada": return { pos: [-2 + 2 * e, 4.6 - 0.5 * e, 27 - 8 * e], look: [-2, 2.5, -12], fov: 40, roll: -1.2 + 2.4 * e };
     case "dermaga": return { pos: [-16 + 3 * e, 2.2, 9 - 2 * e], look: [-22, 1.4, -16], fov: 44, roll: 1.5 - 3 * e };
     case "datang": return { pos: [7 - 3 * e, 2.0, 11 - 4 * e], look: [0, 1.7, -9], fov: 46, roll: -2 + 4 * e };
     case "hadapan": return { pos: [0, 8.4 - 1.2 * e, 42 - 6 * e], look: [0, 2.6, -14], fov: 50 - 3 * e, roll: -1.5 + 3 * e };

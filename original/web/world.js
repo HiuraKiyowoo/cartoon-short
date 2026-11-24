@@ -61,26 +61,35 @@ const wood = tex(256, 256, (g, w, h) => {
 });
 
 const sail = tex(256, 256, (g, w, h) => {
-  g.fillStyle = "#f4e7c8";
+  const gr = g.createLinearGradient(0, 0, 0, h);
+  gr.addColorStop(0, "#fdf7e6");
+  gr.addColorStop(0.62, "#f6ebd0");
+  gr.addColorStop(1, "#e8d5b0");
+  g.fillStyle = gr;
   g.fillRect(0, 0, w, h);
   const r = rng(19);
-  for (let i = 0; i < 90; i++) {
-    g.fillStyle = `rgba(150,120,80,${0.02 + r() * 0.05})`;
+  for (let i = 0; i < 220; i++) {
+    g.fillStyle = `rgba(152,124,86,${0.01 + r() * 0.028})`;
     g.beginPath();
-    g.ellipse(r() * w, r() * h, 6 + r() * 26, 3 + r() * 12, r() * 3, 0, 7);
+    g.ellipse(r() * w, r() * h, 4 + r() * 16, 2 + r() * 7, r() * 3, 0, 7);
     g.fill();
   }
-  g.strokeStyle = "rgba(120,92,60,.55)";
-  g.lineWidth = 3;
-  for (let y = 24; y < h; y += 38) {
+  g.strokeStyle = "rgba(146,120,84,.26)";
+  g.lineWidth = 2;
+  for (let x = 34; x < w; x += 52) {
+    g.beginPath();
+    g.moveTo(x, 0);
+    g.lineTo(x, h);
+    g.stroke();
+  }
+  g.strokeStyle = "rgba(146,120,84,.16)";
+  g.lineWidth = 1.5;
+  for (let y = 40; y < h; y += 64) {
     g.beginPath();
     g.moveTo(0, y);
     g.lineTo(w, y);
     g.stroke();
   }
-  g.strokeStyle = "#3a2a24";
-  g.lineWidth = 12;
-  g.strokeRect(6, 6, w - 12, h - 12);
 });
 
 const water = tex(512, 512, (g, w, h) => {
@@ -373,9 +382,9 @@ function shrine(x, z, s = 1) {
 function buildCoast(side) {
   const g = new THREE.Group();
   const s = side < 0 ? -1 : 1;
-  const base = new THREE.Mesh(new THREE.PlaneGeometry(70, 34), toon(0xffffff, T.grass));
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(46, 270), toon(0xffffff, T.grass));
   base.rotation.x = -Math.PI / 2;
-  base.position.set(s * 24, 0.06, -46);
+  base.position.set(s * 28, 0.06, -158);
   g.add(base);
 
   for (let i = 0; i < 7; i++) {
@@ -444,10 +453,13 @@ export function buildSeaStage() {
   sun.position.set(16, 15, -150);
   g.add(sun);
 
-  for (const [x, y, z, s] of [
-    [-26, 24, -130, 2.6], [12, 30, -145, 3.2], [38, 20, -120, 2.0],
-    [-48, 17, -110, 1.7], [54, 27, -140, 2.4], [2, 35, -160, 3.6],
-  ]) g.add(cloudCard(x, y, z, s));
+  for (let i = 0; i < 9; i++) {
+    const h = 5 + (i % 4) * 3.2;
+    const isle = new THREE.Mesh(new THREE.SphereGeometry(h, 12, 8), toon(0x6f8a72));
+    isle.scale.set(2.4, 0.34, 1);
+    isle.position.set(-88 + i * 22, h * 0.1, -238 - (i % 3) * 14);
+    g.add(isle);
+  }
 
   g.userData = { fleet, sea, kind: "sea", ships: fleet.userData.ships };
   return g;
