@@ -51,7 +51,7 @@ jobs:
           node render.mjs frames "0-725" 1080 > r1.log 2>&1 &
           node render.mjs frames "726-1450" 1080 > r2.log 2>&1 &
           wait
-          tail -3 r1.log r2.log
+          tail -n 3 r1.log r2.log
           ls frames | wc -l
       - name: Encode video
         if: ${{ inputs.mode == 'render' }}
