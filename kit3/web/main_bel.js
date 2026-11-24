@@ -4,7 +4,7 @@ import { drawFx4 as drawFx2 } from "./fx4.js";
 import { Pen, INK } from "./toon.ts";
 import { addM, mkMat, buildDesk } from "./world.js";
 import { buildNusantara } from "./world_nus.js";
-import { buildKanal } from "./world_kanal.js";
+import { buildKanal, Y_JALAN } from "./world_kanal2.js";
 import { buildKelas, buildPeta } from "./world_int.js";
 
 const Q = new URLSearchParams(location.search), W = +(Q.get("w") || 1080), H = Math.round((W * 16) / 9);
@@ -182,17 +182,17 @@ const frame = (f) => {
       fx("splash", (f % 34) / 34, -2.6, 0.4, -13, 1.6); fx("splash", ((f + 14) % 34) / 34, 3.4, 0.4, -15, 1.4);
       flashA = f >= 430 && f < 434 ? 0.25 : 0; break; }
     case "krat": {
-      C = { pos: A(lv([-9.4, 1.5, 8.4], [-9.4, 1.35, 7.2], sm(u))), look: A([-9.4, 1.05, 6.0]), fov: 40, roll: lerp(1.5, -1.5, u) };
-      fx("star", (f % 40) / 40, -9.4, 2.0, 6.2, 0.85, 0, true);
+      C = { pos: A(lv([-12.4, Y_JALAN + 0.95, 9.6], [-12.4, Y_JALAN + 0.85, 8.4], sm(u))), look: A([-12.4, Y_JALAN + 0.55, 6.2]), fov: 40, roll: lerp(1.5, -1.5, u) };
+      fx("star", (f % 40) / 40, -12.4, Y_JALAN + 1.5, 6.4, 0.85, 0, true);
       break; }
     case "klaim": {
-      C = { pos: A(lv([0, 2.9, 9.6], [0, 2.75, 8.2], sm(u))), look: A([0, 2.6, 2.0]), fov: 46, roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0, Y_JALAN + 1.15, 9.2], [0, Y_JALAN + 1.05, 8.0], sm(u))), look: A([0, Y_JALAN + 0.95, 2.0]), fov: 46, roll: lerp(-1.5, 1.5, u) };
       const pop = (t0) => bk(ramp(f, t0, t0 + 10));
-      if (f >= 582) person(F({ kind: "raja", seed: 3, expr: "grin" }), -0.95, 2.45, 2.0, 1.05 * pop(582), false, idle(f, 3), false);
-      if (f >= 594) person(F({ kind: "gubernur", seed: 5, expr: "nervous", headTilt: -4 }), 0.95, 2.45, 2.0, 1.05 * pop(594), true, idle(f, 5), false);
-      if (f >= 582 && f < 596) fx("puff", ramp(f, 582, 596), -0.95, 2.7, 2.2, 1.7);
-      if (f >= 594 && f < 608) fx("puff", ramp(f, 594, 608), 0.95, 2.7, 2.2, 1.7);
-      if (f >= 598 && f < 614) fx("star", ramp(f, 598, 614), 0, 3.1, 2.1, 0.7, 0, true);
+      if (f >= 582) person(F({ kind: "raja", seed: 3, expr: "grin" }), -0.95, Y_JALAN, 2.0, 1.05 * pop(582), false, idle(f, 3), true);
+      if (f >= 594) person(F({ kind: "gubernur", seed: 5, expr: "nervous", headTilt: -4 }), 0.95, Y_JALAN, 2.0, 1.05 * pop(594), true, idle(f, 5), true);
+      if (f >= 582 && f < 596) fx("puff", ramp(f, 582, 596), -0.95, Y_JALAN + 0.25, 2.2, 1.7);
+      if (f >= 594 && f < 608) fx("puff", ramp(f, 594, 608), 0.95, Y_JALAN + 0.25, 2.2, 1.7);
+      if (f >= 598 && f < 614) fx("star", ramp(f, 598, 614), 0, Y_JALAN + 0.85, 2.1, 0.7, 0, true);
       break; }
     case "kelas_wide": {
       C = { pos: A(lv([0.5, 3.1, 5.8], [0.4, 3.0, 4.8], sm(u))), look: A([0, 2.6, -4.8]), fov: 46, roll: lerp(-1.5, 1.5, u) };
@@ -201,17 +201,17 @@ const frame = (f) => {
       if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 0.95, 0, -3.6, 0.75 * pop(640), false, idle(f, 13), true);
       break; }
     case "kelas_close": {
-      C = { pos: A(lv([0.95, 1.62, 1.7], [0.9, 1.58, 1.1], sm(u))), look: A([0.85, 1.30, -4.6]), fov: 44, roll: lerp(1.2, -1.2, u) };
+      C = { pos: A(lv([0.35, 1.62, 1.9], [0.3, 1.58, 1.3], sm(u))), look: A([0.2, 1.30, -4.6]), fov: 44, roll: lerp(1.2, -1.2, u) };
       const as = f >= 690;
-      person(F({ kind: "murid", seed: 13, expr: as ? "smile" : "dazed", look: as ? 0.8 : 0.2, headTilt: as ? 3 : 0 }), 0.85, 0, -3.6, 0.78, false, idle(f, 13), true);
+      person(F({ kind: "murid", seed: 13, expr: as ? "smile" : "dazed", look: as ? 0.8 : 0.2, headTilt: as ? 3 : 0 }), 0.85, 0, -3.2, 0.78, false, idle(f, 13), true);
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
       break; }
     case "kirim": {
-      C = { pos: A(lv([-9.4, 1.7, 9.2], [-9.4, 1.55, 8.0], sm(u))), look: A([-9.4, 1.2, 6.2]), fov: 40, roll: lerp(-1.5, 1.5, u) };
-      fx("star", ((f + 12) % 40) / 40, -9.4, 2.2, 6.4, 0.9, 0, true);
+      C = { pos: A(lv([-12.4, Y_JALAN + 1.05, 10.0], [-12.4, Y_JALAN + 0.95, 8.8], sm(u))), look: A([-12.4, Y_JALAN + 0.6, 6.4]), fov: 40, roll: lerp(-1.5, 1.5, u) };
+      fx("star", ((f + 12) % 40) / 40, -12.4, Y_JALAN + 1.6, 6.6, 0.9, 0, true);
       break; }
     case "kota_wide": {
-      C = { pos: A([lerp(15, -15, sm(u)), 6.5, 14]), look: A([0, 4.0, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };
+      C = { pos: A([lerp(15, -15, sm(u)), Y_JALAN + 5.2, 14]), look: A([0, Y_JALAN + 2.6, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };
       fx("bird", (f % 44) / 44, 8, 13, -12, 1.4); break; }
     case "peta_wide": {
       C = { pos: A(lv([1.0, 2.7, 5.2], [0.6, 2.55, 4.2], sm(u))), look: A([0, 2.35, -2.0]), fov: 48, roll: lerp(-1.5, 1.5, u) };
@@ -220,19 +220,19 @@ const frame = (f) => {
       if (f >= 852) person(F({ kind: "juru", seed: 17, expr: "neutral", look: 0.6 }), 0.95, 0, -4.4, 1.02 * pop(852), true, idle(f, 17), true);
       break; }
     case "peta_close": {
-      C = { pos: A(lv([0.2, hyP + 0.05, 2.9], [0.1, hyP, 2.3], sm(u))), look: A([0, hyP - 0.05, -1.5]), fov: 38, roll: 3 * Math.sin(f / 12) };
+      C = { pos: A(lv([0.2, hyP + 0.05, 3.1], [0.1, hyP, 2.5], sm(u))), look: A([0, hyP - 0.05, 0.4]), fov: 38, roll: 3 * Math.sin(f / 12) };
       const sh = f >= 960;
-      person(F({ kind: "gubernur", seed: 5, expr: sh ? "shock" : "nervous", headTilt: sh ? Math.sin(f / 3) * 4 : -3 }), 0, 0, -1.5, 1.25, false, sh ? Math.sin(f / 3) * 0.03 : idle(f, 5), true);
-      if (sh) { fx("exclaim", 0, 0.9, hyP + 0.7, -1.3, 1.1 * bk(ramp(f, 960, 968)), 0.1); fx("sweat", (f % 20) / 20, 0.42, hyP + 0.15, -1.4, 0.5); }
+      person(F({ kind: "gubernur", seed: 5, expr: sh ? "shock" : "nervous", headTilt: sh ? Math.sin(f / 3) * 4 : -3 }), 0, 0, 0.4, 1.25, false, sh ? Math.sin(f / 3) * 0.03 : idle(f, 5), true);
+      if (sh) { fx("exclaim", 0, 0.9, hyP + 0.7, 0.5, 1.1 * bk(ramp(f, 960, 968)), 0.1); fx("sweat", (f % 20) / 20, 0.42, hyP + 0.15, 0.4, 0.5); }
       break; }
     case "armada": {
       C = { pos: A(lv([13, 7.5, 21], [5, 9.5, 13], sm(u))), look: A([0, 4.2, -28]), fov: 46, roll: lerp(2, -2, u) };
       flashA = (f >= 1055 && f < 1058) || (f >= 1122 && f < 1125) ? 0.16 : 0;
       fx("cloud", 0, -18, 22, -76, 24); fx("bird", (f % 40) / 40, 10, 12, -16, 1.6); break; }
     case "kanal_senja": {
-      C = { pos: A(lv([0.4, 3.2, 10.4], [0.2, 3.6, 11.8], sm(u))), look: A([0, 2.6, 2.0]), fov: 46, roll: lerp(-1, 1, u) };
-      person(F({ kind: "juru", seed: 17, expr: "dazed", look: Math.sin(f / 20) * 1.5 }), -0.2, 2.45, 2.0, 1.0, false, idle(f, 17), false);
-      if (f % 40 < 2) fx("qmark", (f % 40) / 40, 0.5, 4.3, 2.0, 0.9);
+      C = { pos: A(lv([0.4, Y_JALAN + 1.35, 8.6], [0.2, Y_JALAN + 1.5, 9.6], sm(u))), look: A([0, Y_JALAN + 0.9, 2.0]), fov: 46, roll: lerp(-1, 1, u) };
+      person(F({ kind: "juru", seed: 17, expr: "dazed", look: Math.sin(f / 20) * 1.5 }), -0.2, Y_JALAN, 2.0, 1.15, false, idle(f, 17), true);
+      if (f % 40 < 2) fx("qmark", (f % 40) / 40, 0.5, Y_JALAN + 2.3, 2.0, 0.9);
       break; }
     case "end": {
       C = { pos: A(lv([6, 7, 26], [3, 8.5, 32], sm(u))), look: A([8, 4, -30]), fov: 44, roll: lerp(-1, 1, u) };
