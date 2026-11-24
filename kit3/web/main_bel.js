@@ -190,8 +190,8 @@ const frame = (f) => {
       const pop = (t0) => bk(ramp(f, t0, t0 + 10));
       if (f >= 582) person(F({ kind: "raja", seed: 3, expr: "grin" }), -0.95, Y_JALAN, 3.4, 1.05 * pop(582), false, idle(f, 3), true);
       if (f >= 594) person(F({ kind: "gubernur", seed: 5, expr: "nervous", headTilt: -4 }), 0.95, Y_JALAN, 3.4, 1.05 * pop(594), true, idle(f, 5), true);
-      if (f >= 582 && f < 596) fx("puff", ramp(f, 582, 596), -0.95, Y_JALAN + 0.25, 3.6, 1.7);
-      if (f >= 594 && f < 608) fx("puff", ramp(f, 594, 608), 0.95, Y_JALAN + 0.25, 3.6, 1.7);
+      if (f >= 582 && f < 590) fx("puff", ramp(f, 582, 590), -0.95, Y_JALAN + 0.2, 3.5, 1.0);
+      if (f >= 594 && f < 602) fx("puff", ramp(f, 594, 602), 0.95, Y_JALAN + 0.2, 3.5, 1.0);
       if (f >= 598 && f < 614) fx("star", ramp(f, 598, 614), 0, Y_JALAN + 2.7, 3.5, 0.8, 0, true);   // kilau DI ATAS kepala: tidak menutupi badan
       break; }
     case "kelas_wide": {

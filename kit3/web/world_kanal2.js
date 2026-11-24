@@ -63,8 +63,8 @@ export const buildKanal = (par) => {
   addM(jb, box(21, 0.34, 3.6), mkMat(bataTex), [0, Y_JALAN - 0.17, 0], { ink: 0.03 });
   addM(jb, box(21, 0.16, 3.6), mkMat(batuJalan), [0, Y_JALAN - 0.08, 0], { ink: false });
   for (const sz of [-1, 1]) {
-    for (let i = -3; i <= 3; i++) addM(jb, box(0.18, 0.9, 0.18), mkMat(0x3a2f28), [i * 3.0, Y_JALAN + 0.45, sz * 1.65], { ink: 0.02 });
-    addM(jb, box(19, 0.14, 0.14), mkMat(0x3a2f28), [0, Y_JALAN + 0.9, sz * 1.65], { ink: 0.02 });
+    for (let i = -3; i <= 3; i++) addM(jb, box(0.18, 0.9, 0.18), mkMat(0x3a2f28), [i * 3.0, Y_JALAN + 0.45, sz * 0.9], { ink: 0.02 });
+    addM(jb, box(19, 0.14, 0.14), mkMat(0x3a2f28), [0, Y_JALAN + 0.9, sz * 0.9], { ink: 0.02 });   // pagar ke dalam: karakter di z 3,4 berdiri di muka pagar, badannya tidak teriris
   }
   for (const sx of [-1, 1]) addM(jb, box(1.6, 2.4, 3.6), mkMat(bataTex), [sx * 10.2, 1.1, 0], { ink: 0.03 });
   const km = new THREE.Group(); km.position.set(-24, Y_JALAN, -26); g.add(km);
