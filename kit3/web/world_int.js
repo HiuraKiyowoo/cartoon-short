@@ -19,7 +19,7 @@ const papanTulisTex = (tulisan) => cvTex("papanT" + tulisan, 512, 256, (g, w, h)
   g.fillStyle = "#6b4a2c"; g.fillRect(0, 0, w, h);
   g.fillStyle = "#2f3f3a"; g.fillRect(12, 12, w - 24, h - 24);
   g.strokeStyle = "#e8e6dc"; g.lineWidth = 3; g.strokeRect(12, 12, w - 24, h - 24);
-  g.fillStyle = "#e8e6dc"; g.font = "bold 30px 'DejaVu Sans', sans-serif"; g.textAlign = "center";
+  g.fillStyle = "#e8e6dc"; g.font = "bold 19px 'DejaVu Sans', sans-serif"; g.textAlign = "center";
   g.fillText(tulisan, w / 2, h / 2 + 4);
   g.strokeStyle = "#cfcdc4"; g.lineWidth = 3; g.lineCap = "round";
   for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(60, 190 + i * 16); for (let k = 0; k < 7; k++) g.lineTo(60 + (k + 1) * 56, 190 + i * 16 + (k % 2 ? 5 : -5)); g.stroke(); }

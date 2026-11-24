@@ -201,7 +201,7 @@ const frame = (f) => {
       if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 0.95, 0, -3.6, 0.75 * pop(640), false, idle(f, 13), true);
       break; }
     case "kelas_close": {
-      C = { pos: A(lv([0.95, 1.70, 1.6], [0.9, 1.66, 0.8], sm(u))), look: A([0.85, 1.95, -5.0]), fov: 46, roll: lerp(1.2, -1.2, u) };
+      C = { pos: A(lv([0.95, 1.62, 1.7], [0.9, 1.58, 1.1], sm(u))), look: A([0.85, 1.30, -4.6]), fov: 44, roll: lerp(1.2, -1.2, u) };
       const as = f >= 690;
       person(F({ kind: "murid", seed: 13, expr: as ? "smile" : "dazed", look: as ? 0.8 : 0.2, headTilt: as ? 3 : 0 }), 0.85, 0, -3.6, 0.78, false, idle(f, 13), true);
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
