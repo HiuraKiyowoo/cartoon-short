@@ -26,7 +26,7 @@ const stages = buildWorld(scene);
 // ---------------------------------------------------------------- looks
 const LOOK = {
   pagi: { sky: ["#79c3e8", "#ffe8bd"], fog: 0xf5dfb6, fn: [55, 230], hemi: [0xfff4e0, 0x667a68, 1.18], dir: [0xfff0c8, 1.55], sun: [-7, 9, 6] },
-  senja: { sky: ["#4f6fa8", "#ffcf8a"], fog: 0xf2c08a, fn: [70, 280], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
+  senja: { sky: ["#4f6fa8", "#ffcf8a"], fog: 0xfad2a2, fn: [95, 400], hemi: [0xffd9b2, 0x6a5a70, 1.18], dir: [0xffc27c, 1.65], sun: [-8, 9, 7] },
   malam: { sky: ["#16203c", "#463a58"], fog: 0x2a2a44, fn: [30, 150], hemi: [0x9fb0ff, 0x2a2a3a, 0.82], dir: [0x9fb0ff, 0.7], sun: [-4, 8, 5] },
   kelas: { sky: ["#3a2f28", "#6a5444"], fog: 0x5a4a3a, fn: [12, 55], hemi: [0xffe8c8, 0x5a4a3a, 1.0], dir: [0xffe0b0, 1.0], sun: [-3, 6, 4] },
 };
@@ -82,6 +82,25 @@ for (const k in LOOK) {
   skyTex[k] = t;
 }
 let curLook = null;
+
+// kilau matahari: deret goresan terang di permukaan air
+const glitter = (() => {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffe6b4, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+  for (let i = 0; i < 46; i++) {
+    const t = 0.06 + Math.pow(i / 46, 0.8) * 0.94;
+    const w = 0.5 + Math.random() * 2.4;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, 0.1 + Math.random() * 0.22), mat.clone());
+    m.material.opacity = 0.16 + Math.random() * 0.42 * (1 - t * 0.6);
+    m.rotation.x = -Math.PI / 2;
+    m.position.set((Math.random() - 0.5) * (2.4 + t * 9), 0.04, t * 190);
+    m.userData.sp = 0.6 + Math.random();
+    g.add(m);
+  }
+  g.userData.dash = g.children;
+  return g;
+})();
+scene.add(glitter);
 function setLook(k) {
   if (curLook === k) return;
   const L = LOOK[k];
@@ -136,7 +155,7 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
-    case "armada": return { pos: [-2 + 2 * e, 4.6 - 0.5 * e, 27 - 8 * e], look: [-2, 2.5, -12], fov: 40, roll: -1.2 + 2.4 * e };
+    case "armada": return { pos: [-2 + 2.5 * e, 5.2 - 0.7 * e, 25 - 7 * e], look: [-2, 2.4, -13], fov: 42, roll: -1.2 + 2.4 * e };
     case "dermaga": return { pos: [-16 + 3 * e, 2.2, 9 - 2 * e], look: [-22, 1.4, -16], fov: 44, roll: 1.5 - 3 * e };
     case "datang": return { pos: [7 - 3 * e, 2.0, 11 - 4 * e], look: [0, 1.7, -9], fov: 46, roll: -2 + 4 * e };
     case "hadapan": return { pos: [0, 8.4 - 1.2 * e, 42 - 6 * e], look: [0, 2.6, -14], fov: 50 - 3 * e, roll: -1.5 + 3 * e };
@@ -183,6 +202,12 @@ const frame = (f) => {
   sun.position.set(cam.position.x + L.sun[0], cam.position.y + L.sun[1], cam.position.z + L.sun[2]);
   sun.target.position.set(C.look[0], C.look[1], C.look[2]);
   sun.target.updateMatrixWorld();
+
+  glitter.position.set(16, 0.03, -152);
+  glitter.rotation.y = Math.atan2(cam.position.x - 16, cam.position.z + 152);
+  for (const d of glitter.userData.dash) {
+    d.material.opacity = Math.max(0, d.material.opacity * 0.92 + 0.08 * (0.25 + 0.35 * Math.sin(f * 0.09 * d.userData.sp + d.position.z)));
+  }
 
   flash.material.opacity = 0;
   renderer.clear();

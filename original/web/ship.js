@@ -12,6 +12,8 @@ const GRAD = (() => {
   return t;
 })();
 
+const SAILS = [0xfff6e2, 0xf8ecd4, 0xf2e3c4, 0xfdf3de];
+
 const toon = (color, map = null, extra = {}) =>
   new THREE.MeshToonMaterial({ color, map, gradientMap: GRAD, ...extra });
 
@@ -79,8 +81,11 @@ export function makeShip(ctx, o = {}) {
 
   // --- garis tepi + meriam
   for (const sz of [-0.87, 0.87]) {
-    const stripe = box(6.2, 0.1, 0.06, toon(0xd8c08a));
-    stripe.position.set(-0.2, 0.5, sz);
+    const wale = box(6.2, 0.16, 0.07, toon(0x5e3a26));
+    wale.position.set(-0.2, 0.42, sz);
+    g.add(wale);
+    const stripe = box(6.2, 0.09, 0.07, toon(0xe8c168));
+    stripe.position.set(-0.2, 0.56, sz);
     g.add(stripe);
     for (let i = -2; i <= 2; i++) {
       const port = box(0.26, 0.22, 0.07, toon(0x1c1318));
@@ -117,7 +122,7 @@ export function makeShip(ctx, o = {}) {
   bow.position.set(4.35, 1.95, 0);
   ink(bow, 1.05);
   g.add(bow);
-  const jib = new THREE.Mesh(sailGeometry(2.0, 1.6, 0.22), toon(0xfff4dc, T.sail, { side: THREE.DoubleSide }));
+  const jib = new THREE.Mesh(sailGeometry(2.0, 1.6, 0.22), toon(0xfff6e2, T.sail, { side: THREE.DoubleSide }));
   jib.rotation.y = Math.PI / 2;
   jib.position.set(4.28, 2.2, 0);
   jib.rotation.z = 0.6;
@@ -126,8 +131,9 @@ export function makeShip(ctx, o = {}) {
   // --- tiang utama + layar
   const mastMat = toon(0x6b4226);
   const masts = [[-1.85, 4.2], [0.25, 5.5], [2.15, 3.4]];
+  const sailCol = SAILS[(o.seed || 0) % SAILS.length];
   const addSail = (x, y, w, h, bulge) => {
-    const m = new THREE.Mesh(sailGeometry(w, h, bulge), toon(0xfff4dc, T.sail, { side: THREE.DoubleSide }));
+    const m = new THREE.Mesh(sailGeometry(w, h, bulge), toon(sailCol, T.sail, { side: THREE.DoubleSide }));
     m.position.set(x, y, 0);
     g.add(m);
     const yard = cyl(0.045, 0.045, w * 1.04, mastMat, 5);
@@ -208,7 +214,7 @@ export function makeFleet(ctx) {
   layout.forEach(([x, z, yaw, scale], i) => {
     const hero = i === layout.length - 1;
     const ship = makeShip(ctx, {
-      x, z, yaw, scale,
+      x, z, yaw, scale, seed: i,
       hullColor: hero ? 0xf6e2cc : tints[i % tints.length],
       banner: hero ? T.bannerKris : i % 3 === 0 ? T.bannerKris : i % 2 ? T.bannerWave : T.bannerSun,
       bob: { amp: 0.05 / scale, spd: 26 + (i % 5) * 5, ph: i * 1.7 },
