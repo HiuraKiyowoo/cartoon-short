@@ -4,13 +4,13 @@ import { drawPerson } from "./cast.js";
 
 const cache = new Map();
 
-function texFor(kind, expr, pose, seed) {
-  const key = `${kind}|${expr}|${pose}|${seed}`;
+function texFor(kind, expr, pose, seed, back) {
+  const key = `${kind}|${expr}|${pose}|${seed}|${back ? 1 : 0}`;
   if (cache.has(key)) return cache.get(key);
   const cv = document.createElement("canvas");
   cv.width = 450;
   cv.height = 750;
-  drawPerson(cv, { kind, expr, pose, seed });
+  drawPerson(cv, { kind, expr, pose, seed, back });
   const t = new THREE.CanvasTexture(cv);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 4;
@@ -21,7 +21,7 @@ function texFor(kind, expr, pose, seed) {
 export function makeCard(o = {}) {
   const h = o.h || 3.3;
   const w = (h * 450) / 750;
-  const t = texFor(o.kind || "sailor", o.expr || "neutral", o.pose || "stand", o.seed || 1);
+  const t = texFor(o.kind || "sailor", o.expr || "neutral", o.pose || "stand", o.seed || 1, o.back);
   const m = new THREE.Mesh(
     new THREE.PlaneGeometry(w, h),
     new THREE.MeshBasicMaterial({ map: t, transparent: true, side: THREE.DoubleSide })

@@ -140,7 +140,7 @@ const water = tex(512, 512, (g, w, h) => {
     g.lineTo(x + l, y);
     g.stroke();
   }
-}, [18, 18]);
+}, [40, 40]);
 
 const plaster = tex(256, 256, (g, w, h) => {
   g.fillStyle = "#e9dcc0";
@@ -704,6 +704,19 @@ export function buildClassStage() {
   const sideR = sideL.clone();
   sideR.position.x = 11;
   g.add(sideR);
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(22, 16), toon(0x6a5744));
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, 7.6, 0);
+  g.add(ceil);
+  const lampCord = cyl(0.03, 0.03, 1.2, toon(0x2a2020), 4);
+  lampCord.position.set(0, 6.9, 1.5);
+  g.add(lampCord);
+  const lampShade = new THREE.Mesh(new THREE.ConeGeometry(0.9, 0.7, 10, 1, true), toon(0xd9b878, null, { side: THREE.DoubleSide }));
+  lampShade.position.set(0, 6.2, 1.5);
+  g.add(lampShade);
+  const lampGlow = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffe0a0 }));
+  lampGlow.position.set(0, 6.0, 1.5);
+  g.add(lampGlow);
 
   const boardTex = textTexture(1024, 512, (c, w, h) => {
     c.fillStyle = "#22352c";
@@ -756,10 +769,9 @@ export function buildClassStage() {
   g.add(teacher);
 
   cardRow(g, [
-    { kind: "teacher", expr: "grin", pose: "point", x: -1.9, z: -3.0, h: 3.5, seed: 3 },
-    { kind: "dutchStudent", expr: "neutral", pose: "stand", x: -2.2, z: 0.3, h: 3.2, back: true, seed: 5 },
-    { kind: "dutchStudent", expr: "neutral", pose: "stand", x: 1.6, z: 0.3, h: 3.2, back: true, seed: 6 },
-    { kind: "dutchwoman", expr: "neutral", pose: "stand", x: 5.2, z: 0.3, h: 3.1, back: true, seed: 7 },
+    { kind: "teacher", expr: "grin", pose: "point", x: 0.4, z: 2.4, h: 3.6, seed: 3 },
+    { kind: "dutchStudent", expr: "neutral", pose: "stand", x: -4.6, z: 4.8, h: 3.4, back: true, seed: 5 },
+    { kind: "dutchwoman", expr: "neutral", pose: "stand", x: 4.8, z: 4.4, h: 3.3, back: true, seed: 7 },
   ]);
 
   g.userData = { kind: "class" };
@@ -800,13 +812,13 @@ export function buildMapStage() {
     }
   }
 
-  const table = box(6.4, 0.3, 3.6, toon(0x6b4a2e, T.wood));
+  const table = box(5.4, 0.3, 3.2, toon(0x6b4a2e, T.wood));
   table.position.set(0, 1.5, -1.6);
   ink(table, 1.015);
   g.add(table);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
     const leg = box(0.26, 1.5, 0.26, toon(0x4a3324));
-    leg.position.set(sx * 2.85, 0.75, -1.6 + sz * 1.45);
+    leg.position.set(sx * 2.35, 0.75, -1.6 + sz * 1.25);
     g.add(leg);
   }
 
@@ -840,7 +852,7 @@ export function buildMapStage() {
     c.textAlign = "center";
     c.fillText("NUSANTARA", w / 2, h - 70);
   });
-  const map = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 3.2), new THREE.MeshBasicMaterial({ map: mapTex }));
+  const map = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 2.7), new THREE.MeshBasicMaterial({ map: mapTex }));
   map.rotation.x = -Math.PI / 2;
   map.position.set(0, 1.66, -1.6);
   g.add(map);
@@ -876,7 +888,7 @@ export function buildMapStage() {
   g.add(needle);
 
   cardRow(g, [
-    { kind: "laksamana", expr: "stern", pose: "point", x: -2.9, z: 0.6, h: 3.5, seed: 31 },
+    { kind: "laksamana", expr: "stern", pose: "point", x: -2.3, z: -3.4, h: 3.9, seed: 31 },
   ]);
 
   g.userData = { kind: "map", flame, glow };
@@ -1140,6 +1152,10 @@ export function buildPalaceStage() {
   const back = box(34, 11, 0.4, toon(0xe8d8b8, T.plaster));
   back.position.set(0, 5.5, -14);
   g.add(back);
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(34, 30), toon(0x4a3528, T.plaster));
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, 11.2, -1);
+  g.add(ceil);
 
   const banner = new THREE.Mesh(
     new THREE.PlaneGeometry(7.4, 4.2),
