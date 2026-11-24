@@ -182,7 +182,7 @@ const frame = (f) => {
       fx("splash", (f % 34) / 34, -2.6, 0.4, -13, 1.6); fx("splash", ((f + 14) % 34) / 34, 3.4, 0.4, -15, 1.4);
       flashA = f >= 430 && f < 434 ? 0.25 : 0; break; }
     case "krat": {
-      C = { pos: A(lv([-2.5, Y_JALAN + 2.3, 10.0], [-2.5, Y_JALAN + 2.05, 9.2], sm(u))), look: A([-10.9, Y_JALAN + 0.9, 6.2]), fov: 46, roll: lerp(1.5, -1.5, u) };   // kamera di atas kanal: air depan, peti di bibir, rumah + atap di belakang
+      C = { pos: A(lv([1.2, Y_JALAN + 2.7, 3.6], [0.6, Y_JALAN + 2.5, 2.8], sm(u))), look: A([-11.5, Y_JALAN + 1.5, 9.6]), fov: 50, roll: lerp(1.5, -1.5, u) };   // dari jembatan, menyusur kanal: rumah berjajar + air, tidak ada dinding penuh   // kamera di atas kanal: air depan, peti di bibir, rumah + atap di belakang
       fx("star", (f % 40) / 40, -10.6, Y_JALAN + 1.5, 6.6, 0.9, 0, true);
       break; }
     case "klaim": {
@@ -207,11 +207,11 @@ const frame = (f) => {
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
       break; }
     case "kirim": {
-      C = { pos: A(lv([-2.2, Y_JALAN + 2.5, 10.6], [-2.2, Y_JALAN + 2.2, 9.8], sm(u))), look: A([-10.9, Y_JALAN + 0.95, 6.4]), fov: 46, roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([1.4, Y_JALAN + 2.8, 4.2], [0.8, Y_JALAN + 2.6, 3.4], sm(u))), look: A([-11.5, Y_JALAN + 1.6, 10.0]), fov: 50, roll: lerp(-1.5, 1.5, u) };
       fx("star", ((f + 12) % 40) / 40, -10.6, Y_JALAN + 1.6, 6.8, 0.95, 0, true);
       break; }
     case "kota_wide": {
-      C = { pos: A([lerp(15, -15, sm(u)), Y_JALAN + 5.2, 14]), look: A([0, Y_JALAN + 2.6, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };
+      C = { pos: A([lerp(26, -26, sm(u)), Y_JALAN + 9, 24]), look: A([0, Y_JALAN + 3.5, -12]), fov: 46, roll: lerp(1.5, -1.5, u) };
       fx("bird", (f % 44) / 44, 8, 13, -12, 1.4); break; }
     case "peta_wide": {
       C = { pos: A(lv([61.0, 2.8, 5.0], [60.6, 2.65, 4.2], sm(u))), look: A([60, 2.35, -1.4]), fov: 48, roll: lerp(-1.5, 1.5, u) };

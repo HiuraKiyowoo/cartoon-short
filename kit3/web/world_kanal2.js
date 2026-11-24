@@ -85,7 +85,10 @@ export const buildKanal = (par) => {
     for (const sz of [-1, 1]) addM(k, box(1.3, 0.62, 0.12), mkMat(0xb08a5a), [0, 0.31, sz * 0.59], { ink: 0.025 });
     for (let j = 0; j < 4; j++) { const bx = -0.36 + (j % 2) * 0.72, bz = -0.34 + Math.floor(j / 2) * 0.68;
       addM(k, cyl(0.045, 0.045, 0.5, 6), mkMat(0x3f7a34), [bx, 0.36, bz], { ink: 0.012 });
-      addM(k, new THREE.ConeGeometry(0.14, 0.3, 6), mkMat(j % 2 ? 0xd5343b : 0xe8c45a), [bx, 0.74, bz], { ink: 0.018 }); }
+      const kn = addM(k, new THREE.SphereGeometry(0.15, 8, 6), mkMat(j % 2 ? 0xd5343b : 0xe8c45a), [bx, 0.78, bz], { ink: 0.018 });
+      kn.scale.set(1, 1.25, 1);
+      addM(k, new THREE.SphereGeometry(0.09, 6, 5), mkMat(j % 2 ? 0xb02a30 : 0xc9a63a), [bx - 0.1, 0.72, bz + 0.06], { ink: 0.012 });
+      addM(k, new THREE.SphereGeometry(0.09, 6, 5), mkMat(j % 2 ? 0xb02a30 : 0xc9a63a), [bx + 0.1, 0.72, bz - 0.06], { ink: 0.012 }); }
     o.krat.push(k);
   }
   for (let i = 0; i < 3; i++) addM(g, cyl(0.5, 0.5, 1.1, 10), mkMat(0x8a5a32), [19.0, Y_JALAN + 0.55, 4.4 - i * 1.4], { ink: 0.03 });
