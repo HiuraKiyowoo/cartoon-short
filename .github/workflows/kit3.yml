@@ -1,16 +1,18 @@
-name: Kit3 — cerita baru (Belanda jadi jajahan)
-
+name: Kit3 Belanda
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "stills (kontak sheet) atau render (video penuh)"
+        description: "stills atau render"
+        type: string
         default: "stills"
       frames:
-        description: "daftar frame: 20,110,540 (stills) — diabaikan saat mode=render"
-        default: "20,110,200,280,360,450,530,600,640,690,730,790,860,940,1100,1240,1390"
+        description: "daftar frame untuk stills"
+        type: string
+        default: "40,120,200,290,370,460,530,600,640,690,730,790,860,940,1100,1240,1390"
       width:
         description: "lebar frame"
+        type: string
         default: "540"
 
 jobs:
@@ -25,27 +27,24 @@ jobs:
       - name: Pasang dependensi
         working-directory: kit3
         run: npm install --no-audit --no-fund
-      - name: Pasang Chromium (Playwright)
+      - name: Pasang Chromium
         working-directory: kit3
         run: npx playwright install --with-deps chromium
-
-      - name: Pasang Pillow (untuk kontak sheet)
+      - name: Pasang Pillow
         run: python3 -m pip install --quiet --break-system-packages pillow
-
       - name: Bundle
         working-directory: kit3
         run: npm run bundle
-      - name: Audit penempatan (denah: terpotong / terhalang / kaki)
+      - name: Audit penempatan
         working-directory: kit3
         run: node audit.mjs
-
-      - name: Render stills + kontak sheet
+      - name: Render stills dan kontak sheet
         if: ${{ inputs.mode == 'stills' }}
         working-directory: kit3
         run: |
           node render.mjs stills "${{ inputs.frames }}" "${{ inputs.width }}"
           python3 sheet.py stills stills/contact.jpg 6
-      - name: Render penuh 1080 (2 proses paralel)
+      - name: Render penuh 1080
         if: ${{ inputs.mode == 'render' }}
         working-directory: kit3
         run: |
@@ -54,13 +53,13 @@ jobs:
           wait
           tail -3 r1.log r2.log
           ls frames | wc -l
-      - name: Pasang ffmpeg + encode
+      - name: Encode video
         if: ${{ inputs.mode == 'render' }}
         working-directory: kit3
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-          ffmpeg -y -hide_banner -loglevel error -framerate 30 -i frames/f%04d.jpg -i work/voice.mp3 \
-            -c:v libx264 -crf 23 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart out/video.mp4
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          ffmpeg -y -hide_banner -loglevel error -framerate 30 -i frames/f%04d.jpg -i work/voice.mp3 -c:v libx264 -crf 23 -pix_fmt yuv420p -c:a aac -b:a 192k -shortest -movflags +faststart out/video.mp4
           ffprobe -v error -show_entries format=duration,size -of csv=p=0 out/video.mp4
       - name: Unggah hasil
         if: always()
