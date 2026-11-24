@@ -29,6 +29,9 @@ jobs:
         working-directory: kit3
         run: npx playwright install --with-deps chromium
 
+      - name: Pasang Pillow (untuk kontak sheet)
+        run: python3 -m pip install --quiet --break-system-packages pillow
+
       - name: Bundle
         working-directory: kit3
         run: npm run bundle

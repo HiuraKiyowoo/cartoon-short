@@ -19,7 +19,7 @@ const papanTulisTex = (tulisan) => cvTex("papanT" + tulisan, 512, 256, (g, w, h)
   g.fillStyle = "#6b4a2c"; g.fillRect(0, 0, w, h);
   g.fillStyle = "#2f3f3a"; g.fillRect(12, 12, w - 24, h - 24);
   g.strokeStyle = "#e8e6dc"; g.lineWidth = 3; g.strokeRect(12, 12, w - 24, h - 24);
-  g.fillStyle = "#e8e6dc"; g.font = "bold 44px 'DejaVu Sans', sans-serif"; g.textAlign = "center";
+  g.fillStyle = "#e8e6dc"; g.font = "bold 30px 'DejaVu Sans', sans-serif"; g.textAlign = "center";
   g.fillText(tulisan, w / 2, h / 2 + 4);
   g.strokeStyle = "#cfcdc4"; g.lineWidth = 3; g.lineCap = "round";
   for (let i = 0; i < 3; i++) { g.beginPath(); g.moveTo(60, 190 + i * 16); for (let k = 0; k < 7; k++) g.lineTo(60 + (k + 1) * 56, 190 + i * 16 + (k % 2 ? 5 : -5)); g.stroke(); }
@@ -45,7 +45,7 @@ export const buildKelas = (par) => {
   addM(g, box(0.2, 7, 13.8), mkMat(dindingTex), [-8.9, 3.4, 0], { ink: false });
   addM(g, box(0.2, 7, 13.8), mkMat(dindingTex), [8.9, 3.4, 0], { ink: false });
   // papan tulis di dinding belakang
-  addM(g, box(7.6, 3.8, 0.16), mkMat(papanTulisTex("BAHASA INDONESIA")), [0, 4.0, -6.75], { ink: 0.03 });
+  addM(g, box(9.2, 3.4, 0.16), mkMat(papanTulisTex("BAHASA INDONESIA")), [0, 4.0, -6.75], { ink: 0.03 });
   addM(g, box(7.9, 0.22, 0.24), mkMat(0x6b4a2c), [0, 2.0, -6.72], { ink: 0.02 });
   // jendela tinggi (cahaya masuk)
   for (let i = -1; i <= 1; i++) {

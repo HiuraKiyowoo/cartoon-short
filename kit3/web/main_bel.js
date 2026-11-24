@@ -151,10 +151,11 @@ const frame = (f) => {
       fx("bird", (f % 40) / 40, 9 - lf * 0.12, 12, -10, 1.5); fx("cloud", 0, -22, 24, -80, 20);
       break; }
     case "hook_face": {
-      C = { pos: A(lv([0.2, hyP, 2.9], [0.1, hyP, 2.3], sm(u))), look: A([0, hyP - 0.05, -1.4]), fov: 38, roll: lerp(-1.2, 1.2, u) };
+      // kamera DI DEPAN karakter (karakter di z 3,2 di depan dermaga) supaya tidak ada peti/tiang penghalang
+      C = { pos: A(lv([0.15, 1.90, 6.2], [0.1, 1.86, 5.4], sm(u))), look: A([0, 1.72, 3.2]), fov: 38, roll: lerp(-1.2, 1.2, u) };
       const sh = f >= 120;
-      person(F({ kind: "panglima", expr: sh ? "shock" : "stern", look: Math.sin(f / 11) * 1.2, headTilt: sh ? Math.sin(f / 3) * 4 : 0 }), 0, 0, -1.4, 1.25, false, sh ? Math.sin(f / 3) * 0.03 : idle(f, 7), true);
-      if (sh) { fx("exclaim", 0, 0.9, hyP + 0.7, -1.2, 1.1 * bk(ramp(f, 120, 128)), 0.1); fx("sweat", (f % 20) / 20, 0.42, hyP + 0.15, -1.3, 0.5); }
+      person(F({ kind: "panglima", expr: sh ? "shock" : "stern", look: Math.sin(f / 11) * 1.2, headTilt: sh ? Math.sin(f / 3) * 4 : 0 }), 0, 0, 3.2, 1.15, false, sh ? Math.sin(f / 3) * 0.03 : idle(f, 7), true);
+      if (sh) { fx("exclaim", 0, 0.9, 2.95, 3.3, 1.1 * bk(ramp(f, 120, 128)), 0.1); fx("sweat", (f % 20) / 20, 0.42, 2.5, 3.15, 0.5); }
       break; }
     case "tahun": {
       C = { pos: A(lv([0.1, 0, 6.0], [0, 0, 5.0], sm(u))), look: A([0, 0, 0]), fov: 40, roll: lerp(-1.5, 1.5, u) };
@@ -166,11 +167,11 @@ const frame = (f) => {
       if (f > 175 && f < 190) fx("puff", ramp(f, 175, 190), 0, -0.1, 0.6, 2.0);
       break; }
     case "rapat": {
-      C = { pos: A(lv([0, 2.0, 8.8], [0, 1.95, 7.4], sm(u))), look: A([0, 1.35, -0.4]), fov: 46, roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0, 2.05, 8.8], [0, 2.0, 7.5], sm(u))), look: A([0, 1.35, 3.2]), fov: 46, roll: lerp(-1.5, 1.5, u) };
       const pop = (t0) => bk(ramp(f, t0, t0 + 9));
-      [[244, -0.95, F({ kind: "raja", seed: 3, expr: "stern" }), 1.1], [256, 0.0, F({ kind: "panglima", seed: 11, expr: "neutral" }), 1.0],
-       [268, 0.95, F({ kind: "pelaut", v: 2, seed: 21, expr: "neutral" }), 0.98]].forEach(([t0, x, o, s]) => {
-        if (f < t0) return; person(o, x, 0, 0.5, s * pop(t0), false, idle(f, t0 % 7), true); if (f < t0 + 12) fx("puff", ramp(f, t0, t0 + 12), x, 0.3, 0.6, 1.8); });
+      [[244, -1.0, F({ kind: "raja", seed: 3, expr: "stern" }), 1.1], [256, 0.0, F({ kind: "panglima", seed: 11, expr: "neutral" }), 1.0],
+       [268, 1.0, F({ kind: "pelaut", v: 2, seed: 21, expr: "neutral" }), 0.98]].forEach(([t0, x, o, s]) => {
+        if (f < t0) return; person(o, x, 0, 3.2, s * pop(t0), false, idle(f, t0 % 7), true); if (f < t0 + 12) fx("puff", ramp(f, t0, t0 + 12), x, 0.3, 3.3, 1.8); });
       break; }
     case "serang_wide": {
       C = { pos: A(lv([15, 6.5, 20], [6, 8.5, 12], sm(u))), look: A([0, 4.5, -26]), fov: 46, roll: lerp(-2, 2, u) };
@@ -194,13 +195,13 @@ const frame = (f) => {
       if (f >= 598 && f < 614) fx("star", ramp(f, 598, 614), 0, 3.1, 2.1, 0.7, 0, true);
       break; }
     case "kelas_wide": {
-      C = { pos: A(lv([0.5, 2.6, 5.6], [0.4, 2.5, 4.6], sm(u))), look: A([0, 2.3, -4.6]), fov: 48, roll: lerp(-1.5, 1.5, u) };
+      C = { pos: A(lv([0.5, 3.1, 5.8], [0.4, 3.0, 4.8], sm(u))), look: A([0, 2.6, -4.8]), fov: 46, roll: lerp(-1.5, 1.5, u) };
       const pop = (t0) => bk(ramp(f, t0, t0 + 9));
       if (f >= 628) person(F({ kind: "guru", seed: 9, expr: "neutral", look: -1.2 }), -1.0, 0, -3.4, 1.05 * pop(628), false, idle(f, 9), true);
       if (f >= 640) person(F({ kind: "murid", seed: 13, expr: "nervous" }), 0.95, 0, -3.6, 0.75 * pop(640), false, idle(f, 13), true);
       break; }
     case "kelas_close": {
-      C = { pos: A(lv([0.95, 1.55, 0.4], [0.9, 1.5, -0.3], sm(u))), look: A([0.85, 1.45, -3.7]), fov: 40, roll: lerp(1.2, -1.2, u) };
+      C = { pos: A(lv([0.95, 1.70, 1.6], [0.9, 1.66, 0.8], sm(u))), look: A([0.85, 1.95, -5.0]), fov: 46, roll: lerp(1.2, -1.2, u) };
       const as = f >= 690;
       person(F({ kind: "murid", seed: 13, expr: as ? "smile" : "dazed", look: as ? 0.8 : 0.2, headTilt: as ? 3 : 0 }), 0.85, 0, -3.6, 0.78, false, idle(f, 13), true);
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
