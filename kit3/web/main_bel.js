@@ -265,9 +265,14 @@ window.auditShot = (list) => {
       const jarak = c.distanceTo(cam.position);
       const rc = new THREE.Raycaster(cam.position.clone(), c.clone().sub(cam.position).normalize(), 0.1, jarak - 0.05);
       const tabrak = rc.intersectObjects(scene.children, true).filter((h) => !isCard(h.object) && !(h.object.parent && isCard(h.object.parent)) && h.object !== m && terlihat(h.object));
-      const nama = (o) => `${o.geometry ? o.geometry.type : "?"}@(${o.position.x.toFixed(1)},${o.position.y.toFixed(1)},${o.position.z.toFixed(1)})`;
+      const nama = (o) => {
+        const w = new THREE.Vector3(); o.getWorldPosition(w);
+        let jalur = [], x = o;
+        for (let i = 0; i < 4 && x; i++) { jalur.push(x.name || x.type); x = x.parent; }
+        return `${o.geometry ? o.geometry.type : o.type} dunia(${w.x.toFixed(1)},${w.y.toFixed(1)},${w.z.toFixed(1)}) jalur=${jalur.join("<")}`;
+      };
       baris.push({ x: +p.x.toFixed(2), y: +p.y.toFixed(2), kaki: +bb.min.y.toFixed(2), jarak: +jarak.toFixed(1),
-        potong: p.x < -1 || p.x > 1 || p.y < -1 || p.y > 1, terhalang: tabrak.length ? nama(tabrak[0].object.parent || tabrak[0].object) : null });
+        potong: p.x < -1 || p.x > 1 || p.y < -1 || p.y > 1, terhalang: tabrak.length ? nama(tabrak[0].object) + ` jarakHit=${tabrak[0].distance.toFixed(1)}` : null });
     }
     res.push({ f, shot: S.id, panggung: S.st, look: S.look, kartu: baris.length, baris });
   }
