@@ -182,9 +182,9 @@ const frame = (f) => {
       fx("splash", (f % 34) / 34, -2.6, 0.4, -13, 1.6); fx("splash", ((f + 14) % 34) / 34, 3.4, 0.4, -15, 1.4);
       flashA = f >= 430 && f < 434 ? 0.25 : 0; break; }
     case "krat": {
-      C = { pos: A(lv([-12.4, Y_JALAN + 3.6, 11.4], [-12.4, Y_JALAN + 3.2, 10.2], sm(u))), look: A([-12.4, Y_JALAN + 0.7, 6.0]), fov: 40, roll: lerp(1.5, -1.5, u) };
-      fx("star", (f % 40) / 40, -12.4, Y_JALAN + 1.5, 6.4, 0.85, 0, true);
-      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -13.5, Y_JALAN, 5.2, 1.0, false, idle(f, 23), true);
+      C = { pos: A(lv([-9.0, Y_JALAN + 2.2, 8.2], [-9.0, Y_JALAN + 1.9, 7.4], sm(u))), look: A([-18.4, Y_JALAN + 0.7, 6.0]), fov: 40, roll: lerp(1.5, -1.5, u) };   // kamera di sisi kanal, melihat peti di tengah jalan
+      fx("star", (f % 40) / 40, -19.0, Y_JALAN + 1.6, 6.4, 0.9, 0, true);
+      person(F({ kind: "pelaut", v: 1, seed: 23, expr: "neutral", look: -0.8 }), -17.0, Y_JALAN, 5.4, 1.0, false, idle(f, 23), true);
       break; }
     case "klaim": {
       C = { pos: A(lv([0, Y_JALAN + 1.2, 9.6], [0, Y_JALAN + 1.1, 8.4], sm(u))), look: A([0, Y_JALAN + 0.95, 3.4]), fov: 46, roll: lerp(-1.5, 1.5, u) };
@@ -208,9 +208,9 @@ const frame = (f) => {
       if (as) fx("spark", (f % 26) / 26, 1.35, 1.7, -3.3, 0.7, 0, true);
       break; }
     case "kirim": {
-      C = { pos: A(lv([-12.4, Y_JALAN + 3.3, 11.8], [-12.4, Y_JALAN + 2.9, 10.6], sm(u))), look: A([-12.4, Y_JALAN + 0.75, 6.4]), fov: 40, roll: lerp(-1.5, 1.5, u) };
-      fx("star", ((f + 12) % 40) / 40, -12.4, Y_JALAN + 1.6, 6.6, 0.9, 0, true);
-      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -11.4, Y_JALAN, 5.0, 1.0, true, idle(f, 27), true);
+      C = { pos: A(lv([-8.4, Y_JALAN + 2.4, 9.0], [-8.4, Y_JALAN + 2.1, 8.2], sm(u))), look: A([-19.0, Y_JALAN + 0.75, 6.4]), fov: 40, roll: lerp(-1.5, 1.5, u) };
+      fx("star", ((f + 12) % 40) / 40, -19.0, Y_JALAN + 1.7, 6.6, 0.95, 0, true);
+      person(F({ kind: "pelaut", v: 3, seed: 27, expr: "grin", look: -0.6 }), -20.4, Y_JALAN, 5.6, 1.0, true, idle(f, 27), true);
       break; }
     case "kota_wide": {
       C = { pos: A([lerp(15, -15, sm(u)), Y_JALAN + 5.2, 14]), look: A([0, Y_JALAN + 2.6, -22]), fov: 46, roll: lerp(1.5, -1.5, u) };

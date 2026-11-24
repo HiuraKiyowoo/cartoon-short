@@ -76,16 +76,16 @@ export const buildKanal = (par) => {
   // peti tulip di jalan sisi barat (x -12,4), bukan di air
   o.krat = [];
   for (let i = 0; i < 6; i++) {
-    const k = new THREE.Group(); k.position.set(-12.4 + (i % 3) * 1.35, Y_JALAN, 6.2 - Math.floor(i / 3) * 1.5); g.add(k);
+    const k = new THREE.Group(); k.position.set(-19.0 + (i % 3) * 1.35, Y_JALAN, 6.2 - Math.floor(i / 3) * 1.5); g.add(k);   // di TENGAH jalan: kamera dari sisi kanal tidak pernah masuk rumah
     addM(k, box(1.2, 0.62, 1.24), mkMat(0xb08a5a), [0, 0.31, 0], { ink: 0.03 });
     for (let j = 0; j < 4; j++) { const bx = -0.44 + (j % 2) * 0.88, bz = -0.42 + Math.floor(j / 2) * 0.84;
       addM(k, cyl(0.05, 0.05, 0.44, 6), mkMat(0x3f7a34), [bx, 0.82, bz], { ink: 0.015 });
       addM(k, new THREE.ConeGeometry(0.16, 0.26, 6), mkMat(j % 2 ? 0xd5343b : 0xe8c45a), [bx, 1.17, bz], { ink: 0.02 }); }
     o.krat.push(k);
   }
-  for (let i = 0; i < 3; i++) addM(g, cyl(0.5, 0.5, 1.1, 10), mkMat(0x8a5a32), [13.0, Y_JALAN + 0.55, 4.4 - i * 1.4], { ink: 0.03 });
-  addM(g, box(3.2, 0.16, 1.4), mkMat(0x6b4a2c), [13.4, Y_JALAN + 0.62, 8.6], { ink: 0.03 });
-  for (const sx of [-1, 1]) addM(g, cyl(0.5, 0.5, 0.16, 10), mkMat(0x4a3426), [13.4 + sx * 1.3, Y_JALAN + 0.5, 8.6], { rot: [Math.PI / 2, 0, 0], ink: 0.02 });
+  for (let i = 0; i < 3; i++) addM(g, cyl(0.5, 0.5, 1.1, 10), mkMat(0x8a5a32), [19.0, Y_JALAN + 0.55, 4.4 - i * 1.4], { ink: 0.03 });
+  addM(g, box(3.2, 0.16, 1.4), mkMat(0x6b4a2c), [19.4, Y_JALAN + 0.62, 8.6], { ink: 0.03 });
+  for (const sx of [-1, 1]) addM(g, cyl(0.5, 0.5, 0.16, 10), mkMat(0x4a3426), [19.4 + sx * 1.3, Y_JALAN + 0.5, 8.6], { rot: [Math.PI / 2, 0, 0], ink: 0.02 });
   for (const [x, z] of [[-30, 8], [30, 0], [-30, -8]]) {
     addM(g, cyl(0.09, 0.12, 4.6, 8), mkMat(0x2f3338), [x, Y_JALAN + 2.3, z], { ink: 0.02 });
     addM(g, box(0.5, 0.6, 0.5), new THREE.MeshBasicMaterial({ color: 0xffd88a }), [x, Y_JALAN + 4.4, z], { ink: 0.02 });
