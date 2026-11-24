@@ -1,0 +1,7 @@
+node_modules/
+web/bundle.js
+frames/
+stills/
+out/
+work/*.wav
+work/voice.mp3

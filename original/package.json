@@ -1,0 +1,13 @@
+{
+  "name": "belanda-opencode",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "esbuild web/main.js --bundle --outfile=web/bundle.js --format=iife"
+  },
+  "dependencies": {
+    "three": "0.160.0",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.40.0"
+  }
+}
