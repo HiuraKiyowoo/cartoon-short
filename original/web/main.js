@@ -190,20 +190,20 @@ const shotAt = (f) => {
 function camFor(S, u) {
   const e = sm(u);
   switch (S.id) {
-    case "hook": return { pos: [0.7 - 0.3 * e, 2.55, 4.4 - 0.9 * e], look: [-0.3, 1.9, -1.6], fov: 36, roll: 0.6 - 0.4 * e };
-    case "peta": return { pos: [-0.6 + 1.2 * e, 3.1 - 0.3 * e, 5.2 - 0.8 * e], look: [0, 1.8, -2], fov: 42, roll: -0.5 + 0.6 * e };
+    case "hook": return { pos: [1.9 - 0.9 * e, 2.5, 3.6 - 0.8 * e], look: [-0.6, 1.7, -1.8], fov: 44, roll: 0.6 - 0.4 * e };
+    case "peta": return { pos: [-1.2 + 2.0 * e, 3.0 - 0.3 * e, 4.6 - 0.7 * e], look: [0, 1.7, -1.8], fov: 44, roll: -0.5 + 0.6 * e };
     case "pelabuhan": return { pos: [-1.5 + 3 * e, 2.8, 17 - 4 * e], look: [0, 3.4, -15], fov: 44, roll: -1 + 1.4 * e };
     case "armada": return { pos: [-2 + 2.5 * e, 5.2 - 0.7 * e, 25 - 7 * e], look: [-2, 2.4, -13], fov: 42, roll: -1.2 + 2.4 * e };
     case "serang": return { pos: [8 - 2 * e, 2.0, 10 - 3.5 * e], look: [-5, 3.4, -15], fov: 48, roll: 2 - 3 * e };
-    case "dagang": return { pos: [-2.0 + 1.4 * e, 2.1, 8.5 - 2.5 * e], look: [-3.4, 1.7, -2.5], fov: 42, roll: -1 + 1.6 * e };
+    case "dagang": return { pos: [-0.6 + 1.8 * e, 2.4, 12.5 - 2.5 * e], look: [-3.2, 2.0, -2.5], fov: 46, roll: -1 + 1.6 * e };
     case "kolonial": return { pos: [1.5 - 1.0 * e, 4.4 - 0.4 * e, 16 - 3.5 * e], look: [0, 2.6, -20], fov: 44, roll: 1 - 1.6 * e };
-    case "kelas": return { pos: [0.4 - 0.8 * e, 2.85, 7.6 - 1.3 * e], look: [-0.4, 3.4, -6.5], fov: 40, roll: -0.6 + 1.0 * e };
-    case "tulip": return { pos: [2.2 + 1.6 * e, 1.95, 6.8 - 1.8 * e], look: [5.2, 1.5, -2.6], fov: 40, roll: 0.8 - 1.2 * e };
-    case "istana": return { pos: [0, 2.8, 8.5 - 2.5 * e], look: [0, 3.9, -6], fov: 44, roll: -0.7 + 1.2 * e };
-    case "tanya": return { pos: [0.5 - 0.6 * e, 2.45, 4.2 - 1.0 * e], look: [0, 1.95, -1.5], fov: 34, roll: 0.8 - 1.0 * e };
+    case "kelas": return { pos: [1.4 - 1.2 * e, 2.7, 7.8 - 1.2 * e], look: [-0.8, 3.2, -5.0], fov: 44, roll: -0.6 + 1.0 * e };
+    case "tulip": return { pos: [1.6 + 2.2 * e, 2.5, 10.5 - 2.2 * e], look: [4.4, 2.2, -2.4], fov: 44, roll: 0.8 - 1.2 * e };
+    case "istana": return { pos: [0.5, 3.1, 9.0 - 2.2 * e], look: [0, 3.4, -6], fov: 46, roll: -0.7 + 1.2 * e };
+    case "tanya": return { pos: [1.1 - 0.5 * e, 2.4, 3.9 - 0.9 * e], look: [0, 1.8, -1.6], fov: 40, roll: 0.8 - 1.0 * e };
     case "adidaya": return { pos: [-1.2 - 1.6 * e, 2.35, 4.6 - 1.1 * e], look: [-3.6, 2.9, -5.2], fov: 34, roll: -0.8 + 1.2 * e };
     case "salah": return { pos: [0, 7.0 - 1.0 * e, 12 - 2 * e], look: [0, 2.2, -24], fov: 48, roll: 1.4 - 2.2 * e };
-    case "kebiasaan": return { pos: [1.1, 2.2, 3.4 - 0.5 * e], look: [1.9, 2.35, -1.3], fov: 30, roll: -0.6 + 1.0 * e };
+    case "kebiasaan": return { pos: [1.6, 2.3, 2.9 - 0.4 * e], look: [2.1, 2.25, -0.9], fov: 34, roll: -0.6 + 1.0 * e };
     default: return { pos: [0, 2.6, 26 - 7 * e], look: [0, 2.0, -16], fov: 44, roll: 1.2 - 1.6 * e };
   }
 }

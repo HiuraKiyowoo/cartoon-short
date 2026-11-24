@@ -280,6 +280,26 @@ const banner = (a, b, emblem) => tex(256, 128, (g, w, h) => {
   g.restore();
 });
 
+const brick = tex(256, 256, (g, w, h) => {
+  g.fillStyle = "#b07a5a";
+  g.fillRect(0, 0, w, h);
+  const r = rng(509);
+  for (let y = 0; y < h; y += 22) {
+    for (let x = (y / 22) % 2 ? -26 : 0; x < w; x += 52) {
+      g.fillStyle = `rgb(${150 + r() * 46},${92 + r() * 34},${66 + r() * 26})`;
+      g.fillRect(x + 2, y + 2, 48, 18);
+    }
+  }
+  g.strokeStyle = "rgba(90,64,48,.35)";
+  g.lineWidth = 2;
+  for (let y = 0; y < h; y += 22) {
+    g.beginPath();
+    g.moveTo(0, y);
+    g.lineTo(w, y);
+    g.stroke();
+  }
+}, [2, 2]);
+
 const earth = tex(256, 256, (g, w, h) => {
   g.fillStyle = "#9a7a55";
   g.fillRect(0, 0, w, h);
@@ -343,6 +363,7 @@ export const T = {
   bannerKris: banner("#2f3f6b", "#d9b45a", "kris"),
   sailPattern,
   earth,
+  brick,
   awning,
   tulipSign,
   cheeseSign,
@@ -578,25 +599,68 @@ export function buildTownStage() {
   g.add(canal);
 
   const r = rng(211);
+  const facades = [0xd9a882, 0xc08a68, 0xe6c49c, 0xa8705a, 0xd2b090];
   for (let side of [-1, 1]) {
     for (let i = 0; i < 9; i++) {
-      const w = 3.4 + r() * 1.2, h = 4.2 + r() * 2.4, d = 4.2 + r() * 1.6;
-      const x = side * (5.6 + w / 2), z = -44 + i * 5.4;
-      const b = box(w, h, d, toon(0xffffff, T.plaster));
+      const w = 3.4 + r() * 1.2;
+      const h = 4.2 + r() * 2.6;
+      const d = 4.2 + r() * 1.6;
+      const x = side * (5.6 + w / 2);
+      const z = -44 + i * 5.4;
+      const tone = facades[(i * 3 + (side > 0 ? 1 : 0)) % facades.length];
+
+      const b = box(w, h, d, toon(tone, T.brick));
       b.position.set(x, h / 2, z);
       ink(b, 1.02);
       g.add(b);
-      const rf = new THREE.Mesh(new THREE.ConeGeometry(w * 0.78, 1.5, 4), toon(0xffffff, T.roof));
-      rf.rotation.y = Math.PI / 4;
-      rf.position.set(x, h + 0.75, z);
-      ink(rf, 1.02);
-      g.add(rf);
+
+      // gable bertingkat khas kanal
       for (let k = 0; k < 3; k++) {
-        const win = box(0.55, 0.75, 0.08, toon(0x2f4f66));
-        win.position.set(x - side * (w / 2 + 0.05), 1.6 + k * 1.15, z - 1.0 + (k % 2) * 1.8);
-        g.add(win);
+        const gw = w * (0.86 - k * 0.2);
+        const gb = box(gw, 0.62, d, toon(tone, T.brick));
+        gb.position.set(x, h + 0.31 + k * 0.62, z);
+        ink(gb, 1.02);
+        g.add(gb);
+        const cap = box(gw + 0.16, 0.1, d + 0.16, toon(0x7a5a46));
+        cap.position.set(x, h + 0.62 + k * 0.62, z);
+        g.add(cap);
       }
+
+      const lit = 0.55 + r() * 0.45;
+      const winMat = toon(0xffd9a0, null, { emissive: 0xff9a3a, emissiveIntensity: lit });
+      for (let k = 0; k < 3; k++) {
+        const wy = 1.5 + k * 1.25;
+        if (wy > h - 0.8) continue;
+        for (let j = -1; j <= 1; j += 2) {
+          const win = box(0.62, 0.85, 0.1, winMat);
+          win.position.set(x - side * (w / 2 + 0.04), wy, z + j * (d * 0.24));
+          win.rotation.y = Math.PI / 2;
+          g.add(win);
+          const frame = box(0.76, 1.0, 0.06, toon(0x4a3324));
+          frame.position.set(x - side * (w / 2 + 0.01), wy, z + j * (d * 0.24));
+          frame.rotation.y = Math.PI / 2;
+          g.add(frame);
+        }
+      }
+
+      const door = box(0.9, 1.6, 0.12, toon(0x4a2c1e));
+      door.position.set(x - side * (w / 2 + 0.05), 0.8, z);
+      door.rotation.y = Math.PI / 2;
+      g.add(door);
+      const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+      lamp.position.set(x - side * (w / 2 + 0.16), 2.4, z);
+      g.add(lamp);
     }
+  }
+
+  // panji di sepanjang kanal
+  for (const [x, z] of [[-3.6, 2], [3.6, -6], [-3.6, -14], [3.6, -22]]) {
+    const pole = cyl(0.07, 0.09, 5.4, toon(0x5a3a24), 6);
+    pole.position.set(x, 2.7, z);
+    g.add(pole);
+    const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 0.9), new THREE.MeshBasicMaterial({ map: T.bannerSun, side: THREE.DoubleSide, transparent: true }));
+    flag.position.set(x + 0.78, 4.9, z);
+    g.add(flag);
   }
 
   const bridge = box(8.4, 0.45, 2.6, toon(0xffffff, T.wood));
@@ -604,8 +668,13 @@ export function buildTownStage() {
   ink(bridge, 1.02);
   g.add(bridge);
   for (const sx of [-1, 1]) {
-    const rail = box(0.12, 1.0, 2.6, toon(0x5a3524));
-    rail.position.set(sx * 4.1, 1.95, -8);
+    for (let k = -1; k <= 1; k++) {
+      const post = box(0.14, 1.0, 0.14, toon(0x4a3324));
+      post.position.set(sx * 3.9, 1.95, -8 + k * 1.1);
+      g.add(post);
+    }
+    const rail = box(0.12, 0.12, 2.6, toon(0x5a3524));
+    rail.position.set(sx * 3.9, 2.5, -8);
     g.add(rail);
   }
 
@@ -647,18 +716,18 @@ export function buildClassStage() {
     c.fillStyle = "#f4efdc";
     c.textAlign = "center";
     c.textBaseline = "middle";
-    c.font = "bold 92px Georgia, serif";
-    c.fillText("BAHASA INDONESIA", w / 2, 96);
+    c.font = "bold 74px Georgia, serif";
+    c.fillText("BAHASA INDONESIA", w / 2, 92);
     c.strokeStyle = "rgba(244,239,220,.7)";
     c.lineWidth = 6;
     c.beginPath();
     c.moveTo(w * 0.2, 146);
     c.lineTo(w * 0.8, 146);
     c.stroke();
-    c.font = "64px Georgia, serif";
-    c.fillText("selamat pagi", w / 2, 236);
-    c.fillText("terima kasih", w / 2, 326);
-    c.fillText("apa kabar?", w / 2, 416);
+    c.font = "56px Georgia, serif";
+    c.fillText("selamat pagi", w / 2, 232);
+    c.fillText("terima kasih", w / 2, 318);
+    c.fillText("apa kabar?", w / 2, 404);
   });
   const board = new THREE.Mesh(
     new THREE.PlaneGeometry(9.2, 4.4),
@@ -687,7 +756,7 @@ export function buildClassStage() {
   g.add(teacher);
 
   cardRow(g, [
-    { kind: "teacher", expr: "grin", pose: "point", x: -3.6, z: -4.4, h: 3.4, seed: 3 },
+    { kind: "teacher", expr: "grin", pose: "point", x: -1.9, z: -3.0, h: 3.5, seed: 3 },
     { kind: "dutchStudent", expr: "neutral", pose: "stand", x: -2.2, z: 0.3, h: 3.2, back: true, seed: 5 },
     { kind: "dutchStudent", expr: "neutral", pose: "stand", x: 1.6, z: 0.3, h: 3.2, back: true, seed: 6 },
     { kind: "dutchwoman", expr: "neutral", pose: "stand", x: 5.2, z: 0.3, h: 3.1, back: true, seed: 7 },
@@ -700,29 +769,117 @@ export function buildClassStage() {
 // ---------------------------------------------------------------- map room
 export function buildMapStage() {
   const g = new THREE.Group();
-  const floor = box(18, 0.3, 14, toon(0x2a2228));
+
+  const floor = box(20, 0.3, 16, toon(0x3a2c24, T.wood));
   floor.position.y = -0.15;
   g.add(floor);
-  const table = box(6.0, 0.3, 3.4, toon(0x4a3328));
-  table.position.set(0, 1.5, -1.5);
-  ink(table, 1.02);
+
+  const back = box(20, 9, 0.35, toon(0x4a352a, T.wood));
+  back.position.set(0, 4.5, -7.5);
+  g.add(back);
+  const sideL = box(0.35, 9, 16, toon(0x40301f, T.wood));
+  sideL.position.set(-9.8, 4.5, 0);
+  g.add(sideL);
+  const sideR = sideL.clone();
+  sideR.position.x = 9.8;
+  g.add(sideR);
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(20, 16), toon(0x2a1e18));
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, 7.6, 0);
+  g.add(ceil);
+
+  // rak buku di belakang
+  for (let i = 0; i < 3; i++) {
+    const shelf = box(5.4, 0.14, 1.0, toon(0x6b4a2e));
+    shelf.position.set(-5.6, 2.4 + i * 1.5, -6.9);
+    g.add(shelf);
+    for (let j = 0; j < 14; j++) {
+      const bk = box(0.16, 0.9 + (j % 3) * 0.14, 0.7, toon([0x8e2f3a, 0x2f3f6b, 0x6b4a2e, 0x3f6b52][j % 4]));
+      bk.position.set(-8.1 + j * 0.37, 2.95 + i * 1.5, -6.9);
+      g.add(bk);
+    }
+  }
+
+  const table = box(6.4, 0.3, 3.6, toon(0x6b4a2e, T.wood));
+  table.position.set(0, 1.5, -1.6);
+  ink(table, 1.015);
   g.add(table);
   for (const sx of [-1, 1]) for (const sz of [-1, 1]) {
-    const leg = box(0.22, 1.5, 0.22, toon(0x3a2820));
-    leg.position.set(sx * 2.6, 0.75, -1.5 + sz * 1.35);
+    const leg = box(0.26, 1.5, 0.26, toon(0x4a3324));
+    leg.position.set(sx * 2.85, 0.75, -1.6 + sz * 1.45);
     g.add(leg);
   }
-  const map = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 2.8), toon(0xe6d3a4));
+
+  const mapTex = textTexture(1024, 640, (c, w, h) => {
+    c.fillStyle = "#e6d3a4";
+    c.fillRect(0, 0, w, h);
+    const rr = (seed) => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    let sd = 77;
+    c.strokeStyle = "rgba(120,86,52,.5)";
+    c.lineWidth = 2;
+    for (let i = 0; i < 26; i++) {
+      c.beginPath();
+      const x = rr(sd += 13) * w, y = rr(sd += 7) * h;
+      c.moveTo(x, y);
+      c.bezierCurveTo(x + 30, y - 18, x + 60, y + 16, x + 96, y - 6);
+      c.stroke();
+    }
+    c.fillStyle = "rgba(90,120,90,.28)";
+    for (let i = 0; i < 9; i++) {
+      const x = 80 + rr(sd += 5) * (w - 220);
+      const y = 90 + rr(sd += 9) * (h - 200);
+      c.beginPath();
+      c.ellipse(x, y, 40 + rr(sd += 3) * 70, 24 + rr(sd += 4) * 44, rr(sd += 2) * 3, 0, 7);
+      c.fill();
+    }
+    c.strokeStyle = "#7a4a2e";
+    c.lineWidth = 10;
+    c.strokeRect(6, 6, w - 12, h - 12);
+    c.fillStyle = "#5a3a26";
+    c.font = "bold 54px Georgia, serif";
+    c.textAlign = "center";
+    c.fillText("NUSANTARA", w / 2, h - 70);
+  });
+  const map = new THREE.Mesh(new THREE.PlaneGeometry(5.8, 3.2), new THREE.MeshBasicMaterial({ map: mapTex }));
   map.rotation.x = -Math.PI / 2;
-  map.position.set(0, 1.68, -1.5);
+  map.position.set(0, 1.66, -1.6);
   g.add(map);
-  const candle = cyl(0.08, 0.1, 0.5, toon(0xf0e2c0), 6);
-  candle.position.set(1.9, 1.9, -1.3);
+
+  const candle = cyl(0.07, 0.09, 0.55, toon(0xf4ead2), 6);
+  candle.position.set(2.1, 1.93, -0.9);
   g.add(candle);
-  const flame = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffcf6a }));
-  flame.position.set(1.9, 2.22, -1.3);
+  const flame = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+  flame.scale.y = 1.7;
+  flame.position.set(2.1, 2.3, -0.9);
   g.add(flame);
-  g.userData = { kind: "map", flame };
+  const glow = new THREE.PointLight(0xffb45a, 8, 9, 2);
+  glow.position.set(2.1, 2.7, -0.9);
+  g.add(glow);
+
+  // kris di atas meja
+  const blade = box(0.09, 0.03, 1.5, toon(0xd8d2c0));
+  blade.position.set(-1.9, 1.7, -1.3);
+  blade.rotation.y = 0.5;
+  g.add(blade);
+  const hilt = box(0.13, 0.07, 0.42, toon(0x8a6a3a));
+  hilt.position.set(-2.25, 1.72, -0.75);
+  hilt.rotation.y = 0.5;
+  g.add(hilt);
+
+  // kompas
+  const comp = cyl(0.22, 0.22, 0.06, toon(0xc9a05a), 12);
+  comp.position.set(1.2, 1.7, -2.3);
+  g.add(comp);
+  const needle = box(0.04, 0.03, 0.3, toon(0x8e2f3a));
+  needle.position.set(1.2, 1.74, -2.3);
+  needle.rotation.y = 0.6;
+  g.add(needle);
+
+  cardRow(g, [
+    { kind: "laksamana", expr: "stern", pose: "point", x: -2.9, z: 0.6, h: 3.5, seed: 31 },
+  ]);
+
+  g.userData = { kind: "map", flame, glow };
   return g;
 }
 
@@ -888,8 +1045,8 @@ export function buildMarketStage() {
     counter.position.set(cx, 0.45, -2);
     ink(counter, 1.02);
     g.add(counter);
-    const board = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 1.3), new THREE.MeshBasicMaterial({ map: sign }));
-    board.position.set(cx, 4.2, -2.2);
+    const board = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 1.1), new THREE.MeshBasicMaterial({ map: sign }));
+    board.position.set(cx, 4.0, -2.2);
     g.add(board);
   };
   stall(-6.5, T.tulipSign);
@@ -916,12 +1073,12 @@ export function buildMarketStage() {
 
   // keju: roda besar
   for (let i = 0; i < 5; i++) {
-    const ch = cyl(0.75, 0.75, 0.42, toon(0xf0c14a), 14);
+    const ch = cyl(0.42, 0.42, 0.26, toon(0xf0c14a), 14);
     ch.rotation.x = Math.PI / 2;
-    ch.position.set(4.2 + (i % 3) * 1.6, 1.35 + Math.floor(i / 3) * 0.9, -2.4);
+    ch.position.set(4.0 + (i % 3) * 1.05, 1.05 + Math.floor(i / 3) * 0.5, -2.4);
     ink(ch, 1.02);
     g.add(ch);
-    const rind = cyl(0.7, 0.7, 0.44, toon(0xd9a441), 14);
+    const rind = cyl(0.38, 0.38, 0.28, toon(0xd9a441), 14);
     rind.rotation.x = Math.PI / 2;
     rind.position.copy(ch.position);
     g.add(rind);
@@ -1016,6 +1173,13 @@ export function buildPalaceStage() {
     g.add(baseC);
   }
 
+  const cloth = box(11.1, 1.72, 0.14, toon(0x8e2f3a, null, { side: THREE.DoubleSide }));
+  cloth.position.set(0, 0.86, -1.32);
+  g.add(cloth);
+  const cloth2 = box(11.1, 1.72, 0.14, toon(0x8e2f3a));
+  cloth2.position.set(0, 0.86, -4.68);
+  g.add(cloth2);
+
   const table = box(11, 0.32, 3.4, toon(0x6b4a2e, T.wood));
   table.position.set(0, 1.7, -3);
   ink(table, 1.015);
@@ -1057,10 +1221,10 @@ export function buildPalaceStage() {
   }
 
   cardRow(g, [
-    { kind: "laksamana", expr: "stern", pose: "hold", x: -3.4, z: -5.2, h: 3.5, seed: 21 },
-    { kind: "official", expr: "neutral", pose: "point", x: -0.4, z: -5.4, h: 3.4, seed: 22 },
-    { kind: "dutchman", expr: "shock", pose: "stand", x: 2.8, z: -5.2, h: 3.45, seed: 23 },
-    { kind: "merchant", expr: "grin", pose: "hold", x: 5.6, z: -5.0, h: 3.35, seed: 24 },
+    { kind: "laksamana", expr: "stern", pose: "hold", x: -4.2, z: -5.4, h: 4.2, seed: 21 },
+    { kind: "official", expr: "neutral", pose: "point", x: -1.2, z: -5.6, h: 4.1, seed: 22 },
+    { kind: "dutchman", expr: "shock", pose: "stand", x: 2.2, z: -5.4, h: 4.15, seed: 23 },
+    { kind: "merchant", expr: "grin", pose: "hold", x: 5.2, z: -5.2, h: 4.05, seed: 24 },
   ]);
 
   g.userData = { kind: "palace" };
