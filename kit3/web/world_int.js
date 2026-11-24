@@ -59,8 +59,8 @@ export const buildKelas = (par) => {
   for (const sx of [-1, 1]) addM(o.meja, box(0.2, 1.9, 1.3), mkMat(0x7a5638), [sx * 1.8, 0.95, 0], { ink: 0.02 });
   addM(o.meja, box(1.0, 0.1, 0.7), mkMat(0xf2efe6), [0.7, 2.06, 0.2], { rot: [0, 0.2, 0], ink: 0.02 });
   o.bangku = [];
-  for (let i = 0; i < 6; i++) {
-    const bx = -4.6 + (i % 3) * 4.6, bz = 0.4 + Math.floor(i / 3) * 2.6;
+  for (let i = 0; i < 3; i++) {   // HANYA satu baris (di z 0,4): baris z 3,0 menghalangi kaki karakter dari kamera
+    const bx = -4.6 + (i % 3) * 4.6, bz = 0.4;
     const b = new THREE.Group(); b.position.set(bx, 0, bz); g.add(b);
     addM(b, box(2.6, 0.16, 0.8), mkMat(0x9a7448), [0, 1.15, 0], { ink: 0.03 });
     for (const sx of [-1, 1]) addM(b, box(0.16, 1.15, 0.7), mkMat(0x7a5638), [sx * 1.1, 0.58, 0.15], { ink: 0.02 });
